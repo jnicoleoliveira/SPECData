@@ -1,0 +1,16 @@
+CREATE TABLE molecule(
+  name VARCHAR (255),
+  type VARCHAR (255),
+  info VARCHAR (255),
+  mid INT,
+  PRIMARY KEY(mid)
+);
+
+CREATE TABLE peaks(
+  frequency FLOAT,
+  intensity FLOAT,
+  pid INT,
+  mid INT,
+  PRIMARY KEY(pid),
+  FOREIGN KEY(mid) REFERENCES molecule(mid)
+);

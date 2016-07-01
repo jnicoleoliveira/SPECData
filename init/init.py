@@ -6,13 +6,14 @@ import os, sys
 from config import *
 
 # Create 'data' directory
-if not os.path.exists(db_path):
-    os.makedirs(db_path)
-print "[Created Directory: " + db_path + "]"
+if not os.path.exists(db_dir):
+    os.makedirs(db_dir)
+
+print "[Created Directory: " + db_dir + "]"
 
 # Create spectrum database file
-conn = sqlite3.connect(db_path + "\spectrum.db")
-print "[Created Database File: " + db_path + "\spectrum.db]"
+conn = sqlite3.connect(db_filepath)
+print "[Created Database File: " + db_filepath + " ]"
 
 # Create Cursor
 cursor = conn.cursor()

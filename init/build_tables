@@ -1,16 +1,29 @@
-CREATE TABLE molecule(
+CREATE TABLE molecules(
+  mid INTEGER PRIMARY KEY,
   name VARCHAR (255),
-  type VARCHAR (255),
-  info VARCHAR (255),
-  mid INT,
-  PRIMARY KEY(mid)
+  category VARCHAR (255)
 );
 
 CREATE TABLE peaks(
+  pid INTEGER PRIMARY KEY,
+  mid INTEGER,
   frequency FLOAT,
   intensity FLOAT,
-  pid INT,
-  mid INT,
-  PRIMARY KEY(pid),
-  FOREIGN KEY(mid) REFERENCES molecule(mid)
+  FOREIGN KEY(mid) REFERENCES molecules(mid)
+);
+
+CREATE TABLE info(
+  iid INTEGER PRIMARY KEY,
+  mid INTEGER,
+  vibration BOOLEAN,
+  notes VARCHAR(255),
+  FOREIGN KEY(mid) REFERENCES molecules(mid)
+);
+
+CREATE TABLE assignments(
+  aid INTEGER PRIMARY KEY,
+  pid INTEGER,
+  assigned_mid INTEGER,
+  FOREIGN KEY(pid) REFERENCES molecules(pid),
+  FOREIGN KEY(assigned_mid) REFERENCES molecules(mid)
 );

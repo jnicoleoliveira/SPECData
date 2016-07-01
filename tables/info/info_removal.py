@@ -1,3 +1,11 @@
+# Author: Jasmine Oliveira
+# Date: 07/01/2016
+# info_removal:
+#       Module that removes info table entries:
+#       Functions:
+#                   * remove_info(conn, iid):
+
+
 from info_entry import iid_exists
 
 def remove_info(conn, iid):

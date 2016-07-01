@@ -1,3 +1,11 @@
+# Author: Jasmine Oliveira
+# Date: 07/01/2016
+# info_edit:
+#       Module that makes edits to info table entries:
+#       Functions:
+#                   * update_vibration(conn, iid, vibration)
+#                   * update_notes(conn, iid, vibration)
+
 from info_entry import iid_exists
 
 def update_vibration(conn, iid, vibration):

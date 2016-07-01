@@ -1,7 +1,12 @@
 # Author: Jasmine Oliveira
 # Date: 06/28/2016
-
-import sqlite3
+# molecule_entry:
+#       Module that creates molecule table entries, and gets entry information:
+#       Functions:
+#                   * new_molecule_entry(conn, name, category):
+#                   * mid_exists(conn, mid)
+#                   * get_mid(conn, name, category):
+#
 
 def new_molecule_entry(conn, name, category):
     """

@@ -1,4 +1,11 @@
-import sqlite3
+# Author: Jasmine Oliveira
+# Date: 07/01/2016
+# peaks_removal:
+#       Module that removes peak table entries:
+#       Functions:
+#                   * remove_all(conn, mid)
+#                   * remove_peak(conn, pid)
+
 from tables.molecules.molecules_entry import mid_exists
 from peaks_entry import pid_exists
 

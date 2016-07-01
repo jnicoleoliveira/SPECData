@@ -1,10 +1,10 @@
 # Author: Jasmine Oliveira
 # Date: 07/01/2016
-# Tests all functions of SPECdata
+# Tests functions of SPECdata
 
 import config
 import sqlite3
-from query import view_query
+from queries import view_query
 
 # Database Functions
 import tables.info.info_edit as in_edit

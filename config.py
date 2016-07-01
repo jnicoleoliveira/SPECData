@@ -1,7 +1,17 @@
-# Desired database directory
-PROGRAM_DIR = ""
-DATABASE_DIR = "C:\Users\Jasmine\PycharmProjects\DatabaseScripts"
+# Author: Jasmine Oliveira
+# Date: 06/27/2016
+# SPECdata Configuration File:
+#       * Specifies: Program Directory (path)
+#                    Database Directory (path)
+#                    Log Directory path)
 
+
+# Program directory
+PROGRAM_DIR = ""
+# Database directory
+DATABASE_DIR = "C:\Users\Jasmine\PycharmProjects\DatabaseScripts"
+# Log Directory
+LOG_DIR = ""
 
 ##################################################################
 ####################### DO NOT EDIT BELOW ########################

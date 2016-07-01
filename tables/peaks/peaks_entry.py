@@ -1,5 +1,16 @@
 # Author: Jasmine Oliveira
 # Date: 06/27/2016
+# info_entry:
+#       Module that creates peak table entries
+#       Public Functions:
+#                   * import_file(conn, filepath, mid)
+#                   * pid_exists(conn, pid)
+#       Private/Helper Functions:
+#                   * __checkfile(filepath)
+#                   * __import_catfile(conn, filepath, mid)
+#                   * __import_spfile(conn, filepath, mid)
+#                   * __import_linesfile(conn, filepath, mid)
+
 
 import sqlite3
 from tables.molecules.molecules_entry import mid_exists
@@ -8,6 +19,7 @@ def import_file(conn, filepath, mid):
     """
     Imports file to peak table in spectrum database to it's associative molecule
     Molecule must exist for import
+    Supports '.cat' , '.sp', '.lines' files.
     :param filepath: Path to import file
     :param mid: Molecule ID
     :return:

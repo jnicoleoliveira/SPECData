@@ -1,3 +1,10 @@
+# Author: Jasmine Oliveira
+# Date: 07/01/2016
+# molecule_removal:
+#       Module that removes molecule table entries:
+#       Functions:
+#                   * remove_molecule(conn, mid)
+
 from molecules_entry import mid_exists
 
 def remove_molecule(conn, mid):

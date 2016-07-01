@@ -1,5 +1,11 @@
 # Author: Jasmine Oliveira
 # Date: 07/01/2016
+# info_entry:
+#       Module that creates info table entries, and gets entry information:
+#       Functions:
+#                   * new_info_entry(conn, mid, vibration, notes)
+#                   * iid_exists(conn, iid)
+#                   * get_iid(conn, mid)
 
 from tables.molecules.molecules_entry import mid_exists
 

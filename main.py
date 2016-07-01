@@ -1,7 +1,7 @@
 import sqlite3
 
 from config import *
-from query import view_query
+from queries import view_query
 from tables.molecules import molecules_entry
 from tables.molecules import molecules_edit
 from tables.molecules import molecules_removal

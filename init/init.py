@@ -1,5 +1,9 @@
 # Author: Jasmine Oliveira
 # Date: 06/27/2016
+# Module:
+#       * Creates /data directory in location specified in config (db_dir)
+#       * Creates sqlite dir specified in config (db_filepath)
+#       * Generates tables using build_tables.sql
 
 import sqlite3
 import os, sys

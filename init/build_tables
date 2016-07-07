@@ -24,6 +24,8 @@ CREATE TABLE assignments(
   aid INTEGER PRIMARY KEY,
   pid INTEGER,
   assigned_mid INTEGER,
-  FOREIGN KEY(pid) REFERENCES molecules(pid),
-  FOREIGN KEY(assigned_mid) REFERENCES molecules(mid)
+  assigned_pid INTEGER,
+  FOREIGN KEY(pid) REFERENCES peaks(pid),
+  FOREIGN KEY(assigned_mid) REFERENCES molecules(mid),
+  FOREIGN KEY(assigned_pid) REFERENCES peaks(pid)
 );

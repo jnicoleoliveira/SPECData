@@ -82,12 +82,17 @@ def __import_catfile(conn, filepath, mid):
 
     # Store peak data from file, to 'peaks' table
     # Uses associative 'mid' for entry's foreign key
+    linenum = 0
     with open(filepath) as f:
         for line in f:
-            point = str.split((line.strip()))
-            freq = float(point[0])                         # get frequency
-            inte = abs(float(point[2])) ** float(point[2]) # get actual intensity (logx ^ x)
-            conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, freq, inte))   # insert into peak table
+            linenum +=1
+            try:
+                point = str.split((line.strip()))
+                freq = float(point[0])                         # get frequency
+                inte = abs(float(point[2])) ** float(point[2]) # get actual intensity (logx ^ x)
+                conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, freq, inte))  # insert into peak table
+            except IndexError:
+                print "Error in line: " + str(linenum)
 
     # Commit Changes
     conn.commit()
@@ -125,6 +130,18 @@ def __import_linesfile(conn, filepath, mid):
     :param mid: Molecule ID
     :return:
     """
+    # Store peak data in file, to 'peaks' table
+    with open(filepath) as f:
+        for line in f:
+            point = str.split((line.strip()))
+            freq = float(point[0])      # get frequency
+            inte = float(point[1])      # get actual intensity (logx ^ x)
+            conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, freq, inte))   # insert into peak table
+
+    # Commit Changes
+    conn.commit()
+
+    print "[ Added entry peaks ] "
 
 def __checkfile(filepath):
     """

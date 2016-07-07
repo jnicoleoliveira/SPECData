@@ -87,12 +87,12 @@ def main():
     print "Info table -------------------------"
     print view_query.table_view("info")
     # REMOVE ENTRY #############################
-    mol_rem.remove_molecule(conn, mid)
-    print "\nAFTER REMOVAL:"
-    print "Molecule table ---------------------"
-    print view_query.table_view("molecules")
-    print "Info table -------------------------"
-    print view_query.table_view("info")
+    #mol_rem.remove_molecule(conn, mid)
+    #print "\nAFTER REMOVAL:"
+    #print "Molecule table ---------------------"
+    #print view_query.table_view("molecules")
+    #print "Info table -------------------------"
+    #print view_query.table_view("info")
 
     print "************ END OF TESTING ************"
 

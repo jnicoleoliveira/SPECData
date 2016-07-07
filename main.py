@@ -52,7 +52,6 @@ def main():
                 print view_query.row_view("molecules", mid)
 
             ########### INFO ##############
-        print
             print "INFO------------------------"
             print "Enter molecule vibration: "
             vibration = raw_input()

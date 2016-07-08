@@ -1,13 +1,15 @@
 import sqlite3
 
-def get_pidlist(conn, mid):
+def get_pid_list(conn, mid):
     """
 
     :param conn:
     :param mid:
     :return:
     """
-    cursor = conn.execute("SELECT pid FROM molecules INNER JOIN peaks WHERE molecules.mid = peaks.mid AND molecules.mid=?",(mid,))
+    cursor = conn.execute("SELECT pid FROM molecules INNER JOIN peaks"\
+                          " WHERE molecules.mid = peaks.mid AND molecules.mid=?" \
+                          " ORDER BY peaks.intensity DESC",(mid,))
     pid_list = cursor.fetchall()
     return pid_list
 
@@ -17,7 +19,13 @@ def get_frequency(conn, pid):
     frequency = line[0]
     return frequency
 
-def get_unassigned_pidlist(conn, mid):
+def get_intensity(conn, pid):
+    cursor = conn.execute("SELECT intensity FROM peaks WHERE pid=?",(pid,))
+    line = cursor.fetchone()
+    intensity = line[0]
+    return intensity
+
+def get_unassigned_pid_list(conn, mid):
 
     # Set of all peaks for molecule
     all = "(SELECT peaks.pid FROM molecules JOIN peaks"\

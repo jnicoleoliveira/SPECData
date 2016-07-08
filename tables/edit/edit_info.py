@@ -6,7 +6,7 @@
 #                   * update_vibration(conn, iid, vibration)
 #                   * update_notes(conn, iid, vibration)
 
-from info_entry import iid_exists
+from tables.entry.entry_info import iid_exists
 
 def update_vibration(conn, iid, vibration):
     """

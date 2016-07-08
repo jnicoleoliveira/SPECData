@@ -6,7 +6,9 @@
 #                   * remove_all(conn, mid)
 #                   * remove_assignment(conn, aid)
 
-from tables.molecules.molecules_entry import mid_exists
+from tables.entry.entry_molecules import mid_exists
+from tables.get.get_assignments import aid_exists
+
 
 def remove_all(conn, mid):
     """
@@ -32,18 +34,17 @@ def remove_all(conn, mid):
 
 def remove_assignment(conn, aid):
     """
-    Removes a specified peak entry, by its pid
+    Removes a specified assignment entry, by its aid
     :param conn: Connection to sqlite3 database
     :param pid: Assignment entry ID (aid)
     :return: True, if assignment removes successfuly, otherwise False
     """
-    # Determine if pid exists
-    #if(pid_exists(conn, aid) is False):
-    #    # Peak does not exist
-    #    print "[ ERROR: Peak entry does not exist. Cancelling action. ]"
-    #    return False
+    # Determine if aid exists
+    if(aid_exists(conn, aid) is False):
+        print "[ ERROR: assignment entry does not exist. Cancelling action! ]"
+        return False
 
-    # Exists, remove peak
+    # Exists, remove assignment
     conn.execute("DELETE FROM assignments WHERE aid={a}".format(a=aid))
     conn.commit()
 

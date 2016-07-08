@@ -2,15 +2,9 @@ import sqlite3
 
 from config import *
 from queries import view_query
+from tables.entry import entry_info, entry_molecules, entry_peaks
 from tables.molecules import molecules_entry
-from tables.molecules import molecules_edit
-from tables.molecules import molecules_removal
-from tables.molecules import molecules_view
 from tables.peaks import peaks_entry
-from tables.peaks import peaks_update
-from tables.peaks import peaks_removal
-from tables.peaks import peaks_view
-from tables.info import info_entry
 
 init = "python init/init.py"
 
@@ -35,18 +29,18 @@ def main():
             category = raw_input()
 
             # Check if molecule exists
-            mid = molecules_entry.get_mid(conn, name, category)
+            mid = entry_molecules.get_mid(conn, name, category)
             if(mid is None):
                 # Does not exist
                 # Create new entry
                 print("[ Molecule entry does not exist. Creating new entry.]")
-                mid = molecules_entry.new_molecule_entry(conn, name, category)
+                mid = entry_molecules.new_molecule_entry(conn, name, category)
 
                 print "Please enter file name: "
                 filename = raw_input()
                 path = "C:\Users\Jasmine\PycharmProjects\PeakDetection\Known" + "\\" + filename
                 print "[Importing: " + path + " ]"
-                peaks_entry.import_file(conn, path, mid)
+                entry_peaks.import_file(conn, path, mid)
             else:
                 print "[ ERROR: Molecule entry already exists.]"
                 print view_query.row_view("molecules", mid)
@@ -57,7 +51,7 @@ def main():
             vibration = raw_input()
             print "Enter notes about this molecule: "
             notes = raw_input()
-            info_entry.new_info_entry(conn,mid, vibration,notes)            # create new info entry
+            entry_info.new_info_entry(conn, mid, vibration, notes)            # create new info entry
 
         elif choice is "d":
         ## Delete

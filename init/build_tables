@@ -22,6 +22,7 @@ CREATE TABLE info(
 
 CREATE TABLE assignments(
   aid INTEGER PRIMARY KEY,
+  mid INTEGER,
   pid INTEGER,
   assigned_mid INTEGER,
   assigned_pid INTEGER,

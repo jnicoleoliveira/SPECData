@@ -1,4 +1,4 @@
-from molecules_entry import mid_exists
+from tables.entry.entry_molecules import mid_exists
 
 def update_category(conn, mid, category):
     """

@@ -6,8 +6,9 @@
 #                   * remove_all(conn, mid)
 #                   * remove_peak(conn, pid)
 
-from tables.molecules.molecules_entry import mid_exists
-from peaks_entry import pid_exists
+from tables.entry.entry_molecules import mid_exists
+from tables.entry.entry_peaks import pid_exists
+
 
 def remove_all(conn, mid):
     """

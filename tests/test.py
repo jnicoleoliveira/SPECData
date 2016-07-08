@@ -2,19 +2,17 @@
 # Date: 07/01/2016
 # Tests functions of SPECdata
 
-import config
 import sqlite3
+
+import config
 from queries import view_query
 
 # Database Functions
-import tables.info.info_edit as in_edit
-import tables.info.info_entry as info_entry
-import tables.info.info_removal as info_rem
-import tables.molecules.molecules_entry as mol_entry
-import tables.molecules.molecules_edit as mol_edit
-import tables.molecules.molecules_removal as mol_rem
-import tables.peaks.peaks_entry as p_entry
-import tables.peaks.peaks_removal as p_rem
+import tables.entry.entry_info as info_entry
+import tables.remove.remove_info as info_rem
+import tables.entry.entry_molecules as mol_entry
+import tables.entry.entry_peaks as p_entry
+
 
 def main():
 

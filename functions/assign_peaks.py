@@ -1,15 +1,16 @@
-import sqlite3
-from tables.peaks.peaks_get import *
+from tables.entry.entry_assignments import *
+from tables.get.get_peaks import *
 
-def get_candidates(conn, frequency):
+
+def get_candidates(conn, frequency, threshold):
     cursor = conn.cursor()
 
     script= "SELECT molecules.name, molecules.mid, peaks.pid, peaks.frequency" \
             " FROM peaks JOIN molecules"\
-            " WHERE molecules.mid=peaks.mid AND molecules.category='known'" \
+            " WHERE molecules.mid=peaks.mid AND molecules.category='known' AND ABS(peaks.frequency - {freq})<={t}" \
             " ORDER BY ABS(peaks.frequency - {freq} ) ASC" \
-            " LIMIT 5;".format(freq = frequency)
-    print script
+            " LIMIT 5;".format(freq = frequency, t=threshold)
+    #print script
 
     try:
         cursor.execute(script)
@@ -39,7 +40,7 @@ def get_initial_candidates(conn, frequency, query_pool, threshold):
     return cursor.fetchone()
 
 def assign_from_list(conn, mid, midlist):
-    unassigned_pids = get_unassigned_pidlist(conn,mid)    # get unnasigned exp pidlist
+    unassigned_pids = get_unassigned_pid_list(conn,mid)    # get unnasigned exp pidlist
     query_pool = __midlist_to_pidlist_query(midlist)
     assignment_list = []
     for pid in unassigned_pids:
@@ -62,7 +63,6 @@ def assign_from_list(conn, mid, midlist):
 
     return assignment_list
 
-
 def __midlist_to_pidlist_query(midlist):
     sql = "SELECT pid FROM molecules JOIN peaks " \
           "ON molecules.mid = peaks.mid AND ( peaks.mid={m}".format(m=midlist[0])
@@ -73,34 +73,42 @@ def __midlist_to_pidlist_query(midlist):
     return sql
 
 def assign_peaks(conn, mid):
+    """
+    Assigns peaks of an experiment molecule to known peaks
+    Inputs assignments in database
+    Returns a list of assignment names
+    :param conn: Connection to SQLite database
+    :param mid: Molecule ID (mid) to assign peaks to
+    :return: List of assignment names
+    """
     # Get pid List
-    pidlist = []
-    pidlist = get_pidlist(conn, mid)
-    alist = get_assignments(conn, pidlist)
-    print alist
+    experiment_pids = get_pid_list(conn, mid)
+    assignments = calculate_assignments(conn, mid, experiment_pids)
+    return assignments
 
 
-def get_assignments(conn, pidlist):
+def calculate_assignments(conn, mid, pid_list):
     assignment_list = []
 
-    for pid in pidlist:
+    for pid in pid_list:
         pid = pid[0]    # Get tuple
         exp_freq = get_frequency(conn, pid)   # Get frequency
+        exp_inte = get_intensity(conn, pid)   # Get intensity
 
-        # Get Candidate assignment
-        name, assigned_mid, assigned_pid, frequency = get_candidates(conn, exp_freq)
-
-        # Add candidate
-        print "ASSIGNING peak(" + str(pid) + "): freq: " + str(exp_freq) + " TO " + name + "freq: " + str(frequency)
-        add_assignment(conn, pid, assigned_mid)
-        assignment_list.append(name)
+        try:
+            # Get Candidate assignment
+            name, assigned_mid, assigned_pid, assigned_freq = get_candidates(conn, exp_freq, 0.2)
+            # Add Assignment to list
+            add_assignment(conn, mid, pid, assigned_mid, assigned_pid)
+            assignment_list.append(name)
+            print '\033[91m' + "ASSIGNING peak(" + str(pid) + "):    [INTENSITY: " + str(exp_inte) + "]"\
+                "[FREQ: " + str(exp_freq) + "]      TO      " + name + \
+                " [FREQ: " + str(assigned_freq) + "] " + '\033[0m'
+        except TypeError:
+            continue
+            print "TYPEERROR:: Frequency: " + str(exp_freq) + " has no match."
 
     return assignment_list
-
-
-def add_assignment(conn, pid, assigned_mid):
-    cursor = conn.execute("INSERT INTO assignments(pid, assigned_mid) VALUES (?,?)",(pid, assigned_mid))
-    conn.commit()
 
 
 def printCursor(cursor):

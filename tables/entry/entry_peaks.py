@@ -12,8 +12,7 @@
 #                   * __import_linesfile(conn, filepath, mid)
 
 
-import sqlite3
-from tables.molecules.molecules_entry import mid_exists
+from tables.entry.entry_molecules import mid_exists
 
 def import_file(conn, filepath, mid):
     """

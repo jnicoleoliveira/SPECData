@@ -5,7 +5,7 @@
 #       Functions:
 #                   * remove_molecule(conn, mid)
 
-from molecules_entry import mid_exists
+from tables.entry.entry_molecules import mid_exists
 
 def remove_molecule(conn, mid):
     """

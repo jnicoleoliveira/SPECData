@@ -6,7 +6,7 @@
 #                   * remove_info(conn, iid):
 
 
-from info_entry import iid_exists
+from tables.entry.entry_info import iid_exists
 
 def remove_info(conn, iid):
     """

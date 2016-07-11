@@ -91,22 +91,23 @@ def calculate_assignments(conn, mid, pid_list):
     assignment_list = []
 
     for pid in pid_list:
-        pid = pid[0]    # Get tuple
+        ##pid = pid[0]    # Get value in tuple
         exp_freq = get_frequency(conn, pid)   # Get frequency
         exp_inte = get_intensity(conn, pid)   # Get intensity
 
         try:
             # Get Candidate assignment
             name, assigned_mid, assigned_pid, assigned_freq = get_candidates(conn, exp_freq, 0.2)
-            # Add Assignment to list
-            add_assignment(conn, mid, pid, assigned_mid, assigned_pid)
-            assignment_list.append(name)
-            print '\033[91m' + "ASSIGNING peak(" + str(pid) + "):    [INTENSITY: " + str(exp_inte) + "]"\
-                "[FREQ: " + str(exp_freq) + "]      TO      " + name + \
-                " [FREQ: " + str(assigned_freq) + "] " + '\033[0m'
         except TypeError:
-            continue
             print "TYPEERROR:: Frequency: " + str(exp_freq) + " has no match."
+            continue
+
+        # Add Assignment to list
+        add_assignment(conn, pid, mid, assigned_mid, assigned_pid)
+        assignment_list.append(name)
+        print '\033[91m' + "ASSIGNING peak(" + str(pid) + "):    [INTENSITY: " + str(exp_inte) + "]" \
+            "[FREQ: " + str(exp_freq) + "]      TO      " + name + \
+            " [FREQ: " + str(assigned_freq) + "] " + '\033[0m'
 
     return assignment_list
 

@@ -25,8 +25,6 @@ while True:
 
 
     if input == 'a':
-        print "Enter molecule name: "
-        name = raw_input()
         print "Enter category: "
         category = raw_input()
         print "Enter file directory : "

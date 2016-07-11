@@ -1,5 +1,71 @@
 import sqlite3
 
+
+def get_max_frequency(conn, mid):
+    """
+    Gets the maximum frequency of a molecule
+    :param conn: Connection to SQLite Database
+    :param mid: Molecule entry ID
+    :return: Maximum frequency of a molecule
+    """
+    cursor = conn.execute("SELECT MAX(frequency) FROM peaks WHERE mid=?",(mid,))
+    line = cursor.fetchone()
+    frequency = line[0]
+    return frequency
+
+
+def get_max_intensity(conn, mid):
+    """
+    Gets the maximum intensity of a molecule
+    :param conn: Connection to SQLite Database
+    :param mid: Molecule entry ID
+    :return: Maximum intensity of a molecule
+    """
+    cursor = conn.execute("SELECT MAX(intensity) FROM peaks WHERE mid=?",(mid,))
+    line = cursor.fetchone()
+    intensity = line[0]
+    return intensity
+
+
+def get_frequency(conn, pid):
+    """
+    Returns the frequency of a given peak
+    :param conn: SQLite Database connection
+    :param pid: Peak ID (pid) of specified peak
+    :return:
+    """
+    cursor = conn.execute("SELECT frequency FROM peaks WHERE pid=?",(pid,))
+    line = cursor.fetchone()
+    frequency = line[0]
+    return frequency
+
+
+def get_frequency_intensity_list(conn, mid):
+    """
+    Returns frequency and intensity list of a particular module
+    :param conn: SQLite Database connection
+    :param mid: Molecule ID (mid) of associated peaks
+    :return:
+    """
+    cursor = conn.execute("SELECT frequency, intensity FROM peaks WHERE mid=?",(mid,))
+    rows = cursor.fetchall()
+
+    frequency_list = []
+    intensity_list = []
+    for row in rows:
+        frequency_list.append(row[0])
+        intensity_list.append(row[1])
+
+    return frequency_list, intensity_list
+
+
+def get_intensity(conn, pid):
+    cursor = conn.execute("SELECT intensity FROM peaks WHERE pid=?",(pid,))
+    line = cursor.fetchone()
+    intensity = line[0]
+    return intensity
+
+
 def get_pid_list(conn, mid):
     """
 
@@ -7,23 +73,20 @@ def get_pid_list(conn, mid):
     :param mid:
     :return:
     """
-    cursor = conn.execute("SELECT pid FROM molecules INNER JOIN peaks"\
-                          " WHERE molecules.mid = peaks.mid AND molecules.mid=?" \
-                          " ORDER BY peaks.intensity DESC",(mid,))
-    pid_list = cursor.fetchall()
-    return pid_list
+    cursor = conn.execute("SELECT pid FROM peaks"\
+                          " WHERE mid=?" \
+                          " ORDER BY intensity DESC",(mid,))
+    rows = cursor.fetchall()
 
-def get_frequency(conn, pid):
-    cursor = conn.execute("SELECT frequency FROM peaks WHERE pid=?",(pid,))
-    line = cursor.fetchone()
-    frequency = line[0]
-    return frequency
+    if rows is not None:
+        pid_list = []
+        for row in rows:
+            pid_list.append(row[0])
 
-def get_intensity(conn, pid):
-    cursor = conn.execute("SELECT intensity FROM peaks WHERE pid=?",(pid,))
-    line = cursor.fetchone()
-    intensity = line[0]
-    return intensity
+        return pid_list
+
+    return None
+
 
 def get_unassigned_pid_list(conn, mid):
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>importsingle_form</class>
- <widget class="QDialog" name="importsingle_form">
+ <class>checksingleimport_frame</class>
+ <widget class="QDialog" name="checksingleimport_frame">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1034</width>
-    <height>669</height>
+    <height>661</height>
    </rect>
   </property>
   <property name="cursor">
@@ -20,7 +20,7 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(0, 117, 135);</string>
+   <string notr="true">background-color: rgb(53, 53, 53);</string>
   </property>
   <widget class="QLabel" name="title_lbl">
    <property name="geometry">
@@ -163,7 +163,7 @@
    <property name="lineWidth">
     <number>5</number>
    </property>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="header_lbl">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -176,20 +176,18 @@
      <string>Is this the data you want imported?</string>
     </property>
    </widget>
-   <widget class="QTableView" name="info_tbl">
+   <widget class="QTableWidget" name="info_tbl">
     <property name="geometry">
      <rect>
       <x>60</x>
       <y>110</y>
-      <width>721</width>
+      <width>811</width>
       <height>231</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="gridStyle">
-     <enum>Qt::SolidLine</enum>
+     <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 47, 55);</string>
     </property>
    </widget>
   </widget>

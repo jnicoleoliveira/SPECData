@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'finishimport.ui'
+# Form implementation generated from reading ui file 'importfinished.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -22,14 +22,14 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_importsingle_form(object):
-    def setupUi(self, importsingle_form):
-        importsingle_form.setObjectName(_fromUtf8("importsingle_form"))
-        importsingle_form.resize(1051, 671)
-        importsingle_form.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        importsingle_form.setAutoFillBackground(False)
-        importsingle_form.setStyleSheet(_fromUtf8("background-color: rgb(0, 117, 135);"))
-        self.title_lbl = QtGui.QLabel(importsingle_form)
+class Ui_importfinished_frame(object):
+    def setupUi(self, importfinished_frame):
+        importfinished_frame.setObjectName(_fromUtf8("importfinished_frame"))
+        importfinished_frame.resize(1051, 671)
+        importfinished_frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        importfinished_frame.setAutoFillBackground(False)
+        importfinished_frame.setStyleSheet(_fromUtf8("background-color: rgb(53, 53, 53);"))
+        self.title_lbl = QtGui.QLabel(importfinished_frame)
         self.title_lbl.setGeometry(QtCore.QRect(70, 50, 419, 75))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Small Fonts"))
@@ -40,24 +40,24 @@ class Ui_importsingle_form(object):
         self.title_lbl.setFrameShadow(QtGui.QFrame.Plain)
         self.title_lbl.setLineWidth(0)
         self.title_lbl.setObjectName(_fromUtf8("title_lbl"))
-        self.new_lbl = QtGui.QLabel(importsingle_form)
-        self.new_lbl.setGeometry(QtCore.QRect(340, 540, 321, 75))
+        self.return_lbl = QtGui.QLabel(importfinished_frame)
+        self.return_lbl.setGeometry(QtCore.QRect(340, 540, 321, 75))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("8514oem"))
         font.setPointSize(16)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
-        self.new_lbl.setFont(font)
-        self.new_lbl.setAutoFillBackground(False)
-        self.new_lbl.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
-        self.new_lbl.setFrameShape(QtGui.QFrame.Panel)
-        self.new_lbl.setFrameShadow(QtGui.QFrame.Raised)
-        self.new_lbl.setLineWidth(6)
-        self.new_lbl.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.new_lbl.setOpenExternalLinks(False)
-        self.new_lbl.setObjectName(_fromUtf8("new_lbl"))
-        self.frame = QtGui.QFrame(importsingle_form)
+        self.return_lbl.setFont(font)
+        self.return_lbl.setAutoFillBackground(False)
+        self.return_lbl.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
+        self.return_lbl.setFrameShape(QtGui.QFrame.Panel)
+        self.return_lbl.setFrameShadow(QtGui.QFrame.Raised)
+        self.return_lbl.setLineWidth(6)
+        self.return_lbl.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.return_lbl.setOpenExternalLinks(False)
+        self.return_lbl.setObjectName(_fromUtf8("return_lbl"))
+        self.frame = QtGui.QFrame(importfinished_frame)
         self.frame.setGeometry(QtCore.QRect(59, 121, 941, 401))
         self.frame.setStyleSheet(_fromUtf8("color: rgb(255, 255, 255);"))
         self.frame.setFrameShape(QtGui.QFrame.Panel)
@@ -75,13 +75,13 @@ class Ui_importsingle_form(object):
         self.issuccessful_lbl.setObjectName(_fromUtf8("issuccessful_lbl"))
         self.title_lbl.raise_()
         self.frame.raise_()
-        self.new_lbl.raise_()
+        self.return_lbl.raise_()
 
-        self.retranslateUi(importsingle_form)
-        QtCore.QMetaObject.connectSlotsByName(importsingle_form)
+        self.retranslateUi(importfinished_frame)
+        QtCore.QMetaObject.connectSlotsByName(importfinished_frame)
 
-    def retranslateUi(self, importsingle_form):
-        importsingle_form.setWindowTitle(_translate("importsingle_form", "Dialog", None))
-        self.title_lbl.setText(_translate("importsingle_form", "Import to database", None))
-        self.new_lbl.setText(_translate("importsingle_form", "Return to menu", None))
+    def retranslateUi(self, importfinished_frame):
+        importfinished_frame.setWindowTitle(_translate("importfinished_frame", "Dialog", None))
+        self.title_lbl.setText(_translate("importfinished_frame", "Import to database", None))
+        self.return_lbl.setText(_translate("importfinished_frame", "Return to menu", None))
 

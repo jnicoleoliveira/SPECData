@@ -1,11 +1,11 @@
 # Author: Jasmine Oliveira
 # Date: 7/12/2016
 
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from ImportMenu import ImportMenu
-from frames.mainwindow_frame import Ui_MainWindow
+from frames.frame___main_window import Ui_MainWindow # import frame
+
+from dialog___import_menu import ImportMenu # import next window
 from events import clickable
 
 
@@ -19,10 +19,9 @@ class MainWindow(QMainWindow):
 
     def set_menu(self):
         import_lbl = self.ui.import_lbl
+        clickable(import_lbl).connect(self.show_import_menu)
 
-        clickable(import_lbl).connect(self.showImportMenu)
-
-    def showImportMenu(self):
+    def show_import_menu(self):
         self.close()
         window = ImportMenu()
         window.exec_()

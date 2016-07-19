@@ -4,7 +4,6 @@ from PyQt4.QtGui import *
 from events import clickable
 
 from frames.frame___import_finished import Ui_importfinished_frame  # Import Frame
-from dialog___main_window import MainWindow  # Next Window (Return to Menu)
 
 class ImportFinished(QDialog):
     def __init__(self, log_message):
@@ -37,10 +36,14 @@ class ImportFinished(QDialog):
                 log_list.addItem(item)
 
     def return_to_main_menu(self):
-            """
-            Closes current window and returns to MainWindow
-            :return:
-            """
-            self.close()
-            window = MainWindow()
-            window.show()
+        """
+        Closes current window and returns to MainWindow
+        :return:
+        """
+        from dialog___main_menu import MainMenu  # Next Window (Return to Menu)
+        self.close()
+        window = MainMenu()
+        window.exec_()
+
+        #window.show()
+        #window.exec_()

@@ -1,7 +1,7 @@
 # Author: Jasmine Oliveira
 # Date: 7/12/2016
 
-import sys
+import sys, time
 from PyQt4.QtGui import *
 from app.dialogs.dialog___main_window import MainWindow     # Import main window
 
@@ -12,6 +12,7 @@ def main():
 
     window = MainWindow()
     window.show()
+    window.start_main_menu()
 
     sys.exit(app.exec_())
 

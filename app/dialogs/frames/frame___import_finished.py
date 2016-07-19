@@ -66,11 +66,13 @@ class Ui_importfinished_frame(object):
         self.frame.setObjectName(_fromUtf8("frame"))
         self.log_list = QtGui.QListWidget(self.frame)
         self.log_list.setGeometry(QtCore.QRect(30, 40, 881, 191))
-        self.log_list.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
+        self.log_list.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
+"color: rgb(0, 0, 0);"))
         self.log_list.setObjectName(_fromUtf8("log_list"))
         self.issuccessful_lbl = QtGui.QLabel(self.frame)
         self.issuccessful_lbl.setGeometry(QtCore.QRect(30, 250, 881, 101))
-        self.issuccessful_lbl.setStyleSheet(_fromUtf8("background-color: rgb(4, 78, 110);"))
+        self.issuccessful_lbl.setStyleSheet(_fromUtf8("background-color: rgb(4, 78, 110);\n"
+"color: rgb(0, 0, 0);"))
         self.issuccessful_lbl.setText(_fromUtf8(""))
         self.issuccessful_lbl.setObjectName(_fromUtf8("issuccessful_lbl"))
         self.title_lbl.raise_()

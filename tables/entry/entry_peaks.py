@@ -28,12 +28,12 @@ def import_file(conn, filepath, mid):
     if mid_exists(conn, mid) is False:
         # Molecule does not exist, ERR return
         print "[ ERROR: Molecule entry does not exist. Cancelling action! ]"
-        return
+        return False
 
     # Check if file can be opened
     if __checkfile(filepath) is False:
         # File cannot be opened. ERR return
-        return
+        return False
 
     # Get File extention
     extention = str.split(filepath, ".")[1]
@@ -47,7 +47,9 @@ def import_file(conn, filepath, mid):
         __import_linesfile(conn, filepath, mid)
     else:
         print "Invalid import file. EXTENTION must be: '.cat' , '.sp', '.lines'"
+        return False
 
+    return True
 
 def pid_exists(conn, pid):
     """

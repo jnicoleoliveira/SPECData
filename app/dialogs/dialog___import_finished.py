@@ -44,6 +44,3 @@ class ImportFinished(QDialog):
         self.close()
         window = MainMenu()
         window.exec_()
-
-        #window.show()
-        #window.exec_()

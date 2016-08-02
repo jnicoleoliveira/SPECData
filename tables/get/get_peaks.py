@@ -68,7 +68,7 @@ def get_intensity(conn, pid):
 
 def get_pid_list(conn, mid):
     """
-
+    Returns PID List (ordered by descending intensity)
     :param conn:
     :param mid:
     :return:

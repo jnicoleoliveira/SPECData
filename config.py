@@ -6,6 +6,7 @@
 #                    Log Directory path)
 
 
+
 # Program directory
 PROGRAM_DIR = ""
 # Database directory
@@ -17,11 +18,16 @@ LOG_DIR = ""
 ####################### DO NOT EDIT BELOW ########################
 ##################################################################
 
-# GLOBAL CONFIG VARIABLES
+# Imports
+import sqlite3
+
+# GLOBAL CONFIG VARIABLES #
 global db_path
 global db_filepath
+global conn
 
 # SET VARIABLES TO DEFINED
 db_dir = DATABASE_DIR + "\data"
 db_filepath = db_dir + "\spectrum.db"
 prog_dir = PROGRAM_DIR
+conn = sqlite3.connect(db_filepath)

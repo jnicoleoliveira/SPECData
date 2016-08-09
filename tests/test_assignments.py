@@ -14,7 +14,7 @@ from tables.remove import remove_assignments
 conn = sqlite3.connect(db_filepath)
 cursor = conn.cursor()
 
-mid = 153 # EXP 168-1
+mid = 157 # EXP 168-1
 # 75
 
 # Remove all assignments

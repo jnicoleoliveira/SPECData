@@ -60,6 +60,12 @@ def get_frequency_intensity_list(conn, mid):
 
 
 def get_intensity(conn, pid):
+    """
+    Returns the intensity of a specified peak
+    :param conn:
+    :param pid:
+    :return:
+    """
     cursor = conn.execute("SELECT intensity FROM peaks WHERE pid=?",(pid,))
     line = cursor.fetchone()
     intensity = line[0]
@@ -69,8 +75,8 @@ def get_intensity(conn, pid):
 def get_pid_list(conn, mid):
     """
     Returns PID List (ordered by descending intensity)
-    :param conn:
-    :param mid:
+    :param conn: SQLite Database connection
+    :param mid: Molecule ID (mid) of associated peaks
     :return:
     """
     cursor = conn.execute("SELECT pid FROM peaks"\
@@ -88,8 +94,26 @@ def get_pid_list(conn, mid):
     return None
 
 
-def get_unassigned_pid_list(conn, mid):
+def get_peak_count(conn, mid):
+    """
+    Returns the count of peaks associated with this molecule
+    :param conn:
+    :param mid:
+    :return:
+    """
+    cursor = conn.execute("SELECT COUNT(pid) FROM PEAKS"\
+                          " WHERE mid=?", (mid,))
+    rows = cursor.fetchone()
+    return rows[0]
 
+
+def get_unassigned_pid_list(conn, mid):
+    """
+
+    :param conn: SQLite Database connection
+    :param mid: Molecule ID (mid) of associated peaks
+    :return:
+    """
     # Set of all peaks for molecule
     all = "(SELECT peaks.pid FROM molecules JOIN peaks"\
           " ON molecules.mid = peaks.mid"\

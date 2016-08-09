@@ -1,9 +1,10 @@
 import math as math
+import operator
 from config import conn
-from tables.get.get_peaks import get_pid_list
-from tables.get.get_peaks import get_frequency, get_intensity
+import tables.get.get_peaks as peaks
 
 class Experiment:
+
     def __init__(self, name, mid, match_threshold=0.2):
         """
         Experiment Object, represents an experiment, its peaks, molecule matches and its associated probabilities.
@@ -20,9 +21,9 @@ class Experiment:
         self.__get_peaks()           # Populate Peaks list
 
     def __get_peaks(self):
-        # Get PID List
+
         # get_pid_list function already returns order by descending intensity
-        pid_list = get_pid_list(conn,self.mid)
+        pid_list = peaks.get_pid_list(conn,self.mid)  # Get PID List of the molecule
 
         Rst = 1 # Ranking of Intensity Strength
 
@@ -52,6 +53,7 @@ class Experiment:
             # Add matches to associated Molecule Match
             for m in matches:
                 mid = m.mid
+
                 # Determine if this is match is of a new molecule
                 if molecule_matches.has_key(mid) is False:
                     molecule_matches[mid] = MoleculeMatch(m.name, mid, self.N)    # New Molecule, add new entry to matches
@@ -59,19 +61,50 @@ class Experiment:
                 molecule_matches[mid].add_match(m)  # Add match to molecule
 
         # Now, after getting necessary data...
-        # Determine probabilities of all the molecule matches
+        # Determine initial probabilities of all the molecule matches
         for key, value in molecule_matches.iteritems():
             value.M = len(molecule_matches)
             value.get_probability()
-            #for m in molecule_matches:
-        #    m.get_probability()
+        print "Candidate Matches: " + str(len(molecule_matches))
+
+        mm = molecule_matches.copy()
+        # Remove all false matches
+        for key, value in mm.iteritems():
+            if value.p is 0:
+                del molecule_matches[key]
+        print "Matches: " + str(len(molecule_matches))
+
+        # Reavaluate probabilities
+        for key, value in molecule_matches.iteritems():
+            value.M = len(molecule_matches)
+            value.get_probability()
+
 
     def print_matches(self):
+        """
+        Print Molecule Matches of experiment.
+        :return:
+        """
+        buff = 30       # Space Buffer
+        scale = 100     # Scale Factor (p * scale)
+        sorted = []     # Sorted tuple(name,p) list
+
+        print "NAME" + (' '*(buff - 4)) + "[P]    " + "[RATIO]"     # Print Header
+        print '-' * (buff+12)
+
+        # Get Tuples
         for key, value in self.molecule_matches.iteritems():
-            p = value.p *100
-            print " " + str(value.name) + "                                 " + str(p) + "%"
-        #for match in self.molecule_matches:
-        #    print match.name + "     " + str(match.p * 100) + "%"
+            sorted.append((key, value.p * scale))    # Append name and scaled probability values
+
+        sorted.sort(key=lambda tup: tup[1],reverse=True)    # Sorts tuples in place
+
+        for value in sorted:
+            name = str(self.molecule_matches[value[0]].name)
+            prob = str(round(value[1], 2))
+            ratio = str(round(self.molecule_matches[value[0]].ratio, 2))
+
+            space_length = buff - len(name)                           # Get length of space
+            print name + (' ' * space_length) + prob + "   " + ratio  # Print Line
 
     class Peak:
 
@@ -86,19 +119,37 @@ class Experiment:
             self.__get_frequency_and_intensity()    # Get Frequency and Intensity of the peak
 
         def __get_frequency_and_intensity(self):
-            self.frequency = get_frequency(conn, self.pid)
-            self.intensity = get_intensity(conn, self.pid)
+            self.frequency = peaks.get_frequency(conn, self.pid)
+            self.intensity = peaks.get_intensity(conn, self.pid)
 
         def get_matches(self):
             """
 
             :return: List of Matches Match()
             """
+
             if len(self.matches)> 0:
                 del self.matches
                 self.matches = []
 
             threshold = 0.2
+            rows = self.get_candidates(threshold)   # Get candidates. Tuple: (name, mid, pid, difference_freq)
+
+            self.n = len(rows)                      # Set number of matches
+            n_triangle = (self.n * (self.n+1))/2    # Triangular number of n
+            i = 0                                   # ith element
+
+            for row in rows:
+                #p = float(self.n-i)/n_triangle      # Determine probability of the match, p
+                p = (threshold-float(row[3]))/threshold     # Determine probability by range (difference: =0->100% to =threshold->0%)
+                #print str(row[3]) + " ---- " + str(p*100) + "%"
+                i +=1
+                match = Match(row[0], row[1], row[2], float(p), self.pid, self.Rst)     # Create Match object
+                self.matches.append(match)                                              # Add Match to matches
+
+            return self.matches
+
+        def get_candidates(self, threshold):
             frequency = self.frequency
 
             cursor = conn.cursor()
@@ -106,7 +157,7 @@ class Experiment:
             # SQLite Script, that returns name, mid, and pid of matched known molecules in database
             #   that are within the threshold of the specified frequency and are
             #   ordered by the closeness of the frequencies to the specified frequency
-            script = "SELECT molecules.name, molecules.mid, peaks.pid" \
+            script = "SELECT molecules.name, molecules.mid, peaks.pid, ABS(peaks.frequency - {freq})" \
                      " FROM peaks JOIN molecules" \
                      " WHERE molecules.mid=peaks.mid AND molecules.category='known' AND ABS(peaks.frequency - {freq})<={t}" \
                      " ORDER BY ABS(peaks.frequency - {freq} ) ASC".format(freq=frequency, t=threshold)
@@ -118,21 +169,7 @@ class Experiment:
                 raise
 
             rows = cursor.fetchall()
-
-            self.n = len(rows)                      # Set number of matches
-            n_sum = (self.n * (self.n+1))/2
-            #n_factorial = math.factorial(self.n)    # Get n!
-            i = 0                                   # ith element
-
-            for row in rows:
-                #p = float(self.n-i)/float(n_factorial)          # Determine probability of the match, p
-                p = float(self.n-i)/n_sum
-                i +=1
-                #print p
-                match = Match(row[0], row[1], row[2], float(p), self.pid, self.Rst)     # Create Match object
-                self.matches.append(match)                                       # Add Match to matches
-
-            return self.matches
+            return rows
 
 
 class MoleculeMatch:
@@ -147,6 +184,8 @@ class MoleculeMatch:
         self.N = N
         self.name = name
         self.mid = mid
+
+        self.ratio = 0
         self.m = 0          # Total number of matches
         self.matches = []   # List of Match matches
         self.p = 0          # Total Probability of the molecule
@@ -166,30 +205,43 @@ class MoleculeMatch:
         :return:
         """
         self.p = 0
-        self.__determine_probability()
+        if self.determine_valid_ratio() is True:
+            self.__determine_probability()  # Determine probability
+
         return self.p
+
+    def determine_valid_ratio(self):
+
+        # Determine matches to all peaks ratio
+        total_peaks = peaks.get_peak_count(conn, self.mid)
+        ratio = float(self.m) / total_peaks
+        #print ratio
+        if float(ratio) < 0.2:
+            #print ratio
+            return False
+
+        self.ratio = ratio
+        return True
 
     def __determine_probability(self):
         """
         SUM( prob of match * strength of the experimental line) * 1/N!
         :return:
         """
-        # Determine summation of matched probabilities
+        self.p = 1
         # Probability == SUM( prob of match * strength of the experimental line)
-        n_sum = (self.N*(self.N+1))/2
+        N_triangle = (self.N*(self.N+1))/2      # Trianglar sum of N
         m_sum = (self.M*(self.M+1))/2
+        peak_p = 0
+
+        # Determine summation of matched peaks
         for match in self.matches:
-            #self.p += float(match.p)
-            self.p += (float(match.p)) * (self.N - match.Rst) #* self.m
+            peak_p += float(match.p) * (self.N - match.Rst - 1)
+
+        self.p *= peak_p
+        self.p /= N_triangle    # Divide by n-triangle
         #self.p /= self.m
-
-        self.p /= n_sum
         #self.p /= m_sum
-        #print self.p
-        # Multiply this by 1/N+N-1+...
-        #self.p /= n_sum
-        #self.p *= 1/(math.factorial(self.N))
-
 
 class Match:
 

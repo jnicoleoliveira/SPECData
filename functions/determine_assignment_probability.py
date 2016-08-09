@@ -22,6 +22,8 @@ print "Analysing Experiment...  "
 experiment.get_assigned_molecules()
 
 # Print Results
-print "Analysis Complete. "
-print "\n------RESULTS------"
+print "Analysis Complete. \n"
+print "------------------------------------------\n" \
+      "------RESULTS-----------------------------\n" \
+      "------------------------------------------\n"
 experiment.print_matches()

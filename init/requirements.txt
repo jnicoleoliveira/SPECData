@@ -1,0 +1,5 @@
+pysqlite >= 2.8.2
+PyQt4 >= 4.0.0
+libfreetype6-dev
+numpy >= 1.6.1
+matplotlib >= 1.3.1

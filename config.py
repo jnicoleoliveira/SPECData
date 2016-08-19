@@ -8,9 +8,9 @@
 
 
 # Program directory
-PROGRAM_DIR = ""
+PROGRAM_DIR = "/home/joli/PycharmProjects/SPECData"
 # Database directory
-DATABASE_DIR = ""
+DATABASE_DIR = "/home/joli/PycharmProjects/SPECData\data"
 # Log Directory
 LOG_DIR = ""
 

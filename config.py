@@ -10,7 +10,7 @@
 # Program directory
 PROGRAM_DIR = ""
 # Database directory
-DATABASE_DIR = "C:\Users\Jasmine\PycharmProjects\DatabaseScripts"
+DATABASE_DIR = ""
 # Log Directory
 LOG_DIR = ""
 

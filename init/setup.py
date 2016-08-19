@@ -1,5 +1,3 @@
-import os
-
 try:
     from setuptools import setup
 except ImportError:
@@ -8,8 +6,6 @@ except ImportError:
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
-
-
 
 setup(name='SPECdata',
       version='1.0',

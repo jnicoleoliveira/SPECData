@@ -23,7 +23,7 @@ print "[Created Database File: " + db_filepath + " ]"
 cursor = conn.cursor()
 
 # Execute SQL Script 'build_tables'
-script = open('./build_tables', 'r').read()
+script = open('./bin/build_tables', 'r').read()
 sqlite3.complete_statement(script)
 
 try:

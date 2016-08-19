@@ -1,7 +1,6 @@
-import math as math
-import operator
 from config import conn
 import tables.get.get_peaks as peaks
+
 
 class Experiment:
 
@@ -35,6 +34,13 @@ class Experiment:
 
         self.N = Rst   # Store N, the number of Peaks
 
+    def get_assigned_mids(self):
+        assigned_mids = []
+        for key, value in self.molecule_matches.iteritems():
+            assigned_mids.append(value.mid)
+
+        return assigned_mids
+
     def get_assigned_molecules(self):
         """
         Gets Matches/Assignments for peaks
@@ -65,14 +71,14 @@ class Experiment:
         for key, value in molecule_matches.iteritems():
             value.M = len(molecule_matches)
             value.get_probability()
-        print "Candidate Matches: " + str(len(molecule_matches))
+        print "\tCandidate Matches: " + str(len(molecule_matches))
 
         mm = molecule_matches.copy()
         # Remove all false matches
         for key, value in mm.iteritems():
             if value.p is 0:
                 del molecule_matches[key]
-        print "Matches: " + str(len(molecule_matches))
+        print "\tLikely Matches: " + str(len(molecule_matches))
 
         # Reavaluate probabilities
         for key, value in molecule_matches.iteritems():

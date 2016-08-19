@@ -23,7 +23,8 @@ def graph_experiment_and_assignment(conn, exp_mid, assigned_mid, subplot=True, s
 
     # Get assigned and experiment frequency(x), and intensity(y) lists
     assigned_frequency_list, assigned_intensity_list = get_peaks.get_frequency_intensity_list(conn, assigned_mid)
-    experiment_frequency_list, experiment_intensity_list = __get_exp_list(exp_mid)
+    #experiment_frequency_list, experiment_intensity_list = __get_exp_list(exp_mid)
+    experiment_frequency_list, experiment_intensity_list = get_peaks.get_frequency_intensity_list(conn, exp_mid)
 
     if(subplot is True):
         # Begin Plotting

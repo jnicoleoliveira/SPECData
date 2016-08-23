@@ -2,6 +2,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from events import clickable
+from events import display_error_message
+
 import error as error
 from frames.frame___import_single_file import Ui_importsingle_frame # import frame
 from dialog___check_single_import import CheckSingleImport # Next Dialog
@@ -89,26 +91,32 @@ class ImportSingleFile(QDialog):
         else:
             self.category = None
 
-    def requirements_fulfilled(self):
+    def has_error(self):
 
-        error_lbl = self.ui.error_lbl
+        error_msg = ""
+        has_error = True
 
         # Determine if no empty fields
         if self.file_path is None or self.file_path is "":
-            error.display_error(error_lbl, "ERROR: field: [file path] incomplete.")
-            return False
-        elif self.name is None or self.name is "":
-            error.display_error(error_lbl, "ERROR: field: [name] incomplete.")
-            return False
-        elif self.category is None or self.category is "":
-            error.display_error(error_lbl, "ERROR: field: [category] incomplete.")
-            return False
+            error_msg += "ERROR: File Path incomplete."
+        if self.name is None or self.name is "":
+            error_msg += "\nERROR: Name is incomplete."
+        if self.category is None or self.category is "":
+            error_msg += "\nERROR: Category is incomplete."
 
         # Determine if valid file
-        if error.is_valid_file(error_lbl, self.file_path) is False:
-            return False
+        if error.is_valid_file(self.file_path) is False:
+            error_msg += error.get_file_error_message(self.file_path)
 
-        return True
+        # If Error Message is empty, then error is false.
+        if error_msg is "":
+            has_error = False
+
+        # If error exists, display error message window
+        if has_error is True:
+            display_error_message("Invalid input.", "Be sure to check that all fields are complete.", error_msg)
+
+        return has_error
 
     def next_frame(self):
         """
@@ -121,8 +129,8 @@ class ImportSingleFile(QDialog):
         self.determine_checked_category()   # get category selection
         self.determine_name()               # get name field data
 
-        # If requirements are not filled, return
-        if self.requirements_fulfilled() is False:
+        # If there is an error, return
+        if self.has_error() is True:
             return
 
         # All requirements filled

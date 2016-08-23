@@ -35,7 +35,7 @@ while True:
         for i in os.listdir(path):
             if i.endswith('.cat') or i.endswith('.lines'):
                 name = (i.split("."))[0]
-                filepath = path + "\\" + i
+                filepath = os.path.join(path, i)
                 # New Molecule entry
                 #mid = mol_entry.get_mid(conn,name, category)
                 #p_rem.remove_all(conn,mid)

@@ -204,7 +204,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="logo_lbl">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -223,7 +223,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>../resources/specdata_logo.png</pixmap>
+    <pixmap>../../../resources/specdata_logo.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>

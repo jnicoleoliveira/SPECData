@@ -1,7 +1,8 @@
 # Author: Jasmine Oliveira
 # Date: 8/2/2016
 # Test Assignment Probability
-
+import matplotlib
+matplotlib.use('TkAgg')
 from experiment import *
 import matplotlib.pyplot as plt
 import sqlite3
@@ -12,10 +13,12 @@ from tables.remove import remove_assignments
 from tables.entry import entry_assignments
 from tables.get import get_peaks
 from tables.get import get_assignments
+
+
 # Get Experiment Data
 print "Enter Experiment MID: "
-experiment_mid = 157
-experiment_name = get_molecules.getName(conn,experiment_mid)
+experiment_mid = 142
+experiment_name = get_molecules.getName(conn, experiment_mid)
 
 
 # Create New Experiment Obj for analysis

@@ -34,6 +34,13 @@ class Experiment:
 
         self.N = Rst   # Store N, the number of Peaks
 
+    def get_assigned_names(self):
+        assigned_names = []
+        for key, value in self.molecule_matches.iteritems():
+            assigned_names.append(value.name)
+
+        return assigned_names
+
     def get_assigned_mids(self):
         assigned_mids = []
         for key, value in self.molecule_matches.iteritems():
@@ -222,7 +229,7 @@ class MoleculeMatch:
         total_peaks = peaks.get_peak_count(conn, self.mid)
         ratio = float(self.m) / total_peaks
         #print ratio
-        if float(ratio) < 0.2:
+        if float(ratio) < 0.05:
             #print ratio
             return False
 

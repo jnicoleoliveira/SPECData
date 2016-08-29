@@ -14,6 +14,7 @@ import error as error
 
 
 class NewExperimentForm(QDialog):
+
     def __init__(self):
         super(NewExperimentForm, self).__init__()
         self.ui = Ui_Dialog()
@@ -28,6 +29,7 @@ class NewExperimentForm(QDialog):
         self.composition = None
         self.file_type = None
         self.databases = None
+
 
         # Set Up
         self.connect_buttons()  # Connect buttons to its respective function
@@ -52,9 +54,12 @@ class NewExperimentForm(QDialog):
         self.ui.select_file_txt.setPlainText(self.file_path)
 
     def next_frame(self):
+        from dialog___experiment_view import ExperimentView
         # Go to next fame
-        # STUB
-        return True
+        self.close()
+        window = ExperimentView('test', 143)
+        window.show()
+        window.exec_()
 
     def back_frame(self):
         from dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)
@@ -70,7 +75,6 @@ class NewExperimentForm(QDialog):
         if has_errors is False:
             # No errors, may proceed to the next frame
             self.next_frame()
-            return
 
     def get_data(self):
         """
@@ -110,7 +114,7 @@ class NewExperimentForm(QDialog):
         has_error = True
 
         # Determine Error Message
-        if self.file_path is None or self.file_path:
+        if self.file_path is None or not self.file_path:
             error_msg += "ERROR: File Path incomplete."
         if self.author is None or not self.author:
             error_msg += "\nERROR: Author is incomplete."

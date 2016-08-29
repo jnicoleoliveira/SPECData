@@ -26,9 +26,9 @@
   <widget class="QWidget" name="verticalLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>290</x>
      <y>60</y>
-     <width>451</width>
+     <width>411</width>
      <height>581</height>
     </rect>
    </property>
@@ -504,11 +504,6 @@ background-color: rgb(48, 48, 48);</string>
     </item>
    </layout>
   </widget>
-  <zorder>verticalLayoutWidget_2</zorder>
-  <zorder>new_experiment_title_lbl</zorder>
-  <zorder>exp_author_lbl</zorder>
-  <zorder>new_experiment_title_lbl</zorder>
-  <zorder>gridLayoutWidget</zorder>
  </widget>
  <resources/>
  <connections/>

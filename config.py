@@ -8,9 +8,9 @@
 
 
 # Program directory
-PROGRAM_DIR = ""
+PROGRAM_DIR = "/home/joli/PycharmProjects/SPECData"
 # Database directory
-DATABASE_DIR = ""
+DATABASE_DIR = "/home/joli/PycharmProjects/SPECData"
 # Log Directory
 LOG_DIR = ""
 
@@ -32,3 +32,4 @@ db_dir = os.path.join(DATABASE_DIR , "data")
 db_filepath = os.path.join(db_dir, "spectrum.db")
 prog_dir = PROGRAM_DIR
 conn = sqlite3.connect(db_filepath)
+resources = os.path.join(PROGRAM_DIR, "resources")

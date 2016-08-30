@@ -62,7 +62,7 @@ class ExperimentView(QDialog):
         self.add_selection_assignments()        # Add assignments
         time.sleep(2)
         self.loading_screen.next_value(80)      # Progress ++
-        self.graph()
+        #self.graph()
         time.sleep(2)
 
         self.loading_screen.end()

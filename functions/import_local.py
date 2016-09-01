@@ -21,14 +21,14 @@ cursor = conn.cursor()
 
 while True:
     print "Choose an option: \n (a) Import all files in path\n (b) Import individual file\n (c) Remove a molecule entry \n (d) Remove all peaks \n (e) View a row"
-    input = raw_input()
+    input = input()
 
 
     if input == 'a':
         print "Enter category: "
-        category = raw_input()
+        category = input()
         print "Enter file directory : "
-        path = raw_input()
+        path = input()
         imported = 0
 
         # Insert known values
@@ -49,11 +49,11 @@ while True:
                     print "Error importing: " + name
     elif input == "b":
         print "Enter molecule name: "
-        name = raw_input()
+        name = input()
         print "Enter category: "
-        category = raw_input()
+        category = input()
         print "Enter filepath: "
-        filepath = raw_input()
+        filepath = input()
 
         # New molecule entry
         mid = mol_entry.new_molecule_entry(conn, name, category)
@@ -65,7 +65,7 @@ while True:
             print "Error importing: " + name
     elif input == "c":
         print "Enter mid: "
-        mid = raw_input()
+        mid = input()
         name = mol_get.getName(conn, mid)
         mol_rem.remove_molecule(conn,mid)
         print "[ Removed molecule: " + name + " ]"
@@ -78,9 +78,9 @@ while True:
 
     elif input == "e":
         print "Enter tablename: "
-        table = raw_input()
+        table = input()
         print "Enter appropriate id: "
-        id = raw_input()
+        id = input()
         print view_query.row_view(table,id)
     else:
         print "Error. Incorrect input."

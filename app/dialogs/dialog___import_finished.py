@@ -1,9 +1,9 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from events import clickable
-
+from app.events import clickable
 from frames.frame___import_finished import Ui_importfinished_frame  # Import Frame
+
 
 class ImportFinished(QDialog):
     def __init__(self, log_message):

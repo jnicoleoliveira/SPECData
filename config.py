@@ -8,9 +8,9 @@
 
 
 # Program directory
-PROGRAM_DIR = "C:\Users\Jasmine\PycharmProjects\DatabaseScripts"
+PROGRAM_DIR = "/home/joli/PycharmProjects/SPECData"
 # Database directory
-DATABASE_DIR = "C:\Users\Jasmine\PycharmProjects\DatabaseScripts"
+DATABASE_DIR = "/home/joli/PycharmProjects/SPECData"
 # Log Directory
 LOG_DIR = ""
 

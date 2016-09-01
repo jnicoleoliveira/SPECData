@@ -4,10 +4,9 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from frames.frame___import_menu import Ui_importmenu_frame  # import frame
-from events import clickable
-
+from app.events import clickable
 from dialog___import_single_file import ImportSingleFile     # Next Dialog Window
+from frames.frame___import_menu import Ui_importmenu_frame  # import frame
 
 
 class ImportMenu(QDialog):

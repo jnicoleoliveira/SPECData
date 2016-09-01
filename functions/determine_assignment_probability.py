@@ -3,7 +3,7 @@
 # Test Assignment Probability
 import matplotlib
 matplotlib.use('TkAgg')
-from experiment import *
+from .experiment import *
 import matplotlib.pyplot as plt
 import sqlite3
 from config import *

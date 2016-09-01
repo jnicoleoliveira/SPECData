@@ -79,16 +79,16 @@ class Graph():
                                      sharex=self.subplot, \
                                      title='Selected Assignments')
         color_index = 0
-        for key, value in matches.iteritems():
+        for match in matches:
             frequencies = []
             intensities = []
-            for match in value.matches:
-                frequencies.append(get_peaks.get_frequency(conn, match.pid))
-                intensities.append(get_peaks.get_intensity(conn, match.pid))
+            for p in match.matches:
+                frequencies.append(get_peaks.get_frequency(conn, p.pid))
+                intensities.append(get_peaks.get_intensity(conn, p.pid))
 
             subplot.bar(frequencies, intensities, width=0.02, edgecolor=colors[color_index])
-            print value.name + "\t" + colors[color_index]  # Print KEY
+            print match.name + "\t" + colors[color_index]  # Print KEY
             color_index += 1
 
-
-
+    def clear(self):
+        self.plot_widget.getFigure().clear()

@@ -3,20 +3,22 @@
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4.uic import loadUi
+import matplotlib.backends.backend_qt4agg
+
+#import matplotlib
+#matplotlib.use("Agg")
+
+from .frames.frame___experiment import Ui_Dialog
+from .widget___molecule_selection import MoleculeSelectionWidget
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
-import pyqtgraph as pg
-from frames.frame___experiment import Ui_Dialog
-#from widget___molecule_selection import MoleculeSelectionWidget
-from splash_screens import LoadingProgressScreen
+from .splash_screens import LoadingProgressScreen
+
 from ..experiment_analysis import Graph
 from functions import experiment
+import pyqtgraph as pg
 
 import time
 import os
-
-#Ui_Experiment = \
-#    loadUi(os.path.join(os.path.dirname(__file__), 'frames', 'experiment.ui'))
 
 
 class ExperimentView(QDialog):
@@ -27,10 +29,13 @@ class ExperimentView(QDialog):
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Experiment View")
-        self.plot_widget = None
-        self.matplot_widget = None
-        self.selection_widget = None
 
+        # Widgets
+        self.plot_widget = None
+        self.matplot_widget = MatplotlibWidget()
+        self.selection_widget = MoleculeSelectionWidget()
+        self.redisplay_btn = QPushButton()
+        # Data
         self.experiment = None
         self.loading_screen = None
 
@@ -46,47 +51,33 @@ class ExperimentView(QDialog):
         self.loading_screen.set_caption('Creating experiment...')
         self.experiment = self.create_experiment(experiment_name, mid)  # Create experiment obj
         time.sleep(1)
-        self.loading_screen.next_value(20)      # Progress ++
+        self.loading_screen.next_value(20)
 
         # Analyze Experiment
         self.loading_screen.set_caption('Analyzing...')
         self.do_analysis()                      # Run Analysis
-        self.loading_screen.next_value(40)      # Progress ++
-        time.sleep(3)
+        self.loading_screen.next_value(40)
+        time.sleep(2)
 
         # Setup Layout
         self.loading_screen.set_caption('Setting up...')
         self.setup_layout()                     # Setup Layout
-        self.loading_screen.next_value(60)      # Progress ++
-        #self.add_selection_assignments()        # Add assignments
+        self.loading_screen.next_value(60)
+
+        # Add Assignments to Selection Widget
+        self.add_selection_assignments()        # Add assignments
         time.sleep(2)
-        self.loading_screen.next_value(80)      # Progress ++
-        self.graph()
+        self.loading_screen.next_value(80)
+
+        # Graph Main Graph
+        self.graph()                            # Graph
+        self.loading_screen.next_value(90)
         time.sleep(2)
 
         self.loading_screen.end()
 
     def create_experiment(self, experiment_name, mid):
         return experiment.Experiment(experiment_name, mid)
-
-    def start_splash_screen(self):
-        from config import resources
-        pix_map = QPixmap(os.path.join(resources, 'specdata_logo.png'))
-        self.splash_screen = QSplashScreen(pix_map)
-
-        progressBar = QProgressBar(self.splash_screen)
-        progressBar.setGeometry(self.splash_screen.width()/10, 7*self.splash_screen.height()/10, 8*self.splash_screen.width()/10, self.splash_screen.height()/10)
-        self.splash_screen.show()
-
-        #for i in range (0,100):
-        #    progressBar.setValue(i)
-
-            #Analysize
-        #self.splash_screen.setPixmap(pix_map, Qt.WindowStaysOnTopHint)
-        #self.splash_screen.show()
-
-    def stop_splash_screen(self):
-        self.splash_screen.close()
 
     def do_analysis(self):
         self.experiment.get_assigned_molecules()
@@ -99,38 +90,45 @@ class ExperimentView(QDialog):
 
         # Widgets
         self.matplot_widget = MatplotlibWidget()
+        self.selection_widget = MoleculeSelectionWidget()
+        self.redisplay_btn = QPushButton()
 
-        #self.plot_widget = pg.PlotWidget()
+        self.redisplay_btn.setText("Redisplay")
+        self.redisplay_btn.clicked.connect(self.redisplay_graph)
+
         #self.plot_widget = pg.PlotWidget(title="Experiment Peaks")
-        #self.selection_widget = MoleculeSelectionWidget()
         #spacer1_widget = QSpacerItem()
 
         ## Add Widgets to layout
-        layout.addWidget(QLabel("SELECTION WIDGET HERE"), 0, 0)
-        #layout.addWidget(self.selection_widget, 0,0)
+        layout.addWidget(self.selection_widget, 0,0)
+        layout.addWidget(self.matplot_widget, 0, 1)
+        layout.addWidget(self.redisplay_btn, 1,0)
+
         #layout.addWidget(spacer1_widget, 0, 1)
         #layout.addWidget(self.plot_widget, 0,1)
-        layout.addWidget(self.matplot_widget, 0, 1)
 
     def add_selection_assignments(self):
         # Set
-        self.selection_widget.add_all(self.experiment.get_assigned_names(), self.experiment.get_assigned_mids())
+        #self.selection_widget.add_all(self.experiment.get_assigned_names(), self.experiment.get_assigned_mids())
+        self.selection_widget.add_all(self.experiment.molecule_matches.values())
 
     def graph(self):
         experiment_graph = Graph(self.matplot_widget, self.experiment)
         experiment_graph.add_subplot_experiment(211)
-        #experiment_graph.add_subplot_all_assignments(212)
-        experiment_graph.add_subplot_selected_assignments(212,self.get_matches(), ['blue','red'])
+        matches, colors = self.selection_widget.get_selections()
+        experiment_graph.add_subplot_selected_assignments(212, matches, colors)
         experiment_graph.draw()
-
-    def get_matches(self):
-        #Stub
-        print len(self.experiment.molecule_matches)
-        return self.experiment.molecule_matches
 
     def connect_buttons(self):
         redisplay_btn = self.ui.redisplay_btn
         redisplay_btn.clicked.connect(self.redisplay_graph)
 
     def redisplay_graph(self):
+        matches, colors = self.selection_widget.get_selections()
+        self.matplot_widget = MatplotlibWidget()
+        experiment_graph = Graph(self.matplot_widget, self.experiment)
+        #experiment_graph.clear()
+        experiment_graph.add_subplot_experiment(211)
+        experiment_graph.add_subplot_selected_assignments(212, matches, colors)
+
         return True # do nothing

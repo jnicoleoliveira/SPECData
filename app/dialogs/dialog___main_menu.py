@@ -4,12 +4,10 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from frames.frame___main_menu import Ui_mainmenu    # This window
-
+from app.events import clickable
 from dialog___import_menu import ImportMenu         # import window
 from dialog___new_experiment_form import NewExperimentForm    # New Experiment Window
-
-from events import clickable
+from frames.frame___main_menu import Ui_mainmenu    # This window
 
 
 class MainMenu(QDialog):
@@ -53,6 +51,6 @@ class MainMenu(QDialog):
         from dialog___experiment_view import ExperimentView
         # Go to next fame
         self.close()
-        window = ExperimentView('exp892',156)
+        window = ExperimentView('exp1435', 142)
         window.show()
         window.exec_()

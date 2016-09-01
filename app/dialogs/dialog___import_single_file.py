@@ -1,12 +1,12 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from events import clickable
-from events import display_error_message
-
-import error as error
-from frames.frame___import_single_file import Ui_importsingle_frame # import frame
+from app import error as error
+from app.events import clickable
+from app.events import display_error_message
 from dialog___check_single_import import CheckSingleImport # Next Dialog
+from frames.frame___import_single_file import Ui_importsingle_frame # import frame
+
 
 class ImportSingleFile(QDialog):
     """

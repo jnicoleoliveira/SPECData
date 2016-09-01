@@ -1,16 +1,14 @@
 # Author: Jasmine Oliveira
 # Date: 08/22/2016
 
+import os
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+from app import error as error
+from app.events import display_error_message
 from frames.frame___new_experiment_form import Ui_Dialog    # Import frame
-
-# Dialog Functions
-from events import display_error_message
-
-import os
-import error as error
 
 
 class NewExperimentForm(QDialog):
@@ -57,7 +55,7 @@ class NewExperimentForm(QDialog):
         from dialog___experiment_view import ExperimentView
         # Go to next fame
         self.close()
-        window = ExperimentView('test', 143)
+        window = ExperimentView('exp1435', 142)
         window.show()
         window.exec_()
 

@@ -34,6 +34,9 @@ class Experiment:
 
         self.N = Rst   # Store N, the number of Peaks
 
+    def get_experiment_frequencies_intensities_list(self):
+        return peaks.get_frequency_intensity_list(conn,self.mid)
+
     def get_assigned_names(self):
         assigned_names = []
         for key, value in self.molecule_matches.iteritems():
@@ -91,7 +94,6 @@ class Experiment:
         for key, value in molecule_matches.iteritems():
             value.M = len(molecule_matches)
             value.get_probability()
-
 
     def print_matches(self):
         """

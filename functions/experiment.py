@@ -16,23 +16,30 @@ class Experiment:
         self.N = 0                   # Total Number of peak lines
         self.experiment_peaks = []   # List of peaks    (obj: Peak)
         self.molecule_matches = {}   # Dict of Molecule Matches (obj: MoleculeMatch)
+        self.possible_matches = {}
+        self.exp_average_intensity = None
+        self.__setup()           # Populate Peaks list
 
-        self.__get_peaks()           # Populate Peaks list
-
-    def __get_peaks(self):
+    def __setup(self):
 
         # get_pid_list function already returns order by descending intensity
         pid_list = peaks.get_pid_list(conn,self.mid)  # Get PID List of the molecule
 
         Rst = 1 # Ranking of Intensity Strength
 
+        # Get Average Intensity
+        self.exp_average_intensity = peaks.get_average_intensity(conn, self.mid)
+
         # Create peak objects with PID, and Ranking of Intensity Strength (Rst)
         for pid in pid_list:
-            peak = self.Peak(pid, Rst)
+            peak = self.Peak(pid, Rst, self.exp_average_intensity)
             self.experiment_peaks.append(peak)
             Rst += 1
 
         self.N = Rst   # Store N, the number of Peaks
+
+
+        # Remove Peaks where intensity is less than the average
 
     def get_experiment_frequencies_intensities_list(self):
         return peaks.get_frequency_intensity_list(conn,self.mid)
@@ -123,19 +130,20 @@ class Experiment:
 
     class Peak:
 
-        def __init__(self, pid, Rst):
+        def __init__(self, pid, Rst, intensity_to_avg):
             self.pid = pid
             self.Rst = Rst      # Ranking of strength compared to all peaks
             self.n = 0          # Total number of assignments
             self.matches = []   # Matches
             self.frequency = 0
             self.intensity = 0
-
+            self.intensity_to_avg = intensity_to_avg
             self.__get_frequency_and_intensity()    # Get Frequency and Intensity of the peak
 
         def __get_frequency_and_intensity(self):
             self.frequency = peaks.get_frequency(conn, self.pid)
             self.intensity = peaks.get_intensity(conn, self.pid)
+            self.intensity_to_avg = self.intensity/self.intensity_to_avg
 
         def get_matches(self):
             """
@@ -157,7 +165,7 @@ class Experiment:
             for row in rows:
                 #p = float(self.n-i)/n_triangle      # Determine probability of the match, p
                 p = (threshold-float(row[3]))/threshold     # Determine probability by range (difference: =0->100% to =threshold->0%)
-                #print str(row[3]) + " ---- " + str(p*100) + "%"
+                p *= (self.intensity/self.intensity_to_avg)
                 i +=1
                 match = Match(row[0], row[1], row[2], float(p), self.pid, self.Rst)     # Create Match object
                 self.matches.append(match)                                              # Add Match to matches
@@ -231,7 +239,7 @@ class MoleculeMatch:
         total_peaks = peaks.get_peak_count(conn, self.mid)
         ratio = float(self.m) / total_peaks
         #print ratio
-        if float(ratio) < 0.05:
+        if float(ratio) < 0.2:
             #print ratio
             return False
 

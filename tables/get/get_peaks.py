@@ -26,6 +26,18 @@ def get_max_intensity(conn, mid):
     intensity = line[0]
     return intensity
 
+def get_average_intensity(conn, mid):
+    """
+    Gets the average intensity of a molecule
+    :param conn: Connection to SQLite Database
+    :param mid: Molecule entry ID
+    :return: Average intensity of a molecule
+    """
+    cursor = conn.execute("SELECT AVG(intensity) FROM peaks WHERE mid=?",(mid,))
+    line = cursor.fetchone()
+    intensity = line[0]
+    return intensity
+
 
 def get_frequency(conn, pid):
     """

@@ -13,12 +13,14 @@ from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 from tables.get import get_peaks
 from config import conn
 
+
 class Graph():
 
     def __init__(self, plot_widget, experiment):
         self.plot_widget = plot_widget
         self.experiment = experiment
         self.subplot_1 = None
+        self.subplot_2 = None
         self.x = []
         self.y = []
 
@@ -32,11 +34,13 @@ class Graph():
         frequencies, intensities = self.experiment.get_experiment_frequencies_intensities_list()
 
         figure = self.plot_widget.getFigure()
+        figure.set_facecolor("#626262")
+
         self.subplot_1 = figure.add_subplot(pos, \
                                      axisbg='white', \
                                      xlabel="Frequency", \
                                      ylabel="Intensity", \
-                                     title = 'Experiment Peaks')
+                                     title = 'Experiment: ' + self.experiment.name +' Peaks')
 
         self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor='black')
 
@@ -66,18 +70,21 @@ class Graph():
             print value.name + "\t" + colors[color_index]  # Print KEY
             color_index += 1
 
-    def add_subplot_selected_assignments(self, pos, matches, colors):
+    def add_subplot_selected_assignments(self, pos, matches, colors, sharey=None):
 
         if len(matches) != len(colors):
             return
 
         figure = self.plot_widget.getFigure()
-        subplot = figure.add_subplot(pos, \
-                                     axisbg='white', \
-                                     xlabel="Frequency", \
-                                     ylabel="Intensity", \
-                                     sharex=self.subplot_1, \
-                                     title='Selected Assignments')
+        figure.set_facecolor("#626262")
+
+        subplot_2 = figure.add_subplot(pos, \
+                                    axisbg='white', \
+                                    xlabel="Frequency", \
+                                    ylabel="Intensity", \
+                                    sharex=self.subplot_1,\
+                                    sharey=sharey, \
+                                    title='Selected Assignments')
         color_index = 0
         for match in matches:
             frequencies = []
@@ -86,9 +93,26 @@ class Graph():
                 frequencies.append(get_peaks.get_frequency(conn, p.pid))
                 intensities.append(get_peaks.get_intensity(conn, p.pid))
 
-            subplot.bar(frequencies, intensities, width=0.02, edgecolor=colors[color_index])
+            subplot_2.bar(frequencies, intensities, width=0.02, edgecolor=colors[color_index])
             print match.name + "\t" + colors[color_index]  # Print KEY
             color_index += 1
+
+    def add_subplot_full_spectrum(self, pos, mid, color, sharey=None):
+        import tables.get.get_peaks
+        frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, mid)
+
+        figure = self.plot_widget.getFigure()
+        figure.set_facecolor("#626262")
+
+        subplot = figure.add_subplot(pos, \
+                                     axisbg='white', \
+                                     xlabel="Frequency", \
+                                     ylabel="Intensity", \
+                                     sharex=self.subplot_1, \
+                                     sharey=sharey,  \
+                                     title='Full Spectrum')
+
+        subplot.bar(frequencies, intensities, width=0.02, edgecolor=color)
 
     def clear(self):
         self.subplot_1.clear()

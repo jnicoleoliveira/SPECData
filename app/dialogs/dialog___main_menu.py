@@ -51,6 +51,7 @@ class MainMenu(QDialog):
         from dialog___experiment_view import ExperimentView
         # Go to next fame
         self.close()
-        window = ExperimentView('exp1435', 142)
+        #window = ExperimentView('exp1435', 142)
+        window = ExperimentView('168-175-pzf1', 143)
         window.show()
         window.exec_()

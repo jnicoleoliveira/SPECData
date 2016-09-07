@@ -5,22 +5,30 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from frames.frame___molecule_selection_widget import Ui_ScrollArea
 
+from dialog___assignment_window import AssignmentWindow
+from config import resources
+import os
+
 
 class MoleculeSelectionWidget(QWidget):
-    def __init__(self):
+
+    def __init__(self, experiment):
         super(MoleculeSelectionWidget, self).__init__()
         self.ui = Ui_ScrollArea()
         self.ui.setupUi(self)
         self.setLayout(self.ui.gridLayout)
         self.setWindowTitle('Matches')
 
+        self.experiment = experiment
         self.elements = {}
         self.size = 0
         self.selected = []
 
         self.show()
+
+        # Initialize Color Wheel
         self.colorWheel = GraphColorWheel()
-        self.colorWheel.import_color_wheel('/home/joli/PycharmProjects/SPECData/app/dialogs/graphing_colors')
+        self.colorWheel.import_color_wheel(os.path.join(resources, 'graphing_colors'))
 
     def add_row(self, match):
 
@@ -28,28 +36,44 @@ class MoleculeSelectionWidget(QWidget):
         color_lbl = QLabel()
         checkbox = QCheckBox()
         more_btn = QToolButton()
+        probability_lcd = QLCDNumber()
 
+        # Color Label Settings
         color = self.colorWheel.next_color()
-        color_lbl.setText('     ')
-        color_lbl.setFrameShadow(QFrame.Sunken)
+        color_lbl.setText('             ')
+        color_lbl.setFrameShape(QFrame.Panel)
+        color_lbl.setFrameShadow(QFrame.Raised)
         color_lbl.setStyleSheet("border-color: rgb(255, 255, 255); "
                                 + "background-color: " + color + ";")
 
+        # Check Box Settings
         font = QFont()
         font.setPixelSize(20)
         checkbox.setFont(font)
         checkbox.setText(match.name)
         checkbox.click()
-        #checkbox.setEnabled(True)
-        checkbox.setSizeIncrement(2,2)
+
+        # Probability LCD Number
+        #probability_lcd.setDigitCount(match.p)
+        probability_lcd.setNumDigits(8)
+        probability_lcd.display(match.p)
+        probability_lcd.setSegmentStyle(QLCDNumber.Flat)
+        probability_lcd.setFrameShape(QFrame.Panel)
+        probability_lcd.setFrameShadow(QFrame.Raised)
+        probability_lcd.setStyleSheet("background-color: none; \
+                                        border-color: none;\
+                                        color: rgb(255, 255, 255);")
+        # More Button (...) Settings
         more_btn.setText('...')
-        more_btn.clicked.connect(lambda: self.more_info(match.mid))
+        more_btn.clicked.connect(lambda: self.more_info(match, color))
+
 
         # Add Widgets to Layout
-        self.ui.gridLayout.addWidget(color_lbl, self.size, 0)
-        self.ui.gridLayout.addWidget(checkbox, self.size, 1)
-        self.ui.gridLayout.addWidget(more_btn, self.size, 2)
-        self.ui.gridLayout.addWidget(more_btn, self.size, 2)
+        self.ui.gridLayout.addWidget(probability_lcd, self.size, 0)
+        self.ui.gridLayout.addWidget(color_lbl, self.size, 1)
+        self.ui.gridLayout.addWidget(checkbox, self.size, 2)
+        self.ui.gridLayout.addWidget(more_btn, self.size, 3)
+        self.ui.gridLayout.addWidget(more_btn, self.size, 4)
 
         # Add Data to elements array
         self.elements[(self.size, 0)] = match
@@ -64,10 +88,10 @@ class MoleculeSelectionWidget(QWidget):
         for match in match_list:
             self.add_row(match)
 
-    def more_info(self, mid):
-        from ..events import display_error_message
-        display_error_message("Window: " + mid, "Test","Test")
-        print 'open window' + str(mid)
+    def more_info(self, match, color):
+        window = AssignmentWindow(match, color, self.experiment)
+        window.exec_()
+        window.show()
 
     def get_selections(self):
         matches = []
@@ -83,7 +107,22 @@ class MoleculeSelectionWidget(QWidget):
 
         return matches, colors
 
-class GraphColorWheel():
+    def select_all(self):
+        for i in range(0, self.size):
+            checkbox = self.elements[i, 2]
+
+            if checkbox.isChecked() is False:
+                checkbox.click()
+
+    def deselect_all(self):
+        for i in range(0, self.size):
+            checkbox = self.elements[i, 2]
+
+            if checkbox.isChecked() is True:
+                checkbox.click()
+
+
+class GraphColorWheel:
 
     def __init__(self):
         self.color_wheel = None

@@ -35,8 +35,10 @@ class ExperimentView(QDialog):
         self.matplot_widget = MatplotlibWidget()
         self.selection_widget = MoleculeSelectionWidget()
         self.redisplay_btn = QPushButton()
+
         # Data
         self.experiment = None
+        self.experiment_graph = None
         self.loading_screen = None
 
         self.startup(experiment_name, mid)
@@ -113,11 +115,11 @@ class ExperimentView(QDialog):
         self.selection_widget.add_all(self.experiment.molecule_matches.values())
 
     def graph(self):
-        experiment_graph = Graph(self.matplot_widget, self.experiment)
-        experiment_graph.add_subplot_experiment(211)
+        self.experiment_graph = Graph(self.matplot_widget, self.experiment)
+        self.experiment_graph.add_subplot_experiment(211)
         matches, colors = self.selection_widget.get_selections()
-        experiment_graph.add_subplot_selected_assignments(212, matches, colors)
-        experiment_graph.draw()
+        self.experiment_graph.add_subplot_selected_assignments(212, matches, colors)
+        self.experiment_graph.draw()
 
     def connect_buttons(self):
         redisplay_btn = self.ui.redisplay_btn
@@ -125,10 +127,10 @@ class ExperimentView(QDialog):
 
     def redisplay_graph(self):
         matches, colors = self.selection_widget.get_selections()
-        self.matplot_widget = MatplotlibWidget()
-        experiment_graph = Graph(self.matplot_widget, self.experiment)
-        #experiment_graph.clear()
-        experiment_graph.add_subplot_experiment(211)
-        experiment_graph.add_subplot_selected_assignments(212, matches, colors)
+        self.experiment_graph.clear()
+        print "redisplay"
+        self.experiment_graph.add_subplot_experiment(211)
+        self.experiment_graph.add_subplot_selected_assignments(212, matches, colors)
+        self.experiment_graph.draw()
 
         return True # do nothing

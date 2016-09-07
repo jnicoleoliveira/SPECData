@@ -65,6 +65,8 @@ class MoleculeSelectionWidget(QWidget):
             self.add_row(match)
 
     def more_info(self, mid):
+        from ..events import display_error_message
+        display_error_message("Window: " + mid, "Test","Test")
         print 'open window' + str(mid)
 
     def get_selections(self):

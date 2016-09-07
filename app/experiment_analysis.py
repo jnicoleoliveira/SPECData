@@ -18,7 +18,7 @@ class Graph():
     def __init__(self, plot_widget, experiment):
         self.plot_widget = plot_widget
         self.experiment = experiment
-        self.subplot = None
+        self.subplot_1 = None
         self.x = []
         self.y = []
 
@@ -32,13 +32,13 @@ class Graph():
         frequencies, intensities = self.experiment.get_experiment_frequencies_intensities_list()
 
         figure = self.plot_widget.getFigure()
-        self.subplot = figure.add_subplot(pos, \
+        self.subplot_1 = figure.add_subplot(pos, \
                                      axisbg='white', \
                                      xlabel="Frequency", \
                                      ylabel="Intensity", \
                                      title = 'Experiment Peaks')
 
-        self.subplot.bar(frequencies, intensities, width=0.02, edgecolor='black')
+        self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor='black')
 
     def draw(self):
         self.plot_widget.draw()
@@ -53,7 +53,7 @@ class Graph():
                                      axisbg='white', \
                                      xlabel="Frequency", \
                                      ylabel="Intensity",\
-                                     sharex=self.subplot, \
+                                     sharex=self.subplot_1, \
                                      title='Assignments')
         for key, value in self.experiment.molecule_matches.iteritems():
             frequencies = []
@@ -76,7 +76,7 @@ class Graph():
                                      axisbg='white', \
                                      xlabel="Frequency", \
                                      ylabel="Intensity", \
-                                     sharex=self.subplot, \
+                                     sharex=self.subplot_1, \
                                      title='Selected Assignments')
         color_index = 0
         for match in matches:
@@ -91,4 +91,5 @@ class Graph():
             color_index += 1
 
     def clear(self):
+        self.subplot_1.clear()
         self.plot_widget.getFigure().clear()

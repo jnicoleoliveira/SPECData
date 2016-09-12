@@ -1,0 +1,160 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'experiment.ui'
+#
+# Created by: PyQt4 UI code generator 4.11.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
+
+class Ui_ExperimentDialog(object):
+    def setupUi(self, ExperimentDialog):
+        ExperimentDialog.setObjectName(_fromUtf8("ExperimentDialog"))
+        ExperimentDialog.resize(1344, 784)
+        ExperimentDialog.setStyleSheet(_fromUtf8("background-color: rgb(48, 48, 48);\n"
+"gridline-color: rgb(195, 195, 195);\n"
+"color: rgb(255, 255, 255);\n"
+""))
+        self.centralwidget = QtGui.QWidget(ExperimentDialog)
+        self.centralwidget.setEnabled(False)
+        self.centralwidget.setGeometry(QtCore.QRect(10, 0, 1331, 771))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        self.centralwidget.setSizePolicy(sizePolicy)
+        self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
+        self.gridLayout = QtGui.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setSizeConstraint(QtGui.QLayout.SetMinAndMaxSize)
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.gridLayout.addLayout(self.horizontalLayout, 6, 0, 1, 1)
+        self.redisplay_btn = QtGui.QPushButton(self.centralwidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.redisplay_btn.sizePolicy().hasHeightForWidth())
+        self.redisplay_btn.setSizePolicy(sizePolicy)
+        self.redisplay_btn.setObjectName(_fromUtf8("redisplay_btn"))
+        self.gridLayout.addWidget(self.redisplay_btn, 0, 2, 1, 1)
+        self.save_experiment_btn = QtGui.QPushButton(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(7)
+        self.save_experiment_btn.setFont(font)
+        self.save_experiment_btn.setObjectName(_fromUtf8("save_experiment_btn"))
+        self.gridLayout.addWidget(self.save_experiment_btn, 2, 2, 1, 1)
+        self.scrollArea = QtGui.QScrollArea(self.centralwidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
+        self.scrollArea.setSizePolicy(sizePolicy)
+        self.scrollArea.setMaximumSize(QtCore.QSize(400, 800))
+        self.scrollArea.setAutoFillBackground(False)
+        self.scrollArea.setFrameShape(QtGui.QFrame.Box)
+        self.scrollArea.setFrameShadow(QtGui.QFrame.Plain)
+        self.scrollArea.setLineWidth(3)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
+        self.scrollAreaWidgetContents_2 = QtGui.QWidget()
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 394, 755))
+        self.scrollAreaWidgetContents_2.setObjectName(_fromUtf8("scrollAreaWidgetContents_2"))
+        self.verticalScrollBar = QtGui.QScrollBar(self.scrollAreaWidgetContents_2)
+        self.verticalScrollBar.setGeometry(QtCore.QRect(370, 0, 20, 751))
+        self.verticalScrollBar.setOrientation(QtCore.Qt.Vertical)
+        self.verticalScrollBar.setObjectName(_fromUtf8("verticalScrollBar"))
+        self.gridLayoutWidget = QtGui.QWidget(self.scrollAreaWidgetContents_2)
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 20, 231, 74))
+        self.gridLayoutWidget.setObjectName(_fromUtf8("gridLayoutWidget"))
+        self.gridLayout_2 = QtGui.QGridLayout(self.gridLayoutWidget)
+        self.gridLayout_2.setHorizontalSpacing(7)
+        self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
+        self.label_2 = QtGui.QLabel(self.gridLayoutWidget)
+        self.label_2.setStyleSheet(_fromUtf8("background-color: rgb(0, 128, 0);"))
+        self.label_2.setFrameShape(QtGui.QFrame.Panel)
+        self.label_2.setFrameShadow(QtGui.QFrame.Sunken)
+        self.label_2.setText(_fromUtf8(""))
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.gridLayout_2.addWidget(self.label_2, 0, 0, 1, 1)
+        self.pushButton_5 = QtGui.QPushButton(self.gridLayoutWidget)
+        self.pushButton_5.setStyleSheet(_fromUtf8("background-color: rgb(88, 88, 88);"))
+        self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
+        self.gridLayout_2.addWidget(self.pushButton_5, 0, 2, 1, 1)
+        self.checkBox = QtGui.QCheckBox(self.gridLayoutWidget)
+        self.checkBox.setObjectName(_fromUtf8("checkBox"))
+        self.gridLayout_2.addWidget(self.checkBox, 0, 1, 1, 1)
+        self.checkBox_2 = QtGui.QCheckBox(self.gridLayoutWidget)
+        self.checkBox_2.setObjectName(_fromUtf8("checkBox_2"))
+        self.gridLayout_2.addWidget(self.checkBox_2, 1, 1, 1, 1)
+        self.label = QtGui.QLabel(self.gridLayoutWidget)
+        self.label.setStyleSheet(_fromUtf8("background-color: rgb(0, 192, 192);"))
+        self.label.setFrameShape(QtGui.QFrame.WinPanel)
+        self.label.setFrameShadow(QtGui.QFrame.Sunken)
+        self.label.setText(_fromUtf8(""))
+        self.label.setObjectName(_fromUtf8("label"))
+        self.gridLayout_2.addWidget(self.label, 1, 0, 1, 1)
+        self.pushButton_6 = QtGui.QPushButton(self.gridLayoutWidget)
+        self.pushButton_6.setStyleSheet(_fromUtf8("background-color: rgb(88, 88, 88);"))
+        self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
+        self.gridLayout_2.addWidget(self.pushButton_6, 1, 2, 1, 1)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents_2)
+        self.gridLayout.addWidget(self.scrollArea, 0, 0, 5, 1)
+        self.remove_btn = QtGui.QPushButton(self.centralwidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.remove_btn.sizePolicy().hasHeightForWidth())
+        self.remove_btn.setSizePolicy(sizePolicy)
+        self.remove_btn.setObjectName(_fromUtf8("remove_btn"))
+        self.gridLayout.addWidget(self.remove_btn, 1, 2, 1, 1)
+        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem, 4, 2, 1, 1)
+        self.save_graph_btn = QtGui.QPushButton(self.centralwidget)
+        self.save_graph_btn.setObjectName(_fromUtf8("save_graph_btn"))
+        self.gridLayout.addWidget(self.save_graph_btn, 3, 2, 1, 1)
+        self.main_graph = QtGui.QGraphicsView(self.centralwidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.main_graph.sizePolicy().hasHeightForWidth())
+        self.main_graph.setSizePolicy(sizePolicy)
+        self.main_graph.setMaximumSize(QtCore.QSize(800, 3003))
+        self.main_graph.setObjectName(_fromUtf8("main_graph"))
+        self.gridLayout.addWidget(self.main_graph, 0, 3, 5, 1)
+        self.scrollArea.raise_()
+        self.redisplay_btn.raise_()
+        self.remove_btn.raise_()
+        self.save_graph_btn.raise_()
+        self.save_experiment_btn.raise_()
+        self.main_graph.raise_()
+
+        self.retranslateUi(ExperimentDialog)
+        QtCore.QMetaObject.connectSlotsByName(ExperimentDialog)
+
+    def retranslateUi(self, ExperimentDialog):
+        ExperimentDialog.setWindowTitle(_translate("ExperimentDialog", "Dialog", None))
+        self.redisplay_btn.setText(_translate("ExperimentDialog", "Redisplay", None))
+        self.save_experiment_btn.setText(_translate("ExperimentDialog", "Save Experiment", None))
+        self.pushButton_5.setText(_translate("ExperimentDialog", "...", None))
+        self.checkBox.setText(_translate("ExperimentDialog", "Molecule 1", None))
+        self.checkBox_2.setText(_translate("ExperimentDialog", "Molecule 2", None))
+        self.pushButton_6.setText(_translate("ExperimentDialog", "...", None))
+        self.remove_btn.setText(_translate("ExperimentDialog", "Remove", None))
+        self.save_graph_btn.setText(_translate("ExperimentDialog", "Save Graph", None))
+

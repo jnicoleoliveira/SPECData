@@ -52,6 +52,34 @@ def get_frequency(conn, pid):
     return frequency
 
 
+
+
+def get_intensity(conn, pid):
+    """
+    Returns the intensity of a specified peak
+    :param conn:
+    :param pid:
+    :return:
+    """
+    cursor = conn.execute("SELECT intensity FROM peaks WHERE pid=?",(pid,))
+    line = cursor.fetchone()
+    intensity = line[0]
+    return intensity
+
+def get_frequency_intensity(conn, pid):
+    """
+    Returns frequency, intensity of a specified peak
+    :param conn:
+    :param pid:
+    :return:
+    """
+    cursor = conn.execute("SELECT frequency, intensity FROM peaks WHERE pid=?",(pid,))
+    line = cursor.fetchone()
+    frequency = line[0]
+    intensity = line[1]
+
+    return frequency, intensity
+
 def get_frequency_intensity_list(conn, mid):
     """
     Returns frequency and intensity list of a particular module
@@ -69,19 +97,6 @@ def get_frequency_intensity_list(conn, mid):
         intensity_list.append(row[1])
 
     return frequency_list, intensity_list
-
-
-def get_intensity(conn, pid):
-    """
-    Returns the intensity of a specified peak
-    :param conn:
-    :param pid:
-    :return:
-    """
-    cursor = conn.execute("SELECT intensity FROM peaks WHERE pid=?",(pid,))
-    line = cursor.fetchone()
-    intensity = line[0]
-    return intensity
 
 
 def get_pid_list(conn, mid):

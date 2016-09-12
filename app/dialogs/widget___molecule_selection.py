@@ -31,7 +31,16 @@ class MoleculeSelectionWidget(QWidget):
         self.colorWheel.import_color_wheel(os.path.join(resources, 'graphing_colors'))
 
     def add_row(self, match):
-
+        """
+        Adds a Molecule Row to MoleculeSelection Widget, and list of elements.
+        Row consists of the following widgets:
+            color_lbl (color associated with molecule match)
+            checkbox  (checkbox associated with selecting a molecule match for graphing)
+            more_btn  (button associated with opening AssignmentWindow(mid)
+            probability_lcd (QLCDNumber with probability of match)
+        :param match: MoleculeMatch object
+        :return:
+        """
         # Create Widgets
         color_lbl = QLabel()
         checkbox = QCheckBox()
@@ -56,7 +65,7 @@ class MoleculeSelectionWidget(QWidget):
         # Probability LCD Number
         #probability_lcd.setDigitCount(match.p)
         probability_lcd.setNumDigits(8)
-        probability_lcd.display(match.p)
+        probability_lcd.display((match.p * 100))
         probability_lcd.setSegmentStyle(QLCDNumber.Flat)
         probability_lcd.setFrameShape(QFrame.Panel)
         probability_lcd.setFrameShadow(QFrame.Raised)

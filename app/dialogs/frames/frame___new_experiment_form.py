@@ -31,10 +31,12 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
-        Dialog.setStyleSheet(_fromUtf8("background-color: rgba(98, 98, 98, 247)\n"
+        Dialog.setStyleSheet(_fromUtf8("background-color: rgb(48, 48, 48);\n"
+"gridline-color: rgb(195, 195, 195);\n"
+"color: rgb(255, 255, 255);\n"
 ""))
         self.verticalLayoutWidget_2 = QtGui.QWidget(Dialog)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(310, 60, 451, 581))
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(290, 60, 478, 777))
         self.verticalLayoutWidget_2.setObjectName(_fromUtf8("verticalLayoutWidget_2"))
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout_2.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
@@ -241,10 +243,6 @@ class Ui_Dialog(object):
         spacerItem5 = QtGui.QSpacerItem(266, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem5, 0, 1, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout)
-        self.verticalLayoutWidget_2.raise_()
-        self.new_experiment_title_lbl.raise_()
-        self.exp_author_lbl.raise_()
-        self.new_experiment_title_lbl.raise_()
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)

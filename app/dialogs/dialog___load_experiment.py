@@ -1,0 +1,70 @@
+# Author: Jasmine Oliveira
+# Date: 09/12/2016
+
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+from frames.frame___load_experiment import Ui_Dialog              # Dialog Window
+
+from config import conn
+from tables.get import get_molecules
+from ..events import display_error_message
+
+class LoadExperiment(QDialog):
+
+    def __init__(self):
+        super(LoadExperiment, self).__init__()
+        self.ui = Ui_Dialog()
+        self.ui.setupUi(self)
+        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowTitle("Experiment View")
+        self.resize(1000, 1000)
+
+        self.list_widget = self.ui.listWidget
+        self.setup()
+
+    def setup(self):
+
+        self.populate_list_widget()
+
+        back_btn = self.ui.back_btn
+        load_btn = self.ui.load_btn
+
+        back_btn.clicked.connect(self.back)
+        load_btn.clicked.connect(self.load)
+
+    def populate_list_widget(self):
+        """
+        Populates list widget with experiments availible to load.
+        :return:
+        """
+        mids, names = get_molecules.get_experiment_list(conn)
+
+        for i in range(0, len(mids)):
+            line = str(i+1) + "\t" + str(mids[i]) + "\t" + names[i]
+            self.list_widget.addItem(QListWidgetItem(line))
+
+    def load(self):
+        selected_items = self.list_widget.selectedItems()
+
+        try:
+            text = str((selected_items[0].text())).split()
+            print text
+            self.load_experiment(text[1], text[2])
+        except ValueError:
+            display_error_message("SELECTION ERROR", "You must select one item to load.",\
+                                  "You have not selected one item, please select one item.")
+
+    def back(self):
+        from dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)
+        self.close()
+        window = MainMenu()
+        window.exec_()
+
+
+    def load_experiment(self, mid, name):
+
+        from dialog___experiment_view import ExperimentView
+        self.close()
+        window = ExperimentView(name, mid)
+        window.exec_()

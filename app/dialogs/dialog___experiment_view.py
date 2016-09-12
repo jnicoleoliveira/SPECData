@@ -97,9 +97,9 @@ class ExperimentView(QDialog):
         select_btns_layout = QHBoxLayout()
         select_btns_layout.addWidget(self.select_all_btn)
         select_btns_layout.addWidget(self.deselect_all_btn)
-        scroll_selection_containter = QScrollArea()
-        scroll_selection_containter.setWidget(self.selection_widget)
-        scroll_selection_containter.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        scroll_selection_container = QScrollArea()
+        scroll_selection_container.setWidget(self.selection_widget)
+        scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         #scroll_selection_containter.addScrollBarWidget(QScrollBar)
 
 
@@ -116,15 +116,12 @@ class ExperimentView(QDialog):
         #spacer1_widget = QSpacerItem()
 
         ## Add Widgets to layout
-        layout.addWidget(scroll_selection_containter, 0, 0)
-        #layout.addWidget(self.selection_widget, 0,0)
+        layout.addWidget(scroll_selection_container, 0, 0)
         layout.addWidget(self.matplot_widget, 0, 1)
         layout.addLayout(select_btns_layout, 1, 0)
-        #layout.addWidget(self.select_all_btn, 1,0)
-        #layout.addWidget(self.deselect_all_btn, 1, 0)
+
         layout.addWidget(self.redisplay_btn, 2,0)
 
-        #layout.addWidget(spacer1_widget, 0, 1)
         #layout.addWidget(self.plot_widget, 0,1)
 
     def connect_buttons(self):

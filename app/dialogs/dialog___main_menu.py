@@ -49,9 +49,11 @@ class MainMenu(QDialog):
 
     def load_experiment(self):
         from dialog___experiment_view import ExperimentView
+        from dialog___load_experiment import LoadExperiment
         # Go to next fame
         self.close()
         #window = ExperimentView('exp1435', 142)
-        window = ExperimentView('168-175-pzf1', 143)
+        #window = ExperimentView('168-175-pzf1', 143)
+        window = LoadExperiment()
         window.show()
         window.exec_()

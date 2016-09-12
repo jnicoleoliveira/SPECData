@@ -121,18 +121,26 @@ def get_pid_list(conn, mid):
     return None
 
 
-def get_peak_count(conn, mid):
+def get_peak_count(conn, mid, max_range=None, min_range=None):
     """
     Returns the count of peaks associated with this molecule
     :param conn:
     :param mid:
+    :param max_range:
+    :param min_range:
     :return:
     """
-    cursor = conn.execute("SELECT COUNT(pid) FROM PEAKS"\
-                          " WHERE mid=?", (mid,))
+
+    if range is None:
+        cursor = conn.execute("SELECT COUNT(pid) FROM PEAKS"\
+                              " WHERE mid=?", (mid,))
+        rows = cursor.fetchone()
+        return rows[0]
+
+    cursor = conn.execute("SELECT COUNT(pid) FROM PEAKS" \
+                          " WHERE mid=? AND frequency<=?", (mid, max_range))
     rows = cursor.fetchone()
     return rows[0]
-
 
 def get_unassigned_pid_list(conn, mid):
     """

@@ -20,7 +20,9 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgba(98, 98, 98, 247)
+   <string notr="true">background-color: rgb(48, 48, 48);
+gridline-color: rgb(195, 195, 195);
+color: rgb(255, 255, 255);
 </string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget_2">
@@ -28,8 +30,8 @@
     <rect>
      <x>290</x>
      <y>60</y>
-     <width>411</width>
-     <height>581</height>
+     <width>478</width>
+     <height>777</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0">

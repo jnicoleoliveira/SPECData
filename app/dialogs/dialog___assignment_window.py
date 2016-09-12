@@ -11,6 +11,7 @@ from widget___assignment_window_info import AssignmentInfoWidget    # Assignment
 from ..experiment_analysis import Graph
 from config import conn
 
+
 class AssignmentWindow(QDialog):
 
     def __init__(self, match, color, experiment):
@@ -19,7 +20,7 @@ class AssignmentWindow(QDialog):
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Experiment View")
-        self.resize(1000, 1000)
+        self.resize(1500, 750)
 
         # Widgets
         self.matplot_widget = None
@@ -54,11 +55,19 @@ class AssignmentWindow(QDialog):
         # Add Data
         self.populate_table_widget()
 
+        # Containers
+        left_container = QVBoxLayout()
+        left_container.addWidget(self.info_widget)
+        left_container.addWidget(self.table_widget)
+
+
+
         # Add Widgets to Layout
-        layout.addWidget(self.info_widget, 0,0)
-        layout.addWidget(QLabel(), 0, 1)
-        layout.addWidget(self.table_widget, 1, 0)
-        layout.addWidget(self.matplot_widget, 1, 1)
+        layout.addLayout(left_container, 0, 0)
+        #layout.addWidget(self.info_widget, 0,0)
+        #layout.addWidget(QLabel(), 0, 1)
+        #layout.addWidget(self.table_widget, 1, 0)
+        layout.addWidget(self.matplot_widget, 0, 1)
 
     def populate_table_widget(self):
         """

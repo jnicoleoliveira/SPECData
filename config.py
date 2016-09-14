@@ -5,12 +5,16 @@
 #                    Database Directory (path)
 #                    Log Directory (path)
 
-
+# Imports
+import sqlite3
+import os
 
 # Program directory
-PROGRAM_DIR = "/home/joli/PycharmProjects/SPECData"
+PROGRAM_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
+print PROGRAM_DIR
 # Database directory
-DATABASE_DIR = "/home/joli/PycharmProjects/SPECData"
+DATABASE_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
+
 # Log Directory
 LOG_DIR = ""
 
@@ -18,9 +22,6 @@ LOG_DIR = ""
 ####################### DO NOT EDIT BELOW ########################
 ##################################################################
 
-# Imports
-import sqlite3
-import os
 
 # GLOBAL CONFIG VARIABLES #
 global db_path

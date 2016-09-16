@@ -15,6 +15,7 @@ class ImportMenu(QDialog):
         self.ui= Ui_importmenu_frame()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.resize(1025, 750)
 
         # Set up Menu
         self.connect_buttons()

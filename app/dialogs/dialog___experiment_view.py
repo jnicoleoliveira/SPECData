@@ -118,14 +118,22 @@ class ExperimentView(QDialog):
         self.select_all_btn = QPushButton()
         self.deselect_all_btn = QPushButton()
 
-        # Containers
+        # Containers  / Inner Layouts
         select_btns_layout = QHBoxLayout()
         select_btns_layout.addWidget(self.select_all_btn)
         select_btns_layout.addWidget(self.deselect_all_btn)
+
         scroll_selection_container = QScrollArea()
         scroll_selection_container.setWidget(self.selection_widget)
         scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 
+        left_layout = QVBoxLayout()
+        left_layout.addWidget(scroll_selection_container)
+        left_layout.addWidget(self.graph_options_widget)
+        left_layout.addLayout(select_btns_layout)
+        left_layout.addWidget(self.redisplay_btn)
+
+        # Set Data
         self.redisplay_btn.setText("Redisplay")
         self.redisplay_btn.clicked.connect(self.redisplay_graph)
 
@@ -139,13 +147,14 @@ class ExperimentView(QDialog):
         #spacer1_widget = QSpacerItem()
 
         ## Add Widgets to layout
-        layout.addWidget(scroll_selection_container, 0, 0)
+        #layout.addWidget(scroll_selection_container, 0, 0)
+        layout.addLayout(left_layout, 0 , 0)
         layout.addWidget(self.matplot_widget, 0, 1)
-        layout.addWidget(self.graph_options_widget, 1, 1)
-        layout.addLayout(select_btns_layout, 1, 0)
+        #layout.addWidget(self.graph_options_widget, 3, 0)
+        #layout.addLayout(select_btns_layout, 1, 0)
 
-        layout.addWidget(self.redisplay_btn, 2,0)
-
+        #layout.addWidget(self.redisplay_btn, 2,0)
+        #layout.addWidget(QLabel(), 1, 2)
         #layout.addWidget(self.plot_widget, 0,1)
 
     def startup(self, experiment_name, mid):

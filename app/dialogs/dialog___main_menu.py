@@ -17,6 +17,8 @@ class MainMenu(QDialog):
         self.ui = Ui_mainmenu()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.resize(1025, 750)
+
         self.connect_buttons()
         self.load_logo()
 

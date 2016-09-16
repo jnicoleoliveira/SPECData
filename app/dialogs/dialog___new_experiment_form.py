@@ -19,6 +19,7 @@ class NewExperimentForm(QDialog):
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("New Experiment Form")
+        self.resize(1025, 750)
 
         # Variables to hold form input
         self.file_path = None

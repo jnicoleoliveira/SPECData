@@ -11,6 +11,7 @@ class ImportFinished(QDialog):
         self.ui= Ui_importfinished_frame()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.resize(1025, 750)
 
         self.log_message = log_message
 

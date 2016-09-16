@@ -17,6 +17,7 @@ class CheckSingleImport(QDialog):
         self.ui= Ui_checksingleimport_frame()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.resize(1025, 750)
 
         # Data
         self.file_path = file_path

@@ -21,6 +21,7 @@ class ImportSingleFile(QDialog):
         self.ui= Ui_importsingle_frame()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.resize(1025, 750)
 
         # Variables for input
         self.file_path = file_path

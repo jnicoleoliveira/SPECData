@@ -17,8 +17,8 @@ class LoadExperiment(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
-        self.setWindowTitle("Experiment View")
-        self.resize(1000, 1000)
+        self.setWindowTitle("Load Experiment")
+        self.resize(1025, 750)
 
         self.list_widget = self.ui.listWidget
         self.setup()

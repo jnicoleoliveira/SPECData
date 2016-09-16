@@ -156,6 +156,11 @@ class MainGraph():
         self.add_subplot_experiment(211)
         self.add_subplot_selected_assignments(212, matches, colors)
 
+        self.plot_widget.getFigure().subplots_adjust(top=0.95,
+                                                     bottom = 0.07,
+                                                     left = 0.05,
+                                                     right = 0.97,
+                                                     hspace=0.35,)
         if self.full_spectrum is True:
             self.add_full_experiment_spectrum(211, 'grey')
 

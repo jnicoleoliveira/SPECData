@@ -3,17 +3,13 @@
 # Test Assignment Probability
 import matplotlib
 matplotlib.use('TkAgg')
-from .experiment import *
+from analysis.experiment import *
 import matplotlib.pyplot as plt
-import sqlite3
 from config import *
 from tables.get import get_molecules
-from functions import graph_peaks
 from tables.remove import remove_assignments
 from tables.entry import entry_assignments
 from tables.get import get_peaks
-from tables.get import get_assignments
-
 
 # Get Experiment Data
 print "Enter Experiment MID: "

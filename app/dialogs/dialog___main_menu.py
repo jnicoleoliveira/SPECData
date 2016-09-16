@@ -41,7 +41,9 @@ class MainMenu(QDialog):
 
     def show_import_menu(self):
         self.close()
-        window = ImportMenu()
+        from dialog___import_files import ImportFiles
+        window = ImportFiles()
+        #window = ImportMenu()
         window.exec_()
 
     def start_new_experiment(self):

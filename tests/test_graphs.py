@@ -1,8 +1,8 @@
 import sqlite3
 from config import *
 
-from functions import graph_peaks
-from functions import assign_peaks
+from scripts import graph_peaks
+from scripts import assign_peaks
 import tables.get.get_molecules as get_molecules
 import tables.get.get_assignments as get_assignments
 # Connect to sqlite database

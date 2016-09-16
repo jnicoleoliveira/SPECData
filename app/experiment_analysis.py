@@ -1,17 +1,9 @@
 # Author: Jasmine Oliveira
 # Date: 08/24/2016
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.uic import loadUi
-import pyqtgraph as pg
-import matplotlib.pyplot as pyplot
-import numpy as np
-from functions.experiment import Experiment
-from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
-
-from tables.get import get_peaks
 from config import conn
+from tables.get import get_peaks
+
 
 class MainGraph():
     def __init__(self, plot_widget, options_widget, experiment):
@@ -162,7 +154,7 @@ class MainGraph():
                                                      right = 0.97,
                                                      hspace=0.35,)
         if self.full_spectrum is True:
-            self.add_full_experiment_spectrum(211, 'grey')
+            self.add_full_experiment_spectrum(211, 'red')
 
 
 class Graph():
@@ -249,7 +241,6 @@ class Graph():
             color_index += 1
 
     def add_subplot_full_spectrum(self, pos, mid, color, sharey=None):
-        import tables.get.get_peaks
         frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, mid)
 
         figure = self.plot_widget.getFigure()

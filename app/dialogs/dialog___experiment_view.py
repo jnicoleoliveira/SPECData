@@ -1,24 +1,18 @@
 # Author: Jasmine Oliveira
 # Date: 08/24/2016
 
+import time
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import matplotlib.backends.backend_qt4agg
-
-#import matplotlib
-#matplotlib.use("Agg")
-from .frames.frame___experiment import Ui_Dialog
-from .widget___molecule_selection import MoleculeSelectionWidget
-from .widget___main_graph_options import MainGraphOptionsWidget
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
+
+from analysis import experiment
+from .frames.frame___experiment import Ui_Dialog
 from .splash_screens import LoadingProgressScreen
-
+from .widget___main_graph_options import MainGraphOptionsWidget
+from .widget___molecule_selection import MoleculeSelectionWidget
 from ..experiment_analysis import MainGraph
-from functions import experiment
-import pyqtgraph as pg
-
-import time
-import os
 
 
 class ExperimentView(QDialog):

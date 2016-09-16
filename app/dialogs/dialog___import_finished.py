@@ -15,7 +15,7 @@ class ImportFinished(QDialog):
 
         self.log_message = log_message
 
-        self.connect_buttons()  # Connect buttons to appropriate functions
+        self.connect_buttons()  # Connect buttons to appropriate scripts
         self.display_log_message()  # Display Log Message to Screen
 
     def connect_buttons(self):

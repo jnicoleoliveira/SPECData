@@ -3,7 +3,7 @@
 # Test Peak Assignment
 
 from config import *
-from functions.assign_peaks import *
+from scripts.assign_peaks import *
 from tables.remove import remove_assignments
 
 

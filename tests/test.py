@@ -1,6 +1,6 @@
 # Author: Jasmine Oliveira
 # Date: 07/01/2016
-# Tests functions of SPECdata
+# Tests scripts of SPECdata
 
 import sqlite3
 

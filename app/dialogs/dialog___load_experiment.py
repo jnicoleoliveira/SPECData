@@ -36,7 +36,6 @@ class LoadExperiment(QDialog):
     def populate_list_widget(self):
         """
         Populates list widget with experiments availible to load.
-        :return:
         """
         mids, names = get_molecules.get_experiment_list(conn)
 

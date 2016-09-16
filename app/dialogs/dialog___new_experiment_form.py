@@ -68,14 +68,14 @@ class NewExperimentForm(QDialog):
 
     def analyze(self):
 
-        self.get_data()                         # Get information from fields
+        self.collect_form_data()                         # Get information from fields
         has_errors = self.determine_errors()    # Check for field validity
 
         if has_errors is False:
             # No errors, may proceed to the next frame
             self.next_frame()
 
-    def get_data(self):
+    def collect_form_data(self):
         """
         Gets data from the UI, and stores in its respective class variable.
         :return:

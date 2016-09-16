@@ -138,6 +138,12 @@ class MainGraph():
         self.subplot_1.clear()
         self.plot_widget.getFigure().clear()
 
+    def full_spectrum_exists(self):
+        import os
+        from config import db_dir
+        file_path = os.path.join(db_dir, "experiments", (str(self.experiment.mid) + ".sp"))
+        return os.path.exists(file_path)
+
     def set_options(self, full_spectrum=False, sharey=False, y_to_experiment_intensities=False, color_experiment=False):
         self.full_spectrum = full_spectrum
         self.sharey = sharey

@@ -11,7 +11,7 @@ class MainGraphOptionsWidget(QWidget):
         super(MainGraphOptionsWidget, self).__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.full_spectrum_chk = self.ui.full_spectrum_chk
         self.color_experiment_chk = self.ui.color_experiment_chk
         self.sharey_chk = self.ui.sharey_chk

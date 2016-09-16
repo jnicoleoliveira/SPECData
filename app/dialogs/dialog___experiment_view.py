@@ -64,6 +64,11 @@ class ExperimentView(QDialog):
         # Draw Subplots
         self.experiment_graph.draw()
 
+        if self.experiment_graph.full_spectrum_exists() is False:
+            self.graph_options_widget.full_spectrum_chk.setEnabled(False)
+            self.graph_options_widget.full_spectrum_chk.setWhatsThis("Data not available.")
+            self.graph_options_widget.full_spectrum_chk.setStyleSheet("color: rgb(85, 85, 85);")
+
     def get_options(self):
         full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
         sharey = self.graph_options_widget.sharey_chk.isChecked()
@@ -122,7 +127,8 @@ class ExperimentView(QDialog):
         scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 
         left_layout = QVBoxLayout()
-        left_layout.addWidget(scroll_selection_container)
+        #left_layout.addWidget(scroll_selection_container)
+        left_layout.addSpacerItem(QSpacerItem(5, 5, QSizePolicy.Minimum, QSizePolicy.Expanding))
         left_layout.addWidget(self.graph_options_widget)
         left_layout.addLayout(select_btns_layout)
         left_layout.addWidget(self.redisplay_btn)
@@ -141,14 +147,18 @@ class ExperimentView(QDialog):
         #spacer1_widget = QSpacerItem()
 
         ## Add Widgets to layout
-        #layout.addWidget(scroll_selection_container, 0, 0)
-        layout.addLayout(left_layout, 0 , 0)
-        layout.addWidget(self.matplot_widget, 0, 1)
-        #layout.addWidget(self.graph_options_widget, 3, 0)
-        #layout.addLayout(select_btns_layout, 1, 0)
+        layout.addWidget(QLabel(), 0, 0)
+        layout.addWidget(scroll_selection_container, 1, 0)
+        layout.addLayout(left_layout, 1, 1)
+        layout.addWidget(self.matplot_widget, 1, 2)
 
-        #layout.addWidget(self.redisplay_btn, 2,0)
-        #layout.addWidget(QLabel(), 1, 2)
+        #layout.addLayout(left_layout, 0, 0)
+        #layout.addWidget(self.graph_options_widget, 1, 0)
+        #layout.addLayout(select_btns_layout, 2, 0)
+        #layout.addWidget(self.redisplay_btn, 3, 0)
+
+        #layout.addWidget(QLabel(), 1, 1)
+
         #layout.addWidget(self.plot_widget, 0,1)
 
     def startup(self, experiment_name, mid):

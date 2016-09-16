@@ -10,15 +10,16 @@ from ..error import is_valid_file, get_file_error_message
 
 from config import conn
 
+
 class ImportFileVerification(QDialog):
     """
-        Verify File and add add entry information
-            UI:          import_file_verification.ui
-            Dialog:      frame___import_file_verification.py
-            Next Dialog: None
-            Back Dialog: None
+    Verify File and add add entry information
+        UI:          import_file_verification.ui
+        Dialog:      frame___import_file_verification.py
+        Next Dialog: None
+        Back Dialog: None
     """
-    def __init__(self, file_path, i , total):
+    def __init__(self, file_path, i, total):
         super(ImportFileVerification, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
@@ -68,12 +69,6 @@ class ImportFileVerification(QDialog):
     def cancel(self):
         self.close()
 
-    def okay(self):
-        self.collect_form_data()
-        if self.determine_errors() is False:
-            self.import_entry()
-            self.close()
-
     def determine_errors(self):
         """
         Determines if there are any UI form errors.
@@ -109,10 +104,20 @@ class ImportFileVerification(QDialog):
         return has_error
 
     def import_entry(self):
+        """
+        Import current entry
+        """
         import tables.entry.entry_molecules as molecules
         import tables.entry.entry_peaks as peaks
-        import tables.entry.entry_info as info
 
         if molecules.get_mid(conn, self.name, self.category) is None:
             mid = molecules.new_molecule_entry(conn, self.name, self.category)
             peaks.import_file(conn, self.file_path, mid)
+
+    def okay(self):
+        self.collect_form_data()
+        if self.determine_errors() is False:
+            self.import_entry()
+            self.close()
+
+

@@ -24,6 +24,7 @@ class ImportFiles(QDialog):
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Import Files")
+        self.resize(1025, 750)
 
         self.file_paths = None
 
@@ -49,6 +50,9 @@ class ImportFiles(QDialog):
         window.exec_()
 
     def connect_buttons(self):
+        """
+        Connect dialog buttons to associated function
+        """
         # Get Buttons
         add_btn = self.ui.add_btn
         remove_btn = self.ui.remove_btn
@@ -59,6 +63,18 @@ class ImportFiles(QDialog):
         add_btn.clicked.connect(self.add)
         remove_btn.clicked.connect(self.remove)
         cancel_btn.clicked.connect(self.cancel)
+        accept_btn.clicked.connect(self.verify_import_list)
+
+    def verify_import_list(self):
+        from dialog___import_file_verification import ImportFileVerification
+
+        i = 0
+        total = len(self.file_paths)
+        for f in self.file_paths:
+            window = ImportFileVerification(f, i, total)
+            window.exec_()
+            i += 1
+
 
     def open_file_dialog(self):
         """
@@ -80,7 +96,6 @@ class ImportFiles(QDialog):
     def populate_list_with_file_paths(self):
         """
         Populates list widget with file path strings in self.file_paths
-        :return:
         """
         self.ui.listWidget.clear()
 
@@ -91,7 +106,6 @@ class ImportFiles(QDialog):
     def remove(self):
         """
         Removes selected items in the list widget
-        :return:
         """
         items = self.ui.listWidget.selectedItems()
         for item in items:

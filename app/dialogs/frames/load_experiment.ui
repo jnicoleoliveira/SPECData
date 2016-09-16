@@ -20,7 +20,7 @@ color: rgb(255, 255, 255);
 </string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
-   <item row="0" column="2">
+   <item row="1" column="2">
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -36,9 +36,25 @@ color: rgb(255, 255, 255);
      </property>
     </spacer>
    </item>
-   <item row="0" column="1">
+   <item row="1" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::MinimumExpanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="1">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QListWidget" name="listWidget">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -46,23 +62,11 @@ color: rgb(255, 255, 255);
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(25, 25, 25);</string>
+       </property>
       </widget>
-     </item>
-     <item row="0" column="0">
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="title_lbl">
@@ -87,9 +91,16 @@ font: 75 12pt &quot;Droid Sans&quot;;</string>
        </property>
       </widget>
      </item>
+     <item row="2" column="0">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
-   <item row="1" column="1">
+   <item row="2" column="1">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
       <widget class="QPushButton" name="back_btn">
@@ -125,7 +136,7 @@ background-color: rgb(48, 48, 48);</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="1">
       <widget class="QPushButton" name="load_btn">
        <property name="autoFillBackground">
         <bool>false</bool>
@@ -151,28 +162,12 @@ background-color: rgb(48, 48, 48);</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <spacer name="verticalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>50</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
     </layout>
    </item>
-   <item row="0" column="0">
-    <spacer name="horizontalSpacer">
+   <item row="0" column="1">
+    <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeType">
       <enum>QSizePolicy::MinimumExpanding</enum>
@@ -180,7 +175,20 @@ background-color: rgb(48, 48, 48);</string>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>10</height>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="1">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
       </size>
      </property>
     </spacer>

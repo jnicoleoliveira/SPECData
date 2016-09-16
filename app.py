@@ -1,7 +1,9 @@
 # Author: Jasmine Oliveira
 # Date: 7/12/2016
+# app.py
+# SPECdata app executable file
 
-import sys, time
+import sys
 from PyQt4.QtGui import *
 from app.dialogs.dialog___main_window import MainWindow     # Import main window
 

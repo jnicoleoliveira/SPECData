@@ -4,8 +4,6 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from app.events import clickable
-from dialog___import_menu import ImportMenu         # import window
 from dialog___new_experiment_form import NewExperimentForm    # New Experiment Window
 from frames.frame___main_menu import Ui_mainmenu    # This window
 
@@ -17,6 +15,7 @@ class MainMenu(QDialog):
         self.ui = Ui_mainmenu()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowTitle("Main Menu")
         self.resize(1025, 750)
 
         self.connect_buttons()
@@ -24,14 +23,15 @@ class MainMenu(QDialog):
 
     def connect_buttons(self):
         # Get Buttons/Labels
-        import_lbl = self.ui.import_lbl
-        new_experiment_lbl = self.ui.new_lbl
-        load_experiment_lbl = self.ui.load_lbl
+        import_btn = self.ui.import_btn
+        new_experiment_btn = self.ui.new_experiment_btn
+        load_experiment_btn = self.ui.load_experiment_btn
+        make_queries_btn = self.ui.make_queries_btn
 
         # Connect Label to Functions
-        clickable(import_lbl).connect(self.show_import_menu)
-        clickable(new_experiment_lbl).connect(self.start_new_experiment)
-        clickable(load_experiment_lbl).connect(self.load_experiment)
+        import_btn.clicked.connect(self.import_files)
+        new_experiment_btn.clicked.connect(self.start_new_experiment)
+        load_experiment_btn.clicked.connect(self.load_experiment)
 
     def load_logo(self):
         import os
@@ -39,11 +39,10 @@ class MainMenu(QDialog):
         pix_map = QPixmap(os.path.join(resources, 'specdata_logo.png'))
         self.ui.logo_lbl.setPixmap(pix_map)
 
-    def show_import_menu(self):
+    def import_files(self):
         self.close()
         from dialog___import_files import ImportFiles
         window = ImportFiles()
-        #window = ImportMenu()
         window.exec_()
 
     def start_new_experiment(self):
@@ -61,3 +60,7 @@ class MainMenu(QDialog):
         window = LoadExperiment()
         window.show()
         window.exec_()
+
+    def make_queries(self):
+        # stub method
+        print "Make Query"

@@ -41,7 +41,7 @@ class ExperimentView(QDialog):
         self.startup(experiment_name, mid)
 
     def add_selection_assignments(self):
-        self.selection_widget.add_all(self.experiment.molecule_matches.values())
+        self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
 
     def connect_buttons(self):
         redisplay_btn = self.ui.redisplay_btn
@@ -125,13 +125,14 @@ class ExperimentView(QDialog):
         scroll_selection_container = QScrollArea()
         scroll_selection_container.setWidget(self.selection_widget)
         scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        scroll_selection_container.setFrameShadow(QFrame.Raised)
 
         left_layout = QVBoxLayout()
         #left_layout.addWidget(scroll_selection_container)
         left_layout.addSpacerItem(QSpacerItem(5, 5, QSizePolicy.Minimum, QSizePolicy.Expanding))
         left_layout.addWidget(self.graph_options_widget)
-        left_layout.addLayout(select_btns_layout)
-        left_layout.addWidget(self.redisplay_btn)
+        #left_layout.addLayout(select_btns_layout)
+        #left_layout.addWidget(self.redisplay_btn)
 
         # Set Data
         self.redisplay_btn.setText("Redisplay")
@@ -149,6 +150,8 @@ class ExperimentView(QDialog):
         ## Add Widgets to layout
         layout.addWidget(QLabel(), 0, 0)
         layout.addWidget(scroll_selection_container, 1, 0)
+        layout.addLayout(select_btns_layout, 2, 0)
+        layout.addWidget(self.redisplay_btn, 3, 0)
         layout.addLayout(left_layout, 1, 1)
         layout.addWidget(self.matplot_widget, 1, 2)
 

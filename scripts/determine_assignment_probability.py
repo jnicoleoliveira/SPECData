@@ -13,7 +13,7 @@ from tables.get import get_peaks
 
 # Get Experiment Data
 print "Enter Experiment MID: "
-experiment_mid = 142
+experiment_mid = 145
 experiment_name = get_molecules.getName(conn, experiment_mid)
 
 

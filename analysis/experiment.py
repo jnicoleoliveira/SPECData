@@ -107,6 +107,14 @@ class Experiment:
             value.M = len(molecule_matches)
             value.get_probability()
 
+    def get_sorted_molecule_matches(self):
+        import operator
+        # Get Tuples
+        sorted = self.molecule_matches.values()
+        sorted.sort(key=operator.attrgetter('p'), reverse=True)
+
+        return sorted
+
     def print_matches(self):
         """
         Print Molecule Matches of experiment.
@@ -249,7 +257,7 @@ class Experiment:
             total_peaks = peaks.get_peak_count(conn, self.mid, Experiment.max_frequency)
             ratio = float(self.m) / total_peaks
             #print ratio
-            if float(ratio) < 0.2:
+            if float(ratio) < 0.1:
                 #print ratio
                 return False
 

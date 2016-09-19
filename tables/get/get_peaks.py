@@ -165,3 +165,17 @@ def get_unassigned_pid_list(conn, mid):
     cursor = conn.execute(unassigned)
 
     return cursor.fetchall()
+
+def get_all_known_frequencies(conn):
+    # Set of all peaks for molecule
+    cursor = conn.execute("SELECT frequency FROM molecules JOIN peaks"\
+          " ON molecules.mid = peaks.mid"\
+          " WHERE molecules.category='known'"\
+          " or molecules.category='artifact'")
+    frequencies = []
+    rows =  cursor.fetchall()
+
+    for row in rows:
+        frequencies.append(row)
+
+    return frequencies

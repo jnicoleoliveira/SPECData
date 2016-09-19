@@ -65,10 +65,10 @@ class MoleculeSelectionWidget(QWidget):
         # Probability LCD Number
         #probability_lcd.setDigitCount(match.p)
         probability_lcd.setNumDigits(8)
-        probability_lcd.display((match.p * 100))
+        probability_lcd.display((match.p * 1000))
         probability_lcd.setSegmentStyle(QLCDNumber.Flat)
-        probability_lcd.setFrameShape(QFrame.Panel)
-        probability_lcd.setFrameShadow(QFrame.Raised)
+        probability_lcd.setFrameShape(QFrame.NoFrame)
+        #probability_lcd.setFrameShadow(QFrame.Raised)
         probability_lcd.setStyleSheet("background-color: none; \
                                         border-color: none;\
                                         color: rgb(255, 255, 255);")

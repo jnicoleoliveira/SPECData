@@ -5,6 +5,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from frames.frame___main_graph_options_widget import Ui_Form
 
+
 class MainGraphOptionsWidget(QWidget):
 
     def __init__(self):

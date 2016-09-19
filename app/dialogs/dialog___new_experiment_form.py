@@ -29,7 +29,6 @@ class NewExperimentForm(QDialog):
         self.file_type = None
         self.databases = None
 
-
         # Set Up
         self.connect_buttons()  # Connect buttons to its respective function
 
@@ -50,13 +49,13 @@ class NewExperimentForm(QDialog):
         w.resize(320, 240)
         w.setWindowTitle("Open File")
         self.file_path = QFileDialog.getOpenFileName(w, 'Open File', os.path.curdir)
-        self.ui.select_file_txt.setPlainText(self.file_path)
+        self.ui.select_file_txt.setText(self.file_path)
 
-    def next_frame(self):
+    def next_frame(self, mid):
         from dialog___experiment_view import ExperimentView
         # Go to next fame
         self.close()
-        window = ExperimentView('exp1435', 142)
+        window = ExperimentView(str(self.experiment_name), mid)
         window.show()
         window.exec_()
 
@@ -73,7 +72,27 @@ class NewExperimentForm(QDialog):
 
         if has_errors is False:
             # No errors, may proceed to the next frame
-            self.next_frame()
+            mid = self.import_entry()
+            self.next_frame(mid)
+
+    def import_entry(self):
+        """
+        Import experiment entry
+        """
+        import tables.entry.entry_molecules as molecules
+        import tables.entry.entry_peaks as peaks
+        from config import conn, db_dir
+
+        mid = molecules.new_molecule_entry(conn, str(self.experiment_name), "experiment")
+        peaks.import_file(conn, str(self.file_path), mid)
+
+        # If there is a full spectrum file, copy to SPECdata/data/experiments/mid.sp
+        if self.file_type is not "peaks":
+            from shutil import copyfile
+            experiment_file_path = os.path.join(db_dir, "experiments", (str(mid) + ".sp"))
+            copyfile(str(self.file_path), experiment_file_path)
+
+        return mid
 
     def collect_form_data(self):
         """
@@ -81,16 +100,16 @@ class NewExperimentForm(QDialog):
         :return:
         """
         # Get File Path
-        self.file_path = self.ui.select_file_txt.toPlainText()
+        self.file_path = self.ui.select_file_txt.text()
 
         # Get Author
-        self.author = self.ui.author_txt.toPlainText()
+        self.author = self.ui.author_txt.text()
 
         # Get Experiment name
-        self.experiment_name = self.ui.name_txt.toPlainText()
+        self.experiment_name = self.ui.name_txt.text()
 
         # Get Composition
-        self.composition = self.ui.composition_txt.toPlainText()
+        self.composition = self.ui.composition_txt.text()
 
         # Set File type
         # Whether a peak file or a full spectrum file

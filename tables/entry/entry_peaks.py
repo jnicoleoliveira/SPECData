@@ -101,22 +101,31 @@ def __import_catfile(conn, filepath, mid):
     print "[ Added entry peaks ] "
 
 
-
 def __import_spfile(conn, filepath, mid):
     """
-    Inheritently Private Function, imports .sp File to database
+    Inheritently Private Function, determines peaks of .sp File and imports to database
     :param conn: Database connection
     :param filepath: Path to import file
     :param mid: Molecule ID
     :return:
     """
-    # Store peak data in file, to 'peaks' table
+    from analysis import peak_finder
+
+    # Get data from file
+    frequencies = []
+    intensities = []
     with open(filepath) as f:
         for line in f:
             point = str.split((line.strip()))
-            freq = float(point[0])      # get frequency
-            inte = float(point[1])      # get actual intensity (logx ^ x)
-            conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, freq, inte))   # insert into peak table
+            frequencies.append(float(point[0]))   # get frequency
+            intensities.append(float(point[1]))   # get actual intensity (logx ^ x)
+
+    # Determine Peaks
+    frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
+
+    # Store peaks into file
+    for i in range(0, len(frequencies)):
+        conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, frequencies[i], intensities[i]))   # insert into peak table
 
     # Commit Changes
     conn.commit()
@@ -136,7 +145,7 @@ def __import_linesfile(conn, filepath, mid):
         for line in f:
             point = str.split((line.strip()))
             freq = float(point[0])      # get frequency
-            inte = float(point[1])      # get actual intensity (logx ^ x)
+            inte = float(point[1])      # get intensity
             conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, freq, inte))   # insert into peak table
 
     # Commit Changes

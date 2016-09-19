@@ -8,6 +8,7 @@
 #                   * get_mid(conn, name, category):
 #
 
+
 def new_molecule_entry(conn, name, category):
     """
     Adds a new molecule entry to molecule table
@@ -41,6 +42,7 @@ def new_molecule_entry(conn, name, category):
 
     return mid
 
+
 def get_mid(conn, name, category):
     """
     Retreives molecule id (mid) from molecule table
@@ -49,7 +51,7 @@ def get_mid(conn, name, category):
     :param category: Category of molecule entry
     :return: mid: if molecule exists OR None: if molecule does not exist
     """
-    cursor = conn.execute("SELECT * FROM molecules WHERE name=? AND category=?", (name,category))
+    cursor = conn.execute("SELECT * FROM molecules WHERE name=? AND category=?", (name, category))
     row = cursor.fetchone()
 
     if row is None:

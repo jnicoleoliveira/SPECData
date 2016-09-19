@@ -126,7 +126,7 @@ font: 10pt &quot;Droid Sans&quot;;</string>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit">
+        <widget class="QLineEdit" name="author_txt">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(255, 255, 255);
 color: rgb(25, 25, 25);</string>
@@ -486,10 +486,6 @@ background-color: rgb(48, 48, 48);</string>
     </spacer>
    </item>
   </layout>
-  <zorder>verticalLayoutWidget_2</zorder>
-  <zorder></zorder>
-  <zorder>verticalSpacer</zorder>
-  <zorder>verticalSpacer</zorder>
   <zorder>horizontalSpacer</zorder>
   <zorder>horizontalSpacer_2</zorder>
   <zorder>verticalSpacer_2</zorder>

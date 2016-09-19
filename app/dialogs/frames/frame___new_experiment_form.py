@@ -77,11 +77,11 @@ class Ui_Dialog(object):
         self.exp_author_lbl.setLineWidth(22)
         self.exp_author_lbl.setObjectName(_fromUtf8("exp_author_lbl"))
         self.verticalLayout_3.addWidget(self.exp_author_lbl)
-        self.lineEdit = QtGui.QLineEdit(Dialog)
-        self.lineEdit.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
+        self.author_txt = QtGui.QLineEdit(Dialog)
+        self.author_txt.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
 "color: rgb(25, 25, 25);"))
-        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
-        self.verticalLayout_3.addWidget(self.lineEdit)
+        self.author_txt.setObjectName(_fromUtf8("author_txt"))
+        self.verticalLayout_3.addWidget(self.author_txt)
         self.exp_name_lbl = QtGui.QLabel(Dialog)
         self.exp_name_lbl.setStyleSheet(_fromUtf8("color: rgb(255, 255, 255);\n"
 "font: 10pt \"Droid Sans\";"))

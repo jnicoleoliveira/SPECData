@@ -28,7 +28,7 @@ class MainGraph():
     def set_plot_widget(self, plot_widget):
         self.plot_widget = plot_widget
 
-    def add_subplot_experiment(self, pos):
+    def add_subplot_experiment(self, pos, color):
         frequencies, intensities = self.experiment.get_experiment_frequencies_intensities_list()
 
         figure = self.plot_widget.getFigure()
@@ -40,7 +40,7 @@ class MainGraph():
                                      ylabel="Intensity", \
                                      title = 'Experiment: ' + self.experiment.name +' Peaks')
 
-        self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor='black')
+        self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor=color)
 
     def add_subplot_all_assignments(self, pos):
         colors = ['green', 'blue', 'yellow', '#ff6500', 'cyan', 'magenta', '#008B8B', '#8B0000', '#FA8072', '#FF69B4',
@@ -151,16 +151,18 @@ class MainGraph():
         self.y_to_experiment_intensities = y_to_experiment_intensities
 
     def graph(self, matches, colors):
-        self.add_subplot_experiment(211)
-        self.add_subplot_selected_assignments(212, matches, colors)
+        if self.full_spectrum is True:
+            self.add_subplot_experiment(211, 'black')
+            self.add_full_experiment_spectrum(211, 'gray')
+        else:
+            self.add_subplot_experiment(211, 'black')
 
+        self.add_subplot_selected_assignments(212, matches, colors)
         self.plot_widget.getFigure().subplots_adjust(top=0.95,
                                                      bottom = 0.07,
                                                      left = 0.05,
                                                      right = 0.97,
                                                      hspace=0.35,)
-        if self.full_spectrum is True:
-            self.add_full_experiment_spectrum(211, 'red')
 
 
 class Graph():

@@ -13,6 +13,17 @@ def get_max_frequency(conn, mid):
     frequency = line[0]
     return frequency
 
+def get_min_frequency(conn, mid):
+    """
+    Gets the minimum frequency of a molecule
+    :param conn: Connection to SQLite Database
+    :param mid: Molecule entry ID
+    :return: minimum frequency of a molecule
+    """
+    cursor = conn.execute("SELECT MIN(frequency) FROM peaks WHERE mid=?",(mid,))
+    line = cursor.fetchone()
+    frequency = line[0]
+    return frequency
 
 def get_max_intensity(conn, mid):
     """
@@ -25,6 +36,7 @@ def get_max_intensity(conn, mid):
     line = cursor.fetchone()
     intensity = line[0]
     return intensity
+
 
 def get_average_intensity(conn, mid):
     """
@@ -52,8 +64,6 @@ def get_frequency(conn, pid):
     return frequency
 
 
-
-
 def get_intensity(conn, pid):
     """
     Returns the intensity of a specified peak
@@ -65,6 +75,7 @@ def get_intensity(conn, pid):
     line = cursor.fetchone()
     intensity = line[0]
     return intensity
+
 
 def get_frequency_intensity(conn, pid):
     """
@@ -80,14 +91,23 @@ def get_frequency_intensity(conn, pid):
 
     return frequency, intensity
 
-def get_frequency_intensity_list(conn, mid):
+
+def get_frequency_intensity_list(conn, mid, max=None, min=0):
     """
     Returns frequency and intensity list of a particular module
     :param conn: SQLite Database connection
     :param mid: Molecule ID (mid) of associated peaks
+    :param max: (opt) maximum interval value
+    :param min: (opt) minimum interval value
     :return:
     """
-    cursor = conn.execute("SELECT frequency, intensity FROM peaks WHERE mid=?",(mid,))
+    if max is None:
+        cursor = conn.execute("SELECT frequency, intensity FROM peaks WHERE mid=? ORDER by frequency ASC;", (mid,))
+    else:
+        cursor = conn.execute("SELECT frequency, intensity FROM peaks WHERE mid=? "
+                              "AND frequency<? AND frequency>? "
+                              "ORDER by frequency ASC;", (mid, max, min,))
+
     rows = cursor.fetchall()
 
     frequency_list = []
@@ -131,7 +151,7 @@ def get_peak_count(conn, mid, max_range=None, min_range=None):
     :return:
     """
 
-    if range is None:
+    if max_range is None:
         cursor = conn.execute("SELECT COUNT(pid) FROM PEAKS"\
                               " WHERE mid=?", (mid,))
         rows = cursor.fetchone()
@@ -177,5 +197,61 @@ def get_all_known_frequencies(conn):
 
     for row in rows:
         frequencies.append(row)
+
+    return frequencies
+
+def get_all_known_freqencies_with_mids(conn):
+    # Set of all peaks for molecule
+    cursor = conn.execute("SELECT peaks.mid, peaks.frequency FROM molecules JOIN peaks"\
+          " ON molecules.mid = peaks.mid"\
+          " WHERE molecules.category='known'"\
+          " or molecules.category='artifact'"
+          " ORDER BY peaks.frequency ASC;")
+    mids = []
+    frequencies = []
+    rows = cursor.fetchall()
+
+    for row in rows:
+        mids.append(row[0])
+        frequencies.append(row[1])
+
+    return mids, frequencies
+
+def get_mid_from_frequency(conn, frequency):
+
+    cursor = conn.execute("SELECT mid FROM peaks "
+                          "WHERE frequency=?", (frequency,))
+    print frequency
+    row = cursor.fetchone()[0]
+
+    return row
+
+def get_frequencies_in_midlist(conn, mid_list, max=None, min=None):
+
+    if max is None and min is None:
+        query = "SELECT frequency FROM peaks"\
+              " WHERE mid IN (" + ','.join(map(str, mid_list)) + ')'\
+              " ORDER BY frequency ASC;"
+    elif min is None:
+        query = "SELECT frequency FROM peaks"\
+              " WHERE mid IN (" + ','.join(map(str, mid_list)) + ')'\
+              " AND frequency<{max} ORDER BY frequency ASC;".format(max=max)
+    elif max is None:
+        query = "SELECT frequency FROM peaks"\
+              " WHERE mid IN (" + ','.join(map(str, mid_list)) + ')'\
+              " AND frequency>{min} ORDER BY frequency ASC;".format(min=min)
+    else:
+        query = "SELECT frequency FROM peaks"\
+              " WHERE mid IN (" + ','.join(map(str, mid_list)) + ')'\
+              " AND frequency<{max} AND frequency>{min}" \
+              " ORDER BY frequency ASC;".format(max=max, min=min)
+
+    # Set of all peaks for molecule
+    cursor = conn.execute(query)
+    rows = cursor.fetchall()
+
+    frequencies = []
+    for row in rows:
+        frequencies.append(row[0])
 
     return frequencies

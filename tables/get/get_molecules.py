@@ -36,3 +36,15 @@ def get_experiment_list(conn):
         names.append(row[1])
 
     return mids, names
+
+def get_mid_list(conn):
+    # Select row with mid
+    cursor = conn.execute("SELECT mid, name FROM molecules WHERE category='known'"
+                          " OR category='artifact'")
+    rows = cursor.fetchall()
+
+    mids = []
+    for row in rows:
+        mids.append(row[0])
+
+    return mids

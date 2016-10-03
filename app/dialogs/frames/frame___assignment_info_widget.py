@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(501, 233)
+        Form.resize(501, 217)
         Form.setStyleSheet(_fromUtf8("background-color: rgb(48, 48, 48);\n"
 "gridline-color: rgb(195, 195, 195);\n"
 "color: rgb(255, 255, 255);\n"
@@ -54,6 +54,7 @@ class Ui_Form(object):
         self.verticalLayout.addWidget(self.experiment_name_lbl)
         self.verticalLayout_2.addLayout(self.verticalLayout)
         self.formLayout = QtGui.QFormLayout()
+        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
         self.formLayout.setLabelAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.formLayout.setFormAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
@@ -87,9 +88,6 @@ class Ui_Form(object):
         self.presence_val_lbl = QtGui.QLabel(Form)
         self.presence_val_lbl.setObjectName(_fromUtf8("presence_val_lbl"))
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.presence_val_lbl)
-        self.info_val_lbl = QtGui.QLabel(Form)
-        self.info_val_lbl.setObjectName(_fromUtf8("info_val_lbl"))
-        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.info_val_lbl)
         self.info_lbl = QtGui.QLabel(Form)
         font = QtGui.QFont()
         font.setBold(True)
@@ -97,6 +95,9 @@ class Ui_Form(object):
         self.info_lbl.setFont(font)
         self.info_lbl.setObjectName(_fromUtf8("info_lbl"))
         self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.info_lbl)
+        self.info_val_lbl = QtGui.QLabel(Form)
+        self.info_val_lbl.setObjectName(_fromUtf8("info_val_lbl"))
+        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.info_val_lbl)
         self.verticalLayout_2.addLayout(self.formLayout)
 
         self.retranslateUi(Form)
@@ -104,7 +105,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.Title.setText(_translate("Form", "Individual Match View", None))
+        self.Title.setText(_translate("Form", "Experiment View", None))
         self.experiment_name_lbl.setText(_translate("Form", "molecule name here", None))
         self.total_peaks_lbl.setText(_translate("Form", "Total Peaks:", None))
         self.total_peaks_val.setText(_translate("Form", "TextLabel", None))
@@ -112,6 +113,6 @@ class Ui_Form(object):
         self.peaks_assigned_val.setText(_translate("Form", "TextLabel", None))
         self.presence_lbl.setText(_translate("Form", "Chance of Presence (P):", None))
         self.presence_val_lbl.setText(_translate("Form", "TextLabel", None))
-        self.info_val_lbl.setText(_translate("Form", "TextLabel", None))
         self.info_lbl.setText(_translate("Form", "Additional Info:", None))
+        self.info_val_lbl.setText(_translate("Form", "TextLabel", None))
 

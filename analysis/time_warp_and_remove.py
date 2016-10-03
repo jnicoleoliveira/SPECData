@@ -16,6 +16,7 @@ from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
 import matplotlib.pyplot as plt
 
+
 class TimeWarpRemove():
     def __init__(self, mid):
         # Experiment Data
@@ -101,9 +102,6 @@ class TimeWarpRemove():
 
         plt.grid()
         plt.show()
-
-    def display_graph(self):
-
 
     def remove_assigned_from_frequencies(self, linear_segments):
 

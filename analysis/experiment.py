@@ -49,6 +49,13 @@ class Experiment:
     def get_experiment_frequencies_intensities_list(self):
         return peaks.get_frequency_intensity_list(conn,self.mid)
 
+    def get_assigned_peaks_count(self):
+        count = 0
+        for key, value in self.molecule_matches.iteritems():
+            count += value.m
+
+        return count
+
     def get_assigned_names(self):
         assigned_names = []
         for key, value in self.molecule_matches.iteritems():
@@ -84,7 +91,8 @@ class Experiment:
 
                 # Determine if this is match is of a new molecule
                 if molecule_matches.has_key(mid) is False:
-                    molecule_matches[mid] = self.MoleculeMatch(m.name, mid, self.N)    # New Molecule, add new entry to matches
+                    # New Molecule, add new entry to matches
+                    molecule_matches[mid] = self.MoleculeMatch(m.name, mid, self.N)
 
                 molecule_matches[mid].add_match(m)  # Add match to molecule
 
@@ -257,7 +265,7 @@ class Experiment:
             total_peaks = peaks.get_peak_count(conn, self.mid, Experiment.max_frequency)
             ratio = float(self.m) / total_peaks
             #print ratio
-            if float(ratio) < 0.1:
+            if float(ratio) < 0.05:
                 #print ratio
                 return False
 

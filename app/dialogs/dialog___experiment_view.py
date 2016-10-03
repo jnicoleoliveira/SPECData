@@ -12,6 +12,7 @@ from .frames.frame___experiment import Ui_Dialog
 from .splash_screens import LoadingProgressScreen
 from .widget___main_graph_options import MainGraphOptionsWidget
 from .widget___molecule_selection import MoleculeSelectionWidget
+from .widget___experiment_info import ExperimentInfoWidget
 from ..experiment_analysis import MainGraph
 
 
@@ -103,6 +104,12 @@ class ExperimentView(QDialog):
     def select_all(self):
         self.selection_widget.select_all()
 
+    def go_to_main_menu(self):
+        from dialog___main_menu import MainMenu
+        window = MainMenu()
+        self.close()
+        window.exec_()
+
     def setup_layout(self):
 
         # Set a grid layout to manage widgets
@@ -113,9 +120,11 @@ class ExperimentView(QDialog):
         self.matplot_widget = MatplotlibWidget()
         self.graph_options_widget = MainGraphOptionsWidget()
         self.selection_widget = MoleculeSelectionWidget(self.experiment)
+        self.info_widget = ExperimentInfoWidget(self.experiment)
         self.redisplay_btn = QPushButton()
         self.select_all_btn = QPushButton()
         self.deselect_all_btn = QPushButton()
+        self.main_menu_btn = QPushButton()
 
         # Containers  / Inner Layouts
         select_btns_layout = QHBoxLayout()
@@ -144,17 +153,20 @@ class ExperimentView(QDialog):
         self.deselect_all_btn.setText("Deselect All")
         self.deselect_all_btn.clicked.connect(self.deselect_all)
 
+        self.main_menu_btn.setText("Main Menu")
+        self.main_menu_btn.clicked.connect(self.go_to_main_menu)
         #self.plot_widget = pg.PlotWidget(title="Experiment Peaks")
         #spacer1_widget = QSpacerItem()
 
         ## Add Widgets to layout
-        layout.addWidget(QLabel(), 0, 0)
+        layout.addWidget(self.info_widget, 0, 0)
+        #layout.addWidget(QLabel(), 0, 0)
         layout.addWidget(scroll_selection_container, 1, 0)
         layout.addLayout(select_btns_layout, 2, 0)
         layout.addWidget(self.redisplay_btn, 3, 0)
         layout.addLayout(left_layout, 1, 1)
         layout.addWidget(self.matplot_widget, 1, 2)
-
+        layout.addWidget(self.main_menu_btn, 3, 3)
         #layout.addLayout(left_layout, 0, 0)
         #layout.addWidget(self.graph_options_widget, 1, 0)
         #layout.addLayout(select_btns_layout, 2, 0)

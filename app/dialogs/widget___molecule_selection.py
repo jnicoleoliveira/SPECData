@@ -100,7 +100,7 @@ class MoleculeSelectionWidget(QWidget):
     def more_info(self, match, color):
         window = AssignmentWindow(match, color, self.experiment)
         window.exec_()
-        window.show()
+        #window.show()
 
     def get_selections(self):
         matches = []

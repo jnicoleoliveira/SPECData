@@ -15,6 +15,8 @@ from .widget___molecule_selection import MoleculeSelectionWidget
 from .widget___experiment_info import ExperimentInfoWidget
 from ..experiment_analysis import MainGraph
 
+from config import resources
+import os
 
 class ExperimentView(QMainWindow):
 
@@ -39,6 +41,7 @@ class ExperimentView(QMainWindow):
         self.select_all_btn = None      # Select all (for molecule selection)
         self.deselect_all_btn = None    # Deselect all (for molecule selection)
         self.main_menu_btn = None       # Main Menu (exits, returns to main menu)
+        self.delete_btn = None          # Delete Button, removes associated lines from analysis
 
         ''' Data '''
         self.experiment = None          # Experiment Object
@@ -50,15 +53,14 @@ class ExperimentView(QMainWindow):
 
         self.show()
 
-
     def add_selection_assignments(self):
         self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
 
-    def connect_buttons(self):
-        redisplay_btn = self.ui.redisplay_btn
-        redisplay_btn.clicked.connect(self.redisplay_graph)
-
     def deselect_all(self):
+        """
+        Select all button function.
+        Checks all selections in selection widget
+        """
         self.selection_widget.deselect_all()
 
     def do_analysis(self):
@@ -94,7 +96,6 @@ class ExperimentView(QMainWindow):
         """
         Redisplay button function.
         Clears current experiment graph, and redisplays graph from checkbox selections.
-        :return:
         """
         # Clear Graph
         self.experiment_graph.clear()
@@ -111,7 +112,13 @@ class ExperimentView(QMainWindow):
         # Draw
         self.experiment_graph.draw()
 
+    def remove_from_analysis(self):
+        print "Clicked 'remove button'"
     def select_all(self):
+        """
+        Select all button function.
+        Checks all selections in selection widget
+        """
         self.selection_widget.select_all()
 
     def go_to_main_menu(self):
@@ -132,8 +139,9 @@ class ExperimentView(QMainWindow):
 
         # QMainWindow requires central widget
         # Created blank QWidget, and set layout to GridLayout
+        outer_layout = QGridLayout()
         widget = QWidget()
-        widget.setLayout(layout)
+        widget.setLayout(outer_layout)
         self.setCentralWidget(widget)
 
         '''
@@ -152,34 +160,67 @@ class ExperimentView(QMainWindow):
         self.select_all_btn = QPushButton()     # Select all (for molecule selection)
         self.deselect_all_btn = QPushButton()   # Deselect all (for molecule selection)
         self.main_menu_btn = QPushButton()      # Main Menu (exits, returns to main menu)
-
+        self.delete_btn = QPushButton()
+        self.table = QTableWidget()
 
         '''
         Create Inner Layouts / Containers
         '''
-        # BUTTONS LAYOUT
+        # BUTTONS LAYOUT #
+        buttons_layout = QVBoxLayout()
         select_btns_layout = QHBoxLayout()
         select_btns_layout.addWidget(self.select_all_btn)
         select_btns_layout.addWidget(self.deselect_all_btn)
+        select_btns_layout.addWidget(self.delete_btn)
+        buttons_layout.addLayout(select_btns_layout)
+        buttons_layout.addWidget(self.redisplay_btn)
 
-        # TAB LAYOUT
+        # TAB LAYOUT #
 
-        # SCROLL SELECTION
+        # TOOL BOX
+        tool_box = QToolBox()
+        text = QString("Graph Options")
+        tool_box.addItem(self.graph_options_widget, text)
+        tool_box.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        text = QString("Peak List")
+        tool_box.addItem(self.table, text)
+
+        # DOCK WIDGET
+        dock_tools = QDockWidget(self.window())
+        self.window().addDockWidget(Qt.BottomDockWidgetArea, dock_tools)
+        dock_tools.setWidget(tool_box)
+        #dock_tools.setFloating(True)
+        dock_tools.setFeatures(QDockWidget.DockWidgetClosable |
+                               QDockWidget.DockWidgetMovable |
+                               QDockWidget.DockWidgetFloatable |
+                               QDockWidget.DockWidgetVerticalTitleBar)
+        #dock_tools.setFeatures(QDockWidget.DockWidgetMovable)
+        #dock_tools.setFeatures(QDockWidget.DockWidgetFloatable)
+        #dock_tools.setFeatures(QDockWidget.DockWidgetVerticalTitleBar)
+
+        #dock_tools.setAllowedAreas(QDockWidget.LeftDockWidgetArea)
+        #dock_tools.setAllowedAreas(QDockWidget.RightDockWidgetArea)
+        #dock_tools.setAllowedAreas(QDockWidget.TopDockWidgetArea)
+        #dock_tools.setAllowedAreas(QDockWidget.BottomDockWidgetArea)
+
+        # SCROLL SELECTION #
         scroll_selection_container = QScrollArea()
         scroll_selection_container.setWidget(self.selection_widget)
         scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         scroll_selection_container.setFrameShadow(QFrame.Raised)
 
+        # LEFT LAYOUT #
         left_layout = QVBoxLayout()
         #left_layout.addWidget(scroll_selection_container)
         left_layout.addSpacerItem(QSpacerItem(5, 5, QSizePolicy.Minimum, QSizePolicy.Expanding))
-        left_layout.addWidget(self.graph_options_widget)
+        #left_layout.addWidget(self.graph_options_widget)
         #left_layout.addLayout(select_btns_layout)
         #left_layout.addWidget(self.redisplay_btn)
 
         '''
         Connect Buttons
         '''
+
         # -- CONNECT BUTTONS -- #
         self.redisplay_btn.setText("Redisplay")
         self.redisplay_btn.clicked.connect(self.redisplay_graph)
@@ -193,17 +234,26 @@ class ExperimentView(QMainWindow):
         self.main_menu_btn.setText("Main Menu")
         self.main_menu_btn.clicked.connect(self.go_to_main_menu)
 
+        delete_icon = QIcon(QPixmap(os.path.join(resources, 'trash_icon.png')))
+        self.delete_btn.setIcon(delete_icon)
+        self.delete_btn.clicked.connect(self.remove_from_analysis)
 
         '''
         Add widgets to Layout
         '''
-        layout.addWidget(self.info_widget, 0, 0)
         layout.addWidget(scroll_selection_container, 1, 0)
-        layout.addLayout(select_btns_layout, 2, 0)
-        layout.addWidget(self.redisplay_btn, 3, 0)
-        layout.addLayout(left_layout, 1, 1)
-        layout.addWidget(self.matplot_widget, 1, 2)
-        layout.addWidget(self.main_menu_btn, 3, 3)
+        layout.addLayout(buttons_layout, 2, 0)
+        #layout.addWidget(self.redisplay_btn, 3, 0)
+        #layout.addLayout(left_layout, 1, 1)
+        layout.addWidget(self.matplot_widget, 1, 1)
+        #layout.addWidget(dock_tools, 3, 2)
+        #layout.addWidget(QLabel(), 4, 1)
+        #layout.addWidget(tool_box, 4, 2)
+        #layout.addWidget(self.main_menu_btn, 2, 2)
+        outer_layout.addWidget(self.info_widget, 0, 0)
+        outer_layout.addLayout(layout, 1, 0)
+
+        #outer_layout.addWidget(dock_tools, 1, 0)
 
     def startup(self, experiment_name, mid):
         """

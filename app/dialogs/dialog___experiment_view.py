@@ -6,9 +6,9 @@ import time
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
+from .frames.frame___experiment_view import Ui_MainWindow
 
 from analysis import experiment
-from .frames.frame___experiment import Ui_Dialog
 from .splash_screens import LoadingProgressScreen
 from .widget___main_graph_options import MainGraphOptionsWidget
 from .widget___molecule_selection import MoleculeSelectionWidget
@@ -16,30 +16,40 @@ from .widget___experiment_info import ExperimentInfoWidget
 from ..experiment_analysis import MainGraph
 
 
-class ExperimentView(QDialog):
+class ExperimentView(QMainWindow):
 
-    def __init__(self, experiment_name, mid):
-        super(ExperimentView, self).__init__()
-        self.ui = Ui_Dialog()
+    def __init__(self, experiment_name, mid, parent=None):
+        super(ExperimentView, self).__init__(parent)
+        self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Experiment View")
 
-        # Widgets
-        self.plot_widget = None
+        ''' Widgets '''
+        # -- Graph  -- #
+        self.matplot_widget = None
+        # -- Graph Options -- #
         self.graph_options_widget = None
-        self.matplot_widget = MatplotlibWidget()
+        # -- Experiment Info Widget -- #
+        self.info_widget = None
+        # -- Molecule Selection Widget -- #
         self.selection_widget = None
-        self.redisplay_btn = QPushButton()
-        self.select_all_btn = QPushButton()
-        self.deselect_all_btn = QPushButton()
+        # -- Buttons -- #
+        self.redisplay_btn = None       # Redisplay (Redisplay graph with current selections)
+        self.select_all_btn = None      # Select all (for molecule selection)
+        self.deselect_all_btn = None    # Deselect all (for molecule selection)
+        self.main_menu_btn = None       # Main Menu (exits, returns to main menu)
 
-        # Data
+        ''' Data '''
         self.experiment = None          # Experiment Object
         self.experiment_graph = None    # ExperimentGraph Object
         self.loading_screen = None      # LoadingProgressScreen Object
 
+        # Start Up Script
         self.startup(experiment_name, mid)
+
+        self.show()
+
 
     def add_selection_assignments(self):
         self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
@@ -111,26 +121,50 @@ class ExperimentView(QDialog):
         window.exec_()
 
     def setup_layout(self):
+        """
+        Sets up default layout of ExperimentView
+        """
 
-        # Set a grid layout to manage widgets
-        layout = QGridLayout()
-        self.setLayout(layout)
+        '''
+        Set-up QMainWindow layout
+        '''
+        layout = QGridLayout()  # Create Grid Layout
 
-        # Widgets
+        # QMainWindow requires central widget
+        # Created blank QWidget, and set layout to GridLayout
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
+
+        '''
+        Set-up Widgets
+        '''
+        # -- Graph  -- #
         self.matplot_widget = MatplotlibWidget()
+        # -- Graph Options -- #
         self.graph_options_widget = MainGraphOptionsWidget()
+        # -- Molecule Selection Widget -- #
         self.selection_widget = MoleculeSelectionWidget(self.experiment)
+        # -- Experiment Info Widget -- #
         self.info_widget = ExperimentInfoWidget(self.experiment)
-        self.redisplay_btn = QPushButton()
-        self.select_all_btn = QPushButton()
-        self.deselect_all_btn = QPushButton()
-        self.main_menu_btn = QPushButton()
+        # -- Buttons -- #
+        self.redisplay_btn = QPushButton()      # Redisplay (Redisplay graph with current selections)
+        self.select_all_btn = QPushButton()     # Select all (for molecule selection)
+        self.deselect_all_btn = QPushButton()   # Deselect all (for molecule selection)
+        self.main_menu_btn = QPushButton()      # Main Menu (exits, returns to main menu)
 
-        # Containers  / Inner Layouts
+
+        '''
+        Create Inner Layouts / Containers
+        '''
+        # BUTTONS LAYOUT
         select_btns_layout = QHBoxLayout()
         select_btns_layout.addWidget(self.select_all_btn)
         select_btns_layout.addWidget(self.deselect_all_btn)
 
+        # TAB LAYOUT
+
+        # SCROLL SELECTION
         scroll_selection_container = QScrollArea()
         scroll_selection_container.setWidget(self.selection_widget)
         scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
@@ -143,7 +177,10 @@ class ExperimentView(QDialog):
         #left_layout.addLayout(select_btns_layout)
         #left_layout.addWidget(self.redisplay_btn)
 
-        # Set Data
+        '''
+        Connect Buttons
+        '''
+        # -- CONNECT BUTTONS -- #
         self.redisplay_btn.setText("Redisplay")
         self.redisplay_btn.clicked.connect(self.redisplay_graph)
 
@@ -155,61 +192,64 @@ class ExperimentView(QDialog):
 
         self.main_menu_btn.setText("Main Menu")
         self.main_menu_btn.clicked.connect(self.go_to_main_menu)
-        #self.plot_widget = pg.PlotWidget(title="Experiment Peaks")
-        #spacer1_widget = QSpacerItem()
 
-        ## Add Widgets to layout
+
+        '''
+        Add widgets to Layout
+        '''
         layout.addWidget(self.info_widget, 0, 0)
-        #layout.addWidget(QLabel(), 0, 0)
         layout.addWidget(scroll_selection_container, 1, 0)
         layout.addLayout(select_btns_layout, 2, 0)
         layout.addWidget(self.redisplay_btn, 3, 0)
         layout.addLayout(left_layout, 1, 1)
         layout.addWidget(self.matplot_widget, 1, 2)
         layout.addWidget(self.main_menu_btn, 3, 3)
-        #layout.addLayout(left_layout, 0, 0)
-        #layout.addWidget(self.graph_options_widget, 1, 0)
-        #layout.addLayout(select_btns_layout, 2, 0)
-        #layout.addWidget(self.redisplay_btn, 3, 0)
-
-        #layout.addWidget(QLabel(), 1, 1)
-
-        #layout.addWidget(self.plot_widget, 0,1)
 
     def startup(self, experiment_name, mid):
+        """
+        Start-up script, does the following behind a loading progress screen:
+        (1) Creates experiment from mid and experiment_name
+        (2) Does Experiment analysis
+        (3) Sets up layout with respective analysis data
+        (4) Draws graph
+        :param experiment_name: Experiment name
+        :param mid: Experiment molecule ID
+        """
+
+        '''Start Loading Screen'''
         self.loading_screen = LoadingProgressScreen()
         self.loading_screen.start()     # Start Loading Screen
 
         ## Do Things ##
 
-        # Create Experiment
+        ''' Create Experiment '''
         self.loading_screen.set_caption('Creating experiment...')
         self.experiment = experiment.Experiment(experiment_name, mid)  # Create experiment obj
         time.sleep(1)
         self.loading_screen.next_value(20)
 
-        # Analyze Experiment
+        '''Analyze Experiment'''
         self.loading_screen.set_caption('Analyzing...')
         self.do_analysis()                      # Run Analysis
         self.loading_screen.next_value(40)
         time.sleep(1)
 
-        # Setup Layout
+        '''Setup Layout'''
         self.loading_screen.set_caption('Setting up...')
         self.setup_layout()                     # Setup Layout
         self.loading_screen.next_value(60)
 
-        # Add Assignments to Selection Widget
+        '''Add Assignments to Selection Widget'''
         self.add_selection_assignments()        # Add assignments
         time.sleep(1)
         self.loading_screen.next_value(80)
 
-        # Graph Main Graph
+        '''Graph Main Graph'''
         self.graph()                            # Graph
         self.loading_screen.next_value(90)
         time.sleep(2)
 
-        # End Loading Screen
+        '''End Loading Screen'''
         self.loading_screen.end()
 
 

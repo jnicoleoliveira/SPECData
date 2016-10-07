@@ -35,7 +35,7 @@ class LoadExperiment(QDialog):
 
     def populate_list_widget(self):
         """
-        Populates list widget with experiments availible to load.
+        Populates list widget with experiments available to load.
         """
         mids, names = get_molecules.get_experiment_list(conn)
 
@@ -64,6 +64,11 @@ class LoadExperiment(QDialog):
     def load_experiment(self, mid, name):
 
         from dialog___experiment_view import ExperimentView
-        self.close()
-        window = ExperimentView(name, mid)
-        window.exec_()
+        #self.close()
+
+        self.new_window = ExperimentView(name, mid)
+        self.new_window.show()
+
+        #window.show()
+        #window.show()
+        #window.exec_()

@@ -20,7 +20,7 @@ class ExperimentInfoWidget(QWidget):
         self.ui.setupUi(self)
 
         self.setup(experiment)
-        self.show()
+        #self.show()
 
     def setup(self, experiment):
         # Get Data

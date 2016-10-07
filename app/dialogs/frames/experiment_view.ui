@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ExperimentWindow</class>
- <widget class="QDialog" name="ExperimentWindow">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1380</width>
-    <height>779</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Experiment</string>
+   <string>MainWindow</string>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(48, 48, 48);
@@ -19,6 +19,121 @@ gridline-color: rgb(195, 195, 195);
 color: rgb(255, 255, 255);
 </string>
   </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionFull_Screen"/>
+    <addaction name="separator"/>
+    <addaction name="action_Graph_Settings"/>
+    <addaction name="actionAnalysis_Bar"/>
+   </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionSave_Analysis"/>
+    <addaction name="actionSave_analysis_as"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_analysis_write_up"/>
+    <addaction name="actionSave_analysis_write_up_as"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Run</string>
+    </property>
+    <addaction name="actionRe_analyze_2"/>
+    <addaction name="actionRe_analyze"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_a_molecule"/>
+    <addaction name="separator"/>
+    <addaction name="actionEdit_Analyze_Configurations"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+   <addaction name="menuEdit"/>
+  </widget>
+  <action name="action_Graph_Tools">
+   <property name="text">
+    <string>&amp;Graph Tools</string>
+   </property>
+  </action>
+  <action name="actionFull_Screen">
+   <property name="text">
+    <string>Enter Full Screen</string>
+   </property>
+  </action>
+  <action name="action_Graph_Settings">
+   <property name="text">
+    <string>Graph Settings</string>
+   </property>
+  </action>
+  <action name="actionAnalysis_Bar">
+   <property name="text">
+    <string>Analysis Bar</string>
+   </property>
+  </action>
+  <action name="actionSave_Analysis">
+   <property name="text">
+    <string>&amp;Save analysis</string>
+   </property>
+  </action>
+  <action name="actionSave_analysis_as">
+   <property name="text">
+    <string>Save analysis as...</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings...</string>
+   </property>
+  </action>
+  <action name="actionSave_analysis_write_up">
+   <property name="text">
+    <string>&amp;Save analysis write-up</string>
+   </property>
+  </action>
+  <action name="actionSave_analysis_write_up_as">
+   <property name="text">
+    <string>Save analysis write-up as..</string>
+   </property>
+  </action>
+  <action name="actionRe_analyze">
+   <property name="text">
+    <string>Re-analyze...</string>
+   </property>
+  </action>
+  <action name="actionEdit_Analyze_Configurations">
+   <property name="text">
+    <string>&amp;Edit analysis configurations</string>
+   </property>
+  </action>
+  <action name="actionRe_analyze_2">
+   <property name="text">
+    <string>&amp;Re-analyze</string>
+   </property>
+  </action>
+  <action name="actionAdd_a_molecule">
+   <property name="text">
+    <string>Add a molecule...</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

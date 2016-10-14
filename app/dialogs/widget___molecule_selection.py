@@ -23,7 +23,6 @@ class MoleculeSelectionWidget(QWidget):
         self.elements = {}
         self.size = 0
         self.selected = []
-
         self.show()
 
         # Initialize Color Wheel

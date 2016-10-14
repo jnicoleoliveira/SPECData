@@ -157,24 +157,24 @@ class ExperimentView(QMainWindow):
         # -- Experiment Info Widget -- #
         self.info_widget = ExperimentInfoWidget(self.experiment)
         # -- Buttons -- #
-        self.redisplay_btn = QPushButton()      # Redisplay (Redisplay graph with current selections)
-        self.select_all_btn = QPushButton()     # Select all (for molecule selection)
-        self.deselect_all_btn = QPushButton()   # Deselect all (for molecule selection)
-        self.main_menu_btn = QPushButton()      # Main Menu (exits, returns to main menu)
-        self.delete_btn = QPushButton()
-        self.table_widget = QTableWidget()      # Table Widget (molecule assignment and peaks)
+        #self.redisplay_btn = QPushButton()      # Redisplay (Redisplay graph with current selections)
+        #self.select_all_btn = QPushButton()     # Select all (for molecule selection)
+        #self.deselect_all_btn = QPushButton()   # Deselect all (for molecule selection)
+        self.main_menu_btn = QPushButton()       # Main Menu (exits, returns to main menu)
+        #self.delete_btn = QPushButton()
+        self.table_widget = QTableWidget()       # Table Widget (molecule assignment and peaks)
 
         '''
         Create Inner Layouts / Containers
         '''
         # BUTTONS LAYOUT #
-        buttons_layout = QVBoxLayout()
-        select_btns_layout = QHBoxLayout()
-        select_btns_layout.addWidget(self.select_all_btn)
-        select_btns_layout.addWidget(self.deselect_all_btn)
-        select_btns_layout.addWidget(self.delete_btn)
-        buttons_layout.addLayout(select_btns_layout)
-        buttons_layout.addWidget(self.redisplay_btn)
+        #buttons_layout = QVBoxLayout()
+        #select_btns_layout = QHBoxLayout()
+        #select_btns_layout.addWidget(self.select_all_btn)
+        #select_btns_layout.addWidget(self.deselect_all_btn)
+        #select_btns_layout.addWidget(self.delete_btn)
+        #buttons_layout.addLayout(select_btns_layout)
+        #buttons_layout.addWidget(self.redisplay_btn)
 
 
         # TOOL BOX DOCK WIDGET
@@ -197,7 +197,7 @@ class ExperimentView(QMainWindow):
         # SCROLL SELECTION #
         scroll_selection_container = QScrollArea()
         scroll_selection_container.setWidget(self.selection_widget)
-        scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         scroll_selection_container.setFrameShadow(QFrame.Raised)
 
         # LEFT LAYOUT #
@@ -213,36 +213,41 @@ class ExperimentView(QMainWindow):
         '''
 
         # -- CONNECT BUTTONS -- #
-        self.redisplay_btn.setText("Redisplay (F5)")
-        self.redisplay_btn.clicked.connect(self.redisplay_graph)
+        #self.redisplay_btn.setText("Redisplay (F5)")
+        #self.redisplay_btn.clicked.connect(self.redisplay_graph)
 
-        self.select_all_btn.setText("Select All")
-        self.select_all_btn.clicked.connect(self.select_all)
+        #self.select_all_btn.setText("Select All")
+        #self.select_all_btn.clicked.connect(self.select_all)
 
-        self.deselect_all_btn.setText("Deselect All")
-        self.deselect_all_btn.clicked.connect(self.deselect_all)
+        #self.deselect_all_btn.setText("Deselect All")
+        #self.deselect_all_btn.clicked.connect(self.deselect_all)
 
-        self.main_menu_btn.setText("Main Menu")
-        self.main_menu_btn.clicked.connect(self.go_to_main_menu)
+        #self.main_menu_btn.setText("Main Menu")
+        #self.main_menu_btn.clicked.connect(self.go_to_main_menu)
 
-        delete_icon = QIcon(QPixmap(os.path.join(resources, 'trash_icon.png')))
-        self.delete_btn.setIcon(delete_icon)
-        self.delete_btn.clicked.connect(self.remove_from_analysis)
+        #delete_icon = QIcon(QPixmap(os.path.join(resources, 'trash_icon.png')))
+        #self.delete_btn.setIcon(delete_icon)
+        #self.delete_btn.clicked.connect(self.remove_from_analysis)
 
         '''
         Add widgets to Layout
         '''
-        layout.addWidget(scroll_selection_container, 1, 0)
-        layout.addLayout(buttons_layout, 2, 0)
-        #layout.addWidget(self.redisplay_btn, 3, 0)
-        #layout.addLayout(left_layout, 1, 1)
-        layout.addWidget(self.matplot_widget, 1, 1)
-        #layout.addWidget(dock_tools, 3, 2)
-        #layout.addWidget(QLabel(), 4, 1)
-        #layout.addWidget(tool_box, 4, 2)
-        #layout.addWidget(self.main_menu_btn, 2, 2)
-        outer_layout.addWidget(self.info_widget, 0, 0)
-        outer_layout.addLayout(layout, 1, 0)
+
+        hlayout = QHBoxLayout()
+        v1 = QVBoxLayout()
+        v1.addWidget(self.info_widget)
+        v1.addWidget(scroll_selection_container)
+        v2 = QVBoxLayout()
+        v2.addWidget(self.matplot_widget)
+        hlayout.addLayout(v1)
+        hlayout.addLayout(v2)
+        outer_layout.addLayout(hlayout, 0, 0)
+        #layout.addWidget(scroll_selection_container, 1, 0)
+
+        #layout.addWidget(self.matplot_widget, 1, 1)
+
+        #outer_layout.addWidget(self.info_widget, 0, 0)
+        #outer_layout.addLayout(layout, 1, 0)
         #outer_layout.addWidget(dock_tools, 1, 0)
 
         '''
@@ -253,8 +258,10 @@ class ExperimentView(QMainWindow):
     def setup_toolbar_and_shortcuts(self):
 
         action_bar = self.ui.action_bar
-        icon = None
-        pix_map = None
+
+        ''' Home Button '''
+        pix_map = QPixmap(os.path.join(resources, 'home.png'))
+        action_bar.addAction(QIcon(pix_map), "Main Menu", self.go_to_main_menu)
 
         ''' Save Button'''
         # -- Toolbar - #

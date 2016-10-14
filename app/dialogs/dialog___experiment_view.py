@@ -114,6 +114,7 @@ class ExperimentView(QMainWindow):
 
     def remove_from_analysis(self):
         print "Clicked 'remove button'"
+
     def select_all(self):
         """
         Select all button function.
@@ -161,7 +162,7 @@ class ExperimentView(QMainWindow):
         self.deselect_all_btn = QPushButton()   # Deselect all (for molecule selection)
         self.main_menu_btn = QPushButton()      # Main Menu (exits, returns to main menu)
         self.delete_btn = QPushButton()
-        self.table = QTableWidget()
+        self.table_widget = QTableWidget()      # Table Widget (molecule assignment and peaks)
 
         '''
         Create Inner Layouts / Containers
@@ -175,17 +176,15 @@ class ExperimentView(QMainWindow):
         buttons_layout.addLayout(select_btns_layout)
         buttons_layout.addWidget(self.redisplay_btn)
 
-        # TAB LAYOUT #
 
-        # TOOL BOX
+        # TOOL BOX DOCK WIDGET
         tool_box = QToolBox()
         text = QString("Graph Options")
         tool_box.addItem(self.graph_options_widget, text)
         tool_box.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         text = QString("Peak List")
-        tool_box.addItem(self.table, text)
+        tool_box.addItem(self.table_widget, text)
 
-        # DOCK WIDGET
         dock_tools = QDockWidget(self.window())
         self.window().addDockWidget(Qt.BottomDockWidgetArea, dock_tools)
         dock_tools.setWidget(tool_box)
@@ -194,14 +193,6 @@ class ExperimentView(QMainWindow):
                                QDockWidget.DockWidgetMovable |
                                QDockWidget.DockWidgetFloatable |
                                QDockWidget.DockWidgetVerticalTitleBar)
-        #dock_tools.setFeatures(QDockWidget.DockWidgetMovable)
-        #dock_tools.setFeatures(QDockWidget.DockWidgetFloatable)
-        #dock_tools.setFeatures(QDockWidget.DockWidgetVerticalTitleBar)
-
-        #dock_tools.setAllowedAreas(QDockWidget.LeftDockWidgetArea)
-        #dock_tools.setAllowedAreas(QDockWidget.RightDockWidgetArea)
-        #dock_tools.setAllowedAreas(QDockWidget.TopDockWidgetArea)
-        #dock_tools.setAllowedAreas(QDockWidget.BottomDockWidgetArea)
 
         # SCROLL SELECTION #
         scroll_selection_container = QScrollArea()
@@ -222,7 +213,7 @@ class ExperimentView(QMainWindow):
         '''
 
         # -- CONNECT BUTTONS -- #
-        self.redisplay_btn.setText("Redisplay")
+        self.redisplay_btn.setText("Redisplay (F5)")
         self.redisplay_btn.clicked.connect(self.redisplay_graph)
 
         self.select_all_btn.setText("Select All")
@@ -252,8 +243,129 @@ class ExperimentView(QMainWindow):
         #layout.addWidget(self.main_menu_btn, 2, 2)
         outer_layout.addWidget(self.info_widget, 0, 0)
         outer_layout.addLayout(layout, 1, 0)
-
         #outer_layout.addWidget(dock_tools, 1, 0)
+
+        '''
+        Toolbar and ShortCuts
+        '''
+        self.setup_toolbar_and_shortcuts()
+
+    def setup_toolbar_and_shortcuts(self):
+
+        action_bar = self.ui.action_bar
+        icon = None
+        pix_map = None
+
+        ''' Save Button'''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'save-button.png'))
+        action_bar.addAction(QIcon(pix_map), "Save Analysis (Ctrl+S)", self.save_analysis)
+        # Short cut
+        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_S), self),
+                     SIGNAL('activated()'), self.save_analysis)
+
+        action_bar.addSeparator()
+        ##############################################
+        ''' Undo '''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'undo-disabled.png'))
+        action_bar.addAction(QIcon(pix_map), "Undo (Ctrl+Alt+Z)", self.undo)
+
+        ''' Redo '''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'redo.png'))
+        action_bar.addAction(QIcon(pix_map), "Redo (Ctrl+Alt+Y)", self.redo)
+
+        action_bar.addSeparator()
+        ##############################################
+        ''' Redisplay Button'''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'redisplay-graph.png'))
+        action_bar.addAction(QIcon(pix_map), "Redisplay Graph (F5)", self.redisplay_graph)
+        # Short cut
+        self.connect(QShortcut(QKeySequence(Qt.Key_F5), self),
+                     SIGNAL('activated()'), self.redisplay_graph)
+
+        ''' Select All '''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'select-all.png'))
+        action_bar.addAction(QIcon(pix_map), "Select All (Ctrl+A)", self.select_all)
+        # Short cut
+        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_A), self),
+                     SIGNAL('activated()'), self.select_all)
+
+        ''' Deselect All '''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'deselect-all.png'))
+        action_bar.addAction(QIcon(pix_map), "Deselect All (Ctrl+D)", self.deselect_all)
+        # Short cut
+        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_D), self),
+                     SIGNAL('activated()'), self.deselect_all)
+
+        ##############################################
+        action_bar.addSeparator()
+        ##############################################
+
+        ''' Validate Selections '''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'validate.png'))
+        action_bar.addAction(QIcon(pix_map), "Validate Selections", self.validate_selections)
+
+        ''' Invalidate Selections'''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'invalidate.png'))
+        action_bar.addAction(QIcon(pix_map), "Invalidate Selections", self.invalidate_selections)
+
+        ##############################################
+        action_bar.addSeparator()
+        ##############################################
+
+        ''' Re-Analyze'''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 're-analyze.png'))
+        action_bar.addAction(QIcon(pix_map), "Re-Analyze", self.redo_analysis)
+
+        ''' Analysis Settings '''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'analysis-settings.png'))
+        action_bar.addAction(QIcon(pix_map), "Analysis Settings", self.analysis_settings)
+
+        ##############################################
+        action_bar.addSeparator()
+        ##############################################
+
+        ''' Settings '''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'settings.png'))
+        action_bar.addAction(QIcon(pix_map), "Settings (Ctrl+Alt+S)", self.settings)
+        # Short cut
+        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.ALT, Qt.Key_S), self),
+                     SIGNAL('activated()'), self.settings)
+
+    def settings(self):
+        print "SETTINGS"
+
+    def analysis_settings(self):
+        print "ANALYSIS SETTINGS"
+
+    def redo_analysis(self):
+        print "RE-ANALYZE"
+
+    def undo(self):
+        print "UNDO"
+
+    def redo(self):
+        print "REDO"
+
+    def invalidate_selections(self):
+        print "INVALIDATE SELECTIONS CLICKED"
+
+    def validate_selections(self):
+        print "VALIDATE SELECTIONS CLICKED"
+
+    def save_analysis(self):
+        print "SAVE BUTTON CLICKED"
+
 
     def startup(self, experiment_name, mid):
         """

@@ -19,7 +19,7 @@ class AssignmentWindow(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
-        self.setWindowTitle("Experiment View")
+        self.setWindowTitle("Assignment View")
         self.resize(1500, 750)
 
         # Widgets

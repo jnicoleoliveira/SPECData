@@ -21,6 +21,7 @@ class MainMenu(QDialog):
         self.connect_buttons()
         self.load_logo()
 
+
     def connect_buttons(self):
         # Get Buttons/Labels
         import_btn = self.ui.import_btn

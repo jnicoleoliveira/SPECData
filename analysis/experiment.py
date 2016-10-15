@@ -18,6 +18,9 @@ class Experiment:
         self.match_threshold = match_threshold
         self.N = 0                   # Total Number of peak lines
         self.experiment_peaks = []   # List of peaks    (obj: Peak)
+
+        # Match info
+        self.validated_matches = {}
         self.molecule_matches = {}   # Dict of Molecule Matches (obj: MoleculeMatch)
         self.possible_matches = {}
         self.__setup__()           # Populate Peaks list
@@ -123,6 +126,14 @@ class Experiment:
 
         return sorted
 
+    def get_all_matches_list(self):
+        """ Gets list of all molecule_matches's matches"""
+        matches = []
+        for key, value in self.molecule_matches.iteritems():
+            matches.extend(value.matches)
+
+        return matches
+
     def print_matches(self):
         """
         Print Molecule Matches of experiment.
@@ -149,6 +160,20 @@ class Experiment:
             space_length = buff - len(name)                           # Get length of space
             print name + (' ' * space_length) + prob + "   " + ratio  # Print Line
 
+    def validate_a_match(self, mid):
+        #if mid is not None:
+        self.molecule_matches[mid].set_validation(True)
+        #    self.validated_matches[mid] = self.molecule_matches[mid]
+        #    del self.molecule_matches[mid]
+
+        pids = []
+        for m in self.molecule_matches[mid].matches:
+            pids.append(m.exp_pid)
+
+        for peak in self.experiment_peaks:
+            if peak.pid in pids:
+                peak.isValidated = True
+
     class Peak:
 
         def __init__(self, pid, Rst):
@@ -159,6 +184,7 @@ class Experiment:
             self.frequency = 0
             self.intensity = 0
             self.intensity_to_avg = None
+            self.isValidated = False
             self.__get_frequency_and_intensity()    # Get Frequency and Intensity of the peak
 
         def __get_frequency_and_intensity(self):
@@ -239,6 +265,8 @@ class Experiment:
             self.matches = []   # List of Match matches
             self.p = 0          # Total Probability of the molecule
 
+            self.isValidated = False
+
         def add_match(self, match):
             """
 
@@ -247,6 +275,9 @@ class Experiment:
             """
             self.matches.append(match)
             self.m += 1
+
+        def set_validation(self, bool):
+            self.isValidated = bool
 
         def get_probability(self):
             """

@@ -102,7 +102,7 @@ class AssignmentWindow(QDialog):
             # Get Row Data
             pid = matches[i].pid
             exp_pid = matches[i].exp_pid
-            match_frequency, match_intensity = peaks.get_frequency_intensity(conn,pid)
+            match_frequency, match_intensity = peaks.get_frequency_intensity(conn, pid)
             exp_frequency, exp_intensity = peaks.get_frequency_intensity(conn, exp_pid)
             # Convert Data to QTableWidgetItem
             exp_pid_item = QTableWidgetItem(str(exp_pid))
@@ -129,7 +129,6 @@ class AssignmentWindow(QDialog):
         self.table_widget.resizeRowsToContents()
         width = self.table_widget.horizontalHeader().width()
         self.table_widget.setFixedWidth(width)
-
 
     def graph(self):
         """

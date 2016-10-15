@@ -101,6 +101,19 @@ class MoleculeSelectionWidget(QWidget):
         window.exec_()
         #window.show()
 
+    def get_selected_mids(self):
+        mids = []
+
+        for i in range(0, self.size):
+            match = self.elements[i, 0]
+            checkbox = self.elements[i, 2]
+            mid = match.mid
+
+            if checkbox.isChecked():
+                mids.append(mid)
+
+        return mids
+
     def get_selections(self):
         matches = []
         colors = []
@@ -128,6 +141,15 @@ class MoleculeSelectionWidget(QWidget):
 
             if checkbox.isChecked() is True:
                 checkbox.click()
+
+    def validate_selections(self):
+        """
+        Validates the Selected Molecules in experiment
+        """
+        selected_mids = self.get_selected_mids()
+
+        for mid in selected_mids:
+            self.experiment.validate_a_match(mid)
 
 
 class GraphColorWheel:

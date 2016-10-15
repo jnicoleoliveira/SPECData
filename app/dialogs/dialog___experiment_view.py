@@ -18,7 +18,16 @@ from ..experiment_analysis import MainGraph
 from config import resources
 import os
 
+
 class ExperimentView(QMainWindow):
+    """
+        Experiment View
+    """
+
+    # Define Colors
+    COLOR_PENDING = "#D4AC0D"
+    COLOR_INVALID = "#A93226"
+    COLOR_VALID = "#229954"
 
     def __init__(self, experiment_name, mid, parent=None):
         super(ExperimentView, self).__init__(parent)
@@ -36,6 +45,8 @@ class ExperimentView(QMainWindow):
         self.info_widget = None
         # -- Molecule Selection Widget -- #
         self.selection_widget = None
+        # -- Table Widget -- #
+        self.table_widget = None
         # -- Buttons -- #
         self.redisplay_btn = None       # Redisplay (Redisplay graph with current selections)
         self.select_all_btn = None      # Select all (for molecule selection)
@@ -48,9 +59,8 @@ class ExperimentView(QMainWindow):
         self.experiment_graph = None    # ExperimentGraph Object
         self.loading_screen = None      # LoadingProgressScreen Object
 
-        # Start Up Script
+        '''Start Up'''
         self.startup(experiment_name, mid)
-
         self.show()
 
     def add_selection_assignments(self):
@@ -123,10 +133,77 @@ class ExperimentView(QMainWindow):
         self.selection_widget.select_all()
 
     def go_to_main_menu(self):
-        from dialog___main_menu import MainMenu
-        window = MainMenu()
-        self.close()
-        window.exec_()
+        #from dialog___main_menu import MainMenu
+        #window = MainMenu()
+        #self.close()
+        self.hide()
+        #window.exec_()
+        #self.close()
+
+    def populate_table_widget(self):
+        """
+        Populate table_widget with the following graph data:
+            Experiment PID, Frequency, Intensity with its associative
+            match's PID, frequency, and intensity
+        :return:
+        """
+        import tables.get.get_peaks as peaks
+        from config import conn
+        matches = self.experiment.get_all_matches_list()
+
+        row_count = len(matches) # Number of values
+        column_count = 5         # Columns
+        self.table_widget = QTableWidget()
+
+        # Format Table
+        self.table_widget.setRowCount(row_count)
+        self.table_widget.setColumnCount(column_count)
+        self.table_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.MinimumExpanding)
+        self.table_widget.setSortingEnabled(True)
+
+        # Set Header Label
+        self.table_widget.setHorizontalHeaderLabels(["Experiment PID", "Frequency", "Intensity", \
+                                                     "Molecule Matched", "Status"])
+
+        for i in range(0, row_count):
+
+            # Get Row Data
+            exp_pid = matches[i].exp_pid
+            exp_frequency, exp_intensity = peaks.get_frequency_intensity(conn, exp_pid)
+            name = matches[i].name
+            status = "invalid"
+
+            # Convert Data to QTableWidgetItem
+            exp_pid_item = QTableWidgetItem(str(exp_pid))
+            exp_frequency_item = QTableWidgetItem(str(exp_frequency))
+            exp_intensity_item = QTableWidgetItem(str(exp_intensity))
+            name_item = QTableWidgetItem(name)
+            status_item = QTableWidgetItem(status)
+
+            color = QColor("2E2726")
+            # Get status color
+            if status is "pending":
+                color = QColor(self.COLOR_PENDING)
+            elif status is "invalid":
+                color = QColor(self.COLOR_INVALID)
+            elif status is "valid":
+                color = QColor(self.COLOR_VALID)
+
+            name_item.setBackgroundColor(color)
+            status_item.setBackgroundColor(color)
+
+            # Add Widget Items to Table
+            self.table_widget.setItem(i, 0, exp_pid_item)
+            self.table_widget.setItem(i, 1, exp_frequency_item)
+            self.table_widget.setItem(i, 2, exp_intensity_item)
+            self.table_widget.setItem(i, 3, name_item)
+            self.table_widget.setItem(i, 4, status_item)
+
+        self.table_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.table_widget.resizeColumnsToContents()
+        self.table_widget.resizeRowsToContents()
+        #width = self.table_widget.horizontalHeader().width()
+        #self.table_widget.setFixedWidth(width)
 
     def setup_layout(self):
         """
@@ -157,12 +234,10 @@ class ExperimentView(QMainWindow):
         # -- Experiment Info Widget -- #
         self.info_widget = ExperimentInfoWidget(self.experiment)
         # -- Buttons -- #
-        #self.redisplay_btn = QPushButton()      # Redisplay (Redisplay graph with current selections)
-        #self.select_all_btn = QPushButton()     # Select all (for molecule selection)
-        #self.deselect_all_btn = QPushButton()   # Deselect all (for molecule selection)
         self.main_menu_btn = QPushButton()       # Main Menu (exits, returns to main menu)
-        #self.delete_btn = QPushButton()
+        # --  Table -- #
         self.table_widget = QTableWidget()       # Table Widget (molecule assignment and peaks)
+        self.populate_table_widget()
 
         '''
         Create Inner Layouts / Containers
@@ -177,7 +252,7 @@ class ExperimentView(QMainWindow):
         #buttons_layout.addWidget(self.redisplay_btn)
 
 
-        # TOOL BOX DOCK WIDGET
+        # TOOL BOX WIDGET
         tool_box = QToolBox()
         text = QString("Graph Options")
         tool_box.addItem(self.graph_options_widget, text)
@@ -185,6 +260,9 @@ class ExperimentView(QMainWindow):
         text = QString("Peak List")
         tool_box.addItem(self.table_widget, text)
 
+
+
+        # DOCK TOOLS
         dock_tools = QDockWidget(self.window())
         self.window().addDockWidget(Qt.BottomDockWidgetArea, dock_tools)
         dock_tools.setWidget(tool_box)
@@ -242,13 +320,6 @@ class ExperimentView(QMainWindow):
         hlayout.addLayout(v1)
         hlayout.addLayout(v2)
         outer_layout.addLayout(hlayout, 0, 0)
-        #layout.addWidget(scroll_selection_container, 1, 0)
-
-        #layout.addWidget(self.matplot_widget, 1, 1)
-
-        #outer_layout.addWidget(self.info_widget, 0, 0)
-        #outer_layout.addLayout(layout, 1, 0)
-        #outer_layout.addWidget(dock_tools, 1, 0)
 
         '''
         Toolbar and ShortCuts
@@ -349,31 +420,6 @@ class ExperimentView(QMainWindow):
         self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.ALT, Qt.Key_S), self),
                      SIGNAL('activated()'), self.settings)
 
-    def settings(self):
-        print "SETTINGS"
-
-    def analysis_settings(self):
-        print "ANALYSIS SETTINGS"
-
-    def redo_analysis(self):
-        print "RE-ANALYZE"
-
-    def undo(self):
-        print "UNDO"
-
-    def redo(self):
-        print "REDO"
-
-    def invalidate_selections(self):
-        print "INVALIDATE SELECTIONS CLICKED"
-
-    def validate_selections(self):
-        print "VALIDATE SELECTIONS CLICKED"
-
-    def save_analysis(self):
-        print "SAVE BUTTON CLICKED"
-
-
     def startup(self, experiment_name, mid):
         """
         Start-up script, does the following behind a loading progress screen:
@@ -420,6 +466,32 @@ class ExperimentView(QMainWindow):
 
         '''End Loading Screen'''
         self.loading_screen.end()
+
+    def settings(self):
+        print "SETTINGS"
+
+    def analysis_settings(self):
+        print "ANALYSIS SETTINGS"
+
+    def redo_analysis(self):
+        print "RE-ANALYZE"
+
+    def undo(self):
+        print "UNDO"
+
+    def redo(self):
+        print "REDO"
+
+    def invalidate_selections(self):
+        print "INVALIDATE SELECTIONS CLICKED"
+
+    def validate_selections(self):
+        print "VALIDATE SELECTIONS CLICKED"
+        self.selection_widget.validate_selections()
+
+    def save_analysis(self):
+        print "SAVE BUTTON CLICKED"
+
 
 
 

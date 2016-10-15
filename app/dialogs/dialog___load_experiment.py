@@ -21,6 +21,7 @@ class LoadExperiment(QDialog):
         self.resize(1025, 750)
 
         self.list_widget = self.ui.listWidget
+        self.new_window = None
         self.setup()
 
     def setup(self):
@@ -60,15 +61,7 @@ class LoadExperiment(QDialog):
         window = MainMenu()
         window.exec_()
 
-
     def load_experiment(self, mid, name):
 
         from dialog___experiment_view import ExperimentView
-        #self.close()
-
         self.new_window = ExperimentView(name, mid)
-        self.new_window.show()
-
-        #window.show()
-        #window.show()
-        #window.exec_()

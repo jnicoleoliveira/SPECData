@@ -29,7 +29,7 @@ class MoleculeSelectionWidget(QWidget):
         self.colorWheel = GraphColorWheel()
         self.colorWheel.import_color_wheel(os.path.join(resources, 'graphing_colors'))
 
-    def add_row(self, match):
+    def add_row(self, match, color=None):
         """
         Adds a Molecule Row to MoleculeSelection Widget, and list of elements.
         Row consists of the following widgets:
@@ -38,6 +38,7 @@ class MoleculeSelectionWidget(QWidget):
             more_btn  (button associated with opening AssignmentWindow(mid)
             probability_lcd (QLCDNumber with probability of match)
         :param match: MoleculeMatch object
+        :param color : If none, will automatically assign a color.
         :return:
         """
         # Create Widgets
@@ -47,7 +48,10 @@ class MoleculeSelectionWidget(QWidget):
         probability_lcd = QLCDNumber()
 
         # Color Label Settings
-        color = self.colorWheel.next_color()
+
+        if color is None:
+            color = self.colorWheel.next_color()
+
         color_lbl.setText('             ')
         color_lbl.setFrameShape(QFrame.Panel)
         color_lbl.setFrameShadow(QFrame.Raised)
@@ -77,20 +81,29 @@ class MoleculeSelectionWidget(QWidget):
 
 
         # Add Widgets to Layout
-        self.ui.gridLayout.addWidget(probability_lcd, self.size, 0)
-        self.ui.gridLayout.addWidget(color_lbl, self.size, 1)
-        self.ui.gridLayout.addWidget(checkbox, self.size, 2)
-        self.ui.gridLayout.addWidget(more_btn, self.size, 3)
-        self.ui.gridLayout.addWidget(more_btn, self.size, 4)
+        widget = QHBoxLayout()
+        widget.addWidget(probability_lcd)
+        widget.addWidget(color_lbl)
+        widget.addWidget(checkbox)
+        widget.addWidget(more_btn)
+        self.ui.gridLayout.addLayout(widget, self.size, 0)
+        #self.ui.gridLayout.addWidget(probability_lcd, self.size, 0)
+        #self.ui.gridLayout.addWidget(color_lbl, self.size, 1)
+        #self.ui.gridLayout.addWidget(checkbox, self.size, 2)
+        #self.ui.gridLayout.addWidget(more_btn, self.size, 3)
+        #self.ui.gridLayout.addWidget(more_btn, self.size, 4)
 
         # Add Data to elements array
-        self.elements[(self.size, 0)] = match
-        self.elements[(self.size, 1)] = color
-        self.elements[(self.size, 2)] = checkbox
-        self.elements[(self.size, 3)] = more_btn
+        selection_row = SelectionRow(match, color, checkbox, more_btn, widget)
+        self.elements[match.mid] = selection_row
+        #self.elements[(self.size, 0)] = match
+        #self.elements[(self.size, 1)] = color
+        #self.elements[(self.size, 2)] = checkbox
+        #self.elements[(self.size, 3)] = more_btn
+        #self.elements[(self.size, 4)] = widget
 
         self.size += 1          # increase size of elements array
-        self.selected.append(1) # increase # of selected elements
+        #self.selected.append(1) # increase # of selected elements
 
     def add_all(self, match_list):
         for match in match_list:
@@ -99,8 +112,50 @@ class MoleculeSelectionWidget(QWidget):
     def remove_row(self, match):
         print "remove_row"
 
-    def remove_all(self, match_list):
-        print "remove all from match list"
+    def clear_layout(self, layout):
+        for i in reversed(range(layout.count())):
+            item = layout.itemAt(i)
+
+            if isinstance(item, QWidgetItem):
+                print "widget" + str(item)
+                item.widget().close()
+                # or
+                # item.widget().setParent(None)
+            elif isinstance(item, QSpacerItem):
+                print "spacer " + str(item)
+                # no need to do extra stuff
+            else:
+                print "layout " + str(item)
+                self.clearLayout(item.layout())
+
+            # remove the item from layout
+            layout.removeItem(item)
+
+    def remove_selections(self):
+
+        matches = []
+        colors = []
+        mids = []
+        elements_copy = self.elements.copy()
+
+        for key, value in elements_copy.iteritems():
+            match = value.match
+            color = value.color
+            checkbox = value.checkbox
+            widget = value.widget
+
+            if checkbox.isChecked():
+                mids.append(match.mid)
+                matches.append(match)
+                colors.append(color)
+                self.clear_layout(self.elements[key].widget)
+                del self.elements[key]
+
+
+        print str(self.elements)
+
+        return matches, colors
+
 
     def more_info(self, match, color):
         window = AssignmentWindow(match, color, self.experiment)
@@ -110,23 +165,21 @@ class MoleculeSelectionWidget(QWidget):
     def get_selected_mids(self):
         mids = []
 
-        for i in range(0, self.size):
-            match = self.elements[i, 0]
-            checkbox = self.elements[i, 2]
-            mid = match.mid
-
+        for key, value in self.elements.iteritems():
+            checkbox = value.checkbox
             if checkbox.isChecked():
-                mids.append(mid)
+                mids.append(key)
 
         return mids
 
     def get_selections(self):
         matches = []
         colors = []
-        for i in range(0, self.size):
-            match = self.elements[i, 0]
-            color = self.elements[i, 1]
-            checkbox = self.elements[i, 2]
+
+        for key, value in self.elements.iteritems():
+            match = value.match
+            color = value.color
+            checkbox = value.checkbox
 
             if checkbox.isChecked():
                 matches.append(match)
@@ -135,27 +188,24 @@ class MoleculeSelectionWidget(QWidget):
         return matches, colors
 
     def select_all(self):
-        for i in range(0, self.size):
-            checkbox = self.elements[i, 2]
-
+        """
+        'Clicks' all checkboxes that are not checked
+        :return:
+        """
+        for key, value in self.elements.iteritems():
+            checkbox = value.checkbox
             if checkbox.isChecked() is False:
                 checkbox.click()
 
     def deselect_all(self):
-        for i in range(0, self.size):
-            checkbox = self.elements[i, 2]
-
+        """
+        'Clicks' all checkboxes that are checked
+        :return:
+        """
+        for key, value in self.elements.iteritems():
+            checkbox = value.checkbox
             if checkbox.isChecked() is True:
                 checkbox.click()
-
-    def validate_selections(self):
-        """
-        Validates the Selected Molecules in experiment
-        """
-        selected_mids = self.get_selected_mids()
-
-        for mid in selected_mids:
-            self.experiment.validate_a_match(mid)
 
 
 class GraphColorWheel:
@@ -172,3 +222,13 @@ class GraphColorWheel:
     def next_color(self):
         self.index += 1
         return self.color_wheel[self.index-1]
+
+
+class SelectionRow:
+    def __init__(self, match, color, checkbox, more_btn, widget):
+        self.match = match
+        self.color = color
+        self.checkbox = checkbox
+        self.more_btn = more_btn
+        self.widget = widget
+

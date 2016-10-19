@@ -45,6 +45,8 @@ class ExperimentView(QMainWindow):
         self.info_widget = None
         # -- Molecule Selection Widget -- #
         self.selection_widget = None
+        # -- Validated Selection Widget --#
+        self.validated_selection_widget = None
         # -- Table Widget -- #
         self.table_widget = None
         # -- Buttons -- #
@@ -123,6 +125,11 @@ class ExperimentView(QMainWindow):
 
         # Determine graphing selections
         matches, colors = self.selection_widget.get_selections()
+
+        if self.show_validations_on_graph:
+            valid_matches, valid_colors = self.validated_selection_widget.get_selections()
+            matches.extend(valid_matches)
+            colors.extend(valid_colors)
 
         # Graph
         self.experiment_graph.graph(matches, colors)
@@ -227,7 +234,7 @@ class ExperimentView(QMainWindow):
             self.action_show_validations.setIcon \
                 (QIcon(QPixmap(os.path.join(resources, 'show-validations.png'))))
 
-        print "Show Validations: " + self.show_validations
+        print "Show Validations: " + str(self.show_validations_on_graph)
 
     def setup_layout(self):
         """
@@ -268,14 +275,6 @@ class ExperimentView(QMainWindow):
         '''
         Create Inner Layouts / Containers
         '''
-        # BUTTONS LAYOUT #
-        #buttons_layout = QVBoxLayout()
-        #select_btns_layout = QHBoxLayout()
-        #select_btns_layout.addWidget(self.select_all_btn)
-        #select_btns_layout.addWidget(self.deselect_all_btn)
-        #select_btns_layout.addWidget(self.delete_btn)
-        #buttons_layout.addLayout(select_btns_layout)
-        #buttons_layout.addWidget(self.redisplay_btn)
 
         # ------------------------------------------------------------------ #
         # Create Docked Tool Box Widget
@@ -324,28 +323,6 @@ class ExperimentView(QMainWindow):
         selection_tab_widget.addTab(pending_scroll_selection_container, "Pending")
         selection_tab_widget.addTab(validated_scroll_selection_container, "Validated")
 
-
-
-        '''
-        Connect Buttons
-        '''
-
-        # -- CONNECT BUTTONS -- #
-        #self.redisplay_btn.setText("Redisplay (F5)")
-        #self.redisplay_btn.clicked.connect(self.redisplay_graph)
-
-        #self.select_all_btn.setText("Select All")
-        #self.select_all_btn.clicked.connect(self.select_all)
-
-        #self.deselect_all_btn.setText("Deselect All")
-        #self.deselect_all_btn.clicked.connect(self.deselect_all)
-
-        #self.main_menu_btn.setText("Main Menu")
-        #self.main_menu_btn.clicked.connect(self.go_to_main_menu)
-
-        #delete_icon = QIcon(QPixmap(os.path.join(resources, 'trash_icon.png')))
-        #self.delete_btn.setIcon(delete_icon)
-        #self.delete_btn.clicked.connect(self.remove_from_analysis)
 
         '''
         Add widgets to Layout
@@ -538,7 +515,19 @@ class ExperimentView(QMainWindow):
 
     def validate_selections(self):
         print "VALIDATE SELECTIONS"
-        self.selection_widget.validate_selections()
+
+        # -- Get Selected Mids -- #
+        selected_mids = self.selection_widget.get_selected_mids()
+
+        # -- Validate Selections in Experiment -- #
+        for mid in selected_mids:
+            self.experiment.validate_a_match(mid)
+
+        # Remove selected rows, and get those selections #
+        matches, colors = self.selection_widget.remove_selections()
+
+        for i in range(0, len(matches)):
+            self.validated_selection_widget.add_row(matches[i], colors[i])
 
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"

@@ -52,6 +52,40 @@ class Experiment:
     def get_experiment_frequencies_intensities_list(self):
         return peaks.get_frequency_intensity_list(conn,self.mid)
 
+    def get_unvalidated_experiment_intensities_list(self):
+        """x
+        Gets the frequencies and intensities of ONLY invalidated
+        experimental peaks.
+        :return:
+        """
+        frequencies = []
+        intensities = []
+
+        for p in self.experiment_peaks:
+            if not p.is_validated():
+                f, i = peaks.get_frequency_intensity(conn, p.pid)
+                frequencies.append(f)
+                intensities.append(i)
+
+        return frequencies, intensities
+
+    def get_validated_experiment_intensities_list(self):
+        """x
+        Gets the frequencies and intensities of ONLY validated
+        experimental peaks.
+        :return:
+        """
+        frequencies = []
+        intensities = []
+
+        for p in self.experiment_peaks():
+            if p.is_validated():
+                f, i = peaks.get_frequency_intensity(conn, p.pid)
+                frequencies.append(f)
+                intensities.append(i)
+
+        return frequencies, intensities
+
     def get_assigned_peaks_count(self):
         count = 0
         for key, value in self.molecule_matches.iteritems():
@@ -186,6 +220,9 @@ class Experiment:
             self.intensity_to_avg = None
             self.isValidated = False
             self.__get_frequency_and_intensity()    # Get Frequency and Intensity of the peak
+
+        def is_validated(self):
+            return self.isValidated
 
         def __get_frequency_and_intensity(self):
             self.frequency = peaks.get_frequency(conn, self.pid)

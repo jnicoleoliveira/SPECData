@@ -5,7 +5,8 @@ from config import conn
 from tables.get import get_peaks
 
 
-class MainGraph():
+class MainGraph:
+
     def __init__(self, plot_widget, options_widget, experiment):
         self.plot_widget = plot_widget
         self.options_widget = options_widget
@@ -18,6 +19,7 @@ class MainGraph():
         self.sharey = False
         self.display_exp_assignments = False
         self.y_to_experiment_intensities = False
+        self.show_validations = True
 
         self.full_spectrum_intensities = None
         self.full_spectrum_frequencies = None
@@ -28,8 +30,23 @@ class MainGraph():
     def set_plot_widget(self, plot_widget):
         self.plot_widget = plot_widget
 
+    def get_experiment_frequencies_intensities(self):
+        """
+        Returns the appropriate frequencies and intensities list of the experiment to graph
+        based on the state of the options.
+        :return: list of frequencies, list of intensities
+        """
+        # if show validations, get all experiment peaks
+        if self.show_validations:
+            return self.experiment.get_experiment_frequencies_intensities_list()
+
+        # otherwise show only unvalidated
+        return self.experiment.get_unvalidated_experiment_intensities_list()
+
     def add_subplot_experiment(self, pos, color):
-        frequencies, intensities = self.experiment.get_experiment_frequencies_intensities_list()
+
+        # Get experiment frequency and intensities to graph
+        frequencies, intensities = self.get_experiment_frequencies_intensities()
 
         figure = self.plot_widget.getFigure()
         figure.set_facecolor("#626262")
@@ -144,11 +161,12 @@ class MainGraph():
         file_path = os.path.join(db_dir, "experiments", (str(self.experiment.mid) + ".sp"))
         return os.path.exists(file_path)
 
-    def set_options(self, full_spectrum=False, sharey=False, y_to_experiment_intensities=False, color_experiment=False):
+    def set_options(self, full_spectrum=False, sharey=False, y_to_experiment_intensities=False, color_experiment=False, show_validations=True):
         self.full_spectrum = full_spectrum
         self.sharey = sharey
         self.display_exp_assignments = color_experiment
         self.y_to_experiment_intensities = y_to_experiment_intensities
+        self.show_validations = show_validations
 
     def graph(self, matches, colors):
         if self.full_spectrum is True:

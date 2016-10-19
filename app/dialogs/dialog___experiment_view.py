@@ -54,6 +54,10 @@ class ExperimentView(QMainWindow):
         self.main_menu_btn = None       # Main Menu (exits, returns to main menu)
         self.delete_btn = None          # Delete Button, removes associated lines from analysis
 
+        ''' Menu Bar'''
+        self.action_show_validations = None
+        self.show_validations_on_graph = True
+
         ''' Data '''
         self.experiment = None          # Experiment Object
         self.experiment_graph = None    # ExperimentGraph Object
@@ -93,14 +97,18 @@ class ExperimentView(QMainWindow):
             self.graph_options_widget.full_spectrum_chk.setStyleSheet("color: rgb(85, 85, 85);")
 
     def get_options(self):
+
+        # -- Get Values for Options -- #
         full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
         sharey = self.graph_options_widget.sharey_chk.isChecked()
         color_experiment = self.graph_options_widget.color_experiment_chk.isChecked()
         y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
+        show_validations = self.show_validations_on_graph
 
+        # Set Options in graph #
         self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
                                           y_to_experiment_intensities=y_to_experiment_intensities,
-                                          color_experiment=color_experiment)
+                                          color_experiment=color_experiment, show_validations=show_validations)
 
     def redisplay_graph(self):
         """
@@ -206,7 +214,20 @@ class ExperimentView(QMainWindow):
         #self.table_widget.setFixedWidth(width)
 
     def show_validations(self):
-        print "SHOW VALIDATIONS"
+        """
+        Process action_show_validations button.
+        :return:
+        """
+        if self.show_validations_on_graph is True:
+            self.show_validations_on_graph = False
+            self.action_show_validations.setIcon\
+                (QIcon(QPixmap(os.path.join(resources, 'show-validations-off.png'))))
+        else:
+            self.show_validations_on_graph = True
+            self.action_show_validations.setIcon \
+                (QIcon(QPixmap(os.path.join(resources, 'show-validations.png'))))
+
+        print "Show Validations: " + self.show_validations
 
     def setup_layout(self):
         """
@@ -234,6 +255,8 @@ class ExperimentView(QMainWindow):
         self.graph_options_widget = MainGraphOptionsWidget()
         # -- Molecule Selection Widget -- #
         self.selection_widget = MoleculeSelectionWidget(self.experiment)
+        # -- Validated Selection Widget --#
+        self.validated_selection_widget = MoleculeSelectionWidget(self.experiment)
         # -- Experiment Info Widget -- #
         self.info_widget = ExperimentInfoWidget(self.experiment)
         # -- Buttons -- #
@@ -254,8 +277,13 @@ class ExperimentView(QMainWindow):
         #buttons_layout.addLayout(select_btns_layout)
         #buttons_layout.addWidget(self.redisplay_btn)
 
+        # ------------------------------------------------------------------ #
+        # Create Docked Tool Box Widget
+        # ------------------------------------------------------------------ #
+        # --- 1st Tab: Graph options
+        # --- 2nd Tab : Peak List
 
-        # TOOL BOX WIDGET
+        # Create Tool Box
         tool_box = QToolBox()
         text = QString("Graph Options")
         tool_box.addItem(self.graph_options_widget, text)
@@ -263,31 +291,40 @@ class ExperimentView(QMainWindow):
         text = QString("Peak List")
         tool_box.addItem(self.table_widget, text)
 
-
-
-        # DOCK TOOLS
+        # Dock the tool box
         dock_tools = QDockWidget(self.window())
         self.window().addDockWidget(Qt.BottomDockWidgetArea, dock_tools)
         dock_tools.setWidget(tool_box)
-        #dock_tools.setFloating(True)
         dock_tools.setFeatures(QDockWidget.DockWidgetClosable |
                                QDockWidget.DockWidgetMovable |
                                QDockWidget.DockWidgetFloatable |
                                QDockWidget.DockWidgetVerticalTitleBar)
 
-        # SCROLL SELECTION #
-        scroll_selection_container = QScrollArea()
-        scroll_selection_container.setWidget(self.selection_widget)
-        scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
-        scroll_selection_container.setFrameShadow(QFrame.Raised)
+        # ------------------------------------------------------------------ #
+        # Molecule Selection Widgets in Tabs (Pending, Validated, Invalidated)
+        # ------------------------------------------------------------------ #
+        # --- 1st tab: Pending
+        # --- 2nd tab: Validated
+        # --- 3rd tab: Invalidated
 
-        # LEFT LAYOUT #
-        left_layout = QVBoxLayout()
-        #left_layout.addWidget(scroll_selection_container)
-        left_layout.addSpacerItem(QSpacerItem(5, 5, QSizePolicy.Minimum, QSizePolicy.Expanding))
-        #left_layout.addWidget(self.graph_options_widget)
-        #left_layout.addLayout(select_btns_layout)
-        #left_layout.addWidget(self.redisplay_btn)
+        # 1st Container (pending)
+        pending_scroll_selection_container = QScrollArea()
+        pending_scroll_selection_container.setWidget(self.selection_widget)
+        pending_scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
+        pending_scroll_selection_container.setFrameShadow(QFrame.Raised)
+
+        # 2nd Container (validated)
+        validated_scroll_selection_container= QScrollArea()
+        validated_scroll_selection_container.setWidget(self.validated_selection_widget)
+        validated_scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
+        validated_scroll_selection_container.setFrameShadow(QFrame.Raised)
+
+        # Create Tab Widget
+        selection_tab_widget = QTabWidget()
+        selection_tab_widget.addTab(pending_scroll_selection_container, "Pending")
+        selection_tab_widget.addTab(validated_scroll_selection_container, "Validated")
+
+
 
         '''
         Connect Buttons
@@ -317,7 +354,7 @@ class ExperimentView(QMainWindow):
         hlayout = QHBoxLayout()
         v1 = QVBoxLayout()
         v1.addWidget(self.info_widget)
-        v1.addWidget(scroll_selection_container)
+        v1.addWidget(selection_tab_widget)
         v2 = QVBoxLayout()
         v2.addWidget(self.matplot_widget)
         hlayout.addLayout(v1)
@@ -386,8 +423,13 @@ class ExperimentView(QMainWindow):
         ''' Show Validations '''
         # -- Toolbar -- #
         pix_map = QPixmap(os.path.join(resources, 'show-validations.png'))
-        action_bar.addAction(QIcon(pix_map), "Show Validations", self.show_validations)
-
+        self.action_show_validations = QAction("Show Validations", self)
+        self.action_show_validations.setIcon(QIcon(pix_map))
+        self.action_show_validations.setIconText("Show Validations")
+        self.action_show_validations.triggered.connect(self.show_validations)
+        action_bar.addAction(self.action_show_validations)
+        #action_bar.triggered[QAction].connect(self.show_validations)
+        #action_bar.addAction(QIcon(pix_map), "Show Validations", self.show_validations)
 
         ##############################################
         action_bar.addSeparator()
@@ -495,7 +537,7 @@ class ExperimentView(QMainWindow):
         print "INVALIDATE SELECTIONS CLICKED"
 
     def validate_selections(self):
-        print "VALIDATE SELECTIONS CLICKED"
+        print "VALIDATE SELECTIONS"
         self.selection_widget.validate_selections()
 
     def save_analysis(self):

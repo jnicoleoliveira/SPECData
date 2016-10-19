@@ -96,6 +96,12 @@ class MoleculeSelectionWidget(QWidget):
         for match in match_list:
             self.add_row(match)
 
+    def remove_row(self, match):
+        print "remove_row"
+
+    def remove_all(self, match_list):
+        print "remove all from match list"
+
     def more_info(self, match, color):
         window = AssignmentWindow(match, color, self.experiment)
         window.exec_()

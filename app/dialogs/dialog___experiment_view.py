@@ -47,6 +47,8 @@ class ExperimentView(QMainWindow):
         self.selection_widget = None
         # -- Validated Selection Widget --#
         self.validated_selection_widget = None
+        # -- Invalidated Selection Widget --#
+        self.invalidated_selection_widget = None
         # -- Table Widget -- #
         self.table_widget = None
         # -- Buttons -- #
@@ -264,6 +266,8 @@ class ExperimentView(QMainWindow):
         self.selection_widget = MoleculeSelectionWidget(self.experiment)
         # -- Validated Selection Widget --#
         self.validated_selection_widget = MoleculeSelectionWidget(self.experiment)
+        # -- Invalidated Selection Widget --#
+        self.invalidated_selection_widget = MoleculeSelectionWidget(self.experiment)
         # -- Experiment Info Widget -- #
         self.info_widget = ExperimentInfoWidget(self.experiment)
         # -- Buttons -- #
@@ -318,11 +322,18 @@ class ExperimentView(QMainWindow):
         validated_scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         validated_scroll_selection_container.setFrameShadow(QFrame.Raised)
 
+        # 2nd Container (validated)
+        invalidated_scroll_selection_container = QScrollArea()
+        invalidated_scroll_selection_container.setWidget(self.invalidated_selection_widget)
+        invalidated_scroll_selection_container.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
+        invalidated_scroll_selection_container.setFrameShadow(QFrame.Raised)
+
         # Create Tab Widget
         selection_tab_widget = QTabWidget()
         selection_tab_widget.addTab(pending_scroll_selection_container, "Pending")
         selection_tab_widget.addTab(validated_scroll_selection_container, "Validated")
-
+        selection_tab_widget.addTab(invalidated_scroll_selection_container, "Invalidated")
+        selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         '''
         Add widgets to Layout
@@ -511,7 +522,11 @@ class ExperimentView(QMainWindow):
         print "REDO"
 
     def invalidate_selections(self):
-        print "INVALIDATE SELECTIONS CLICKED"
+        # Remove selected rows, and get those selections #
+        matches, colors = self.selection_widget.remove_selections()
+
+        for i in range(0, len(matches)):
+            self.invalidated_selection_widget.add_row(matches[i], colors[i])
 
     def validate_selections(self):
         print "VALIDATE SELECTIONS"

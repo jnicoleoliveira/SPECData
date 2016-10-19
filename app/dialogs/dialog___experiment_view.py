@@ -205,6 +205,9 @@ class ExperimentView(QMainWindow):
         #width = self.table_widget.horizontalHeader().width()
         #self.table_widget.setFixedWidth(width)
 
+    def show_validations(self):
+        print "SHOW VALIDATIONS"
+
     def setup_layout(self):
         """
         Sets up default layout of ExperimentView
@@ -379,6 +382,12 @@ class ExperimentView(QMainWindow):
         # Short cut
         self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_D), self),
                      SIGNAL('activated()'), self.deselect_all)
+
+        ''' Show Validations '''
+        # -- Toolbar -- #
+        pix_map = QPixmap(os.path.join(resources, 'show-validations.png'))
+        action_bar.addAction(QIcon(pix_map), "Show Validations", self.show_validations)
+
 
         ##############################################
         action_bar.addSeparator()

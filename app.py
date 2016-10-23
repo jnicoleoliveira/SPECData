@@ -12,7 +12,7 @@ from app.dialogs.dialog___main_window import MainWindow     # Import main window
 def main():
     app = QApplication(sys.argv)
     app.setApplicationName('specdata')
-
+    #app.setStyle('windows')
     window = MainWindow()
     window.show()
     window.start_main_menu()

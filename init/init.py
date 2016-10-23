@@ -7,7 +7,7 @@
 
 import sqlite3
 import os, sys
-from config import *
+from config import db_dir, db_filepath
 
 # Create 'data' directory
 if not os.path.exists(db_dir):
@@ -16,7 +16,7 @@ if not os.path.exists(db_dir):
 print "[Created Directory: " + db_dir + "]"
 
 # Create spectrum database file
-# conn = sqlite3.connect(db_filepath
+conn = sqlite3.connect(db_filepath)
 print "[Created Database File: " + db_filepath + " ]"
 
 # Create Cursor

@@ -197,7 +197,7 @@ class ExperimentView(QMainWindow):
             name_item = QTableWidgetItem(name)
             status_item = QTableWidgetItem(status)
 
-            color = QColor("2E2726")
+            color = QColor("self.COLOR_PENDING")
             # Get status color
             if status is "pending":
                 color = QColor(self.COLOR_PENDING)
@@ -296,7 +296,7 @@ class ExperimentView(QMainWindow):
 
         # Dock the tool box
         dock_tools = QDockWidget(self.window())
-        self.window().addDockWidget(Qt.BottomDockWidgetArea, dock_tools)
+        self.window().addDockWidget(Qt.RightDockWidgetArea, dock_tools)
         dock_tools.setWidget(tool_box)
         dock_tools.setFeatures(QDockWidget.DockWidgetClosable |
                                QDockWidget.DockWidgetMovable |
@@ -353,6 +353,12 @@ class ExperimentView(QMainWindow):
         Toolbar and ShortCuts
         '''
         self.setup_toolbar_and_shortcuts()
+
+        ''' Button Connections '''
+        self.graph_options_widget.deselect_all_btn.clicked.connect(self.deselect_all)
+        self.graph_options_widget.redisplay_btn.clicked.connect(self.redisplay_graph)
+        self.graph_options_widget.select_all_btn.clicked.connect(self.select_all)
+        self.graph_options_widget.show_validations_btn.clicked.connect(self.show_validations)
 
     def setup_toolbar_and_shortcuts(self):
 
@@ -543,6 +549,9 @@ class ExperimentView(QMainWindow):
 
         for i in range(0, len(matches)):
             self.validated_selection_widget.add_row(matches[i], colors[i])
+
+        # repopulate table widget to show validations
+        self.populate_table_widget()
 
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"

@@ -21,14 +21,14 @@ cursor = conn.cursor()
 
 while True:
     print "Choose an option: \n (a) Import all files in path\n (b) Import individual file\n (c) Remove a molecule entry \n (d) Remove all peaks \n (e) View a row"
-    input = input()
+    input = raw_input()
 
 
     if input == 'a':
         print "Enter category: "
         category = input()
         print "Enter file directory : "
-        path = input()
+        path = raw_input()
         imported = 0
 
         # Insert known values

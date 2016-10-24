@@ -49,6 +49,10 @@ class Experiment:
 
         # Remove Peaks where intensity is less than the average
 
+    def is_validated_molecule(self, mid):
+        """ Determines if a molecule is validated"""
+        return mid in self.validated_matches
+
     def get_experiment_frequencies_intensities_list(self):
         return peaks.get_frequency_intensity_list(conn,self.mid)
 
@@ -196,8 +200,8 @@ class Experiment:
 
     def validate_a_match(self, mid):
         #if mid is not None:
-        self.molecule_matches[mid].set_validation(True)
-        #    self.validated_matches[mid] = self.molecule_matches[mid]
+        self.molecule_matches[mid].set_status_as_validated()
+        self.validated_matches[mid] = self.molecule_matches[mid]
         #    del self.molecule_matches[mid]
 
         pids = []
@@ -206,7 +210,7 @@ class Experiment:
 
         for peak in self.experiment_peaks:
             if peak.pid in pids:
-                peak.isValidated = True
+                peak.set_status_as_validated()
 
     class Peak:
 
@@ -218,11 +222,30 @@ class Experiment:
             self.frequency = 0
             self.intensity = 0
             self.intensity_to_avg = None
-            self.isValidated = False
+            self.status = "pending"
             self.__get_frequency_and_intensity()    # Get Frequency and Intensity of the peak
 
+        def set_status_as_validated(self):
+            """ Sets status a validated"""
+            self.status = "validated"
+
         def is_validated(self):
-            return self.isValidated
+            """
+            Determines if status is validated
+            :return: True if status is validated, Otherwise: False
+            """
+            if self.status is "validated":
+                return True
+            return False
+
+        def is_pending(self):
+            """
+            Determines if status is pending
+            :return: True if status is pending, Otherwise: False
+            """
+            if self.status is "validated":
+                return True
+            return False
 
         def __get_frequency_and_intensity(self):
             self.frequency = peaks.get_frequency(conn, self.pid)
@@ -302,7 +325,7 @@ class Experiment:
             self.matches = []   # List of Match matches
             self.p = 0          # Total Probability of the molecule
 
-            self.isValidated = False
+            self.status = "pending"
 
         def add_match(self, match):
             """
@@ -313,8 +336,26 @@ class Experiment:
             self.matches.append(match)
             self.m += 1
 
-        def set_validation(self, bool):
-            self.isValidated = bool
+        def set_status_as_validated(self):
+            self.status = "validated"
+
+        def is_validated(self):
+            """
+            Determines if status is validated
+            :return: True if status is validated, Otherwise: False
+            """
+            if self.status is "validated":
+                return True
+            return False
+
+        def is_pending(self):
+            """
+            Determines if status is pending
+            :return: True if status is pending, Otherwise: False
+            """
+            if self.status is "validated":
+                return True
+            return False
 
         def get_probability(self):
             """
@@ -347,7 +388,7 @@ class Experiment:
             """
             self.p = 1
             # Probability == SUM( prob of match * strength of the experimental line)
-            N_triangle = (self.N*(self.N+1))/2      # Trianglar sum of N
+            N_triangle = (self.N*(self.N+1))/2      # Triangular sum of N
             m_sum = (self.M*(self.M+1))/2
             peak_p = 0
 
@@ -359,6 +400,7 @@ class Experiment:
             self.p /= N_triangle    # Divide by n-triangle
             #self.p /= self.m
             #self.p /= m_sum
+
 
 class Match:
 

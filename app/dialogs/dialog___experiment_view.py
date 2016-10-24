@@ -84,6 +84,28 @@ class ExperimentView(QMainWindow):
     def do_analysis(self):
         self.experiment.get_assigned_molecules()
 
+    def get_options(self):
+
+        # -- Get Values for Options -- #
+        full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
+        sharey = self.graph_options_widget.sharey_chk.isChecked()
+        color_experiment = self.graph_options_widget.color_experiment_chk.isChecked()
+        y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
+        show_validations = self.show_validations_on_graph
+
+        # Set Options in graph #
+        self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
+                                          y_to_experiment_intensities=y_to_experiment_intensities,
+                                          color_experiment=color_experiment, show_validations=show_validations)
+
+    def go_to_main_menu(self):
+        #from dialog___main_menu import MainMenu
+        #window = MainMenu()
+        #self.close()
+        self.hide()
+        #window.exec_()
+        #self.close()
+
     def graph(self):
         # Get Info for Experiment graph
         self.experiment_graph = MainGraph(self.matplot_widget, self.graph_options_widget, self.experiment)
@@ -100,19 +122,12 @@ class ExperimentView(QMainWindow):
             self.graph_options_widget.full_spectrum_chk.setWhatsThis("Data not available.")
             self.graph_options_widget.full_spectrum_chk.setStyleSheet("color: rgb(85, 85, 85);")
 
-    def get_options(self):
+    def invalidate_selections(self):
+        # Remove selected rows, and get those selections #
+        matches, colors = self.selection_widget.remove_selections()
 
-        # -- Get Values for Options -- #
-        full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
-        sharey = self.graph_options_widget.sharey_chk.isChecked()
-        color_experiment = self.graph_options_widget.color_experiment_chk.isChecked()
-        y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
-        show_validations = self.show_validations_on_graph
-
-        # Set Options in graph #
-        self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
-                                          y_to_experiment_intensities=y_to_experiment_intensities,
-                                          color_experiment=color_experiment, show_validations=show_validations)
+        for i in range(0, len(matches)):
+            self.invalidated_selection_widget.add_row(matches[i], colors[i])
 
     def redisplay_graph(self):
         """
@@ -139,9 +154,6 @@ class ExperimentView(QMainWindow):
         # Draw
         self.experiment_graph.draw()
 
-    def remove_from_analysis(self):
-        print "Clicked 'remove button'"
-
     def select_all(self):
         """
         Select all button function.
@@ -149,20 +161,11 @@ class ExperimentView(QMainWindow):
         """
         self.selection_widget.select_all()
 
-    def go_to_main_menu(self):
-        #from dialog___main_menu import MainMenu
-        #window = MainMenu()
-        #self.close()
-        self.hide()
-        #window.exec_()
-        #self.close()
-
     def populate_table_widget(self):
         """
         Populate table_widget with the following graph data:
             Experiment PID, Frequency, Intensity with its associative
             match's PID, frequency, and intensity
-        :return:
         """
         import tables.get.get_peaks as peaks
         from config import conn
@@ -170,7 +173,6 @@ class ExperimentView(QMainWindow):
 
         row_count = len(matches) # Number of values
         column_count = 5         # Columns
-        self.table_widget = QTableWidget()
 
         # Format Table
         self.table_widget.setRowCount(row_count)
@@ -188,7 +190,12 @@ class ExperimentView(QMainWindow):
             exp_pid = matches[i].exp_pid
             exp_frequency, exp_intensity = peaks.get_frequency_intensity(conn, exp_pid)
             name = matches[i].name
-            status = "invalid"
+            mid = matches[i].mid
+            status = "pending"
+
+            # Determine if status is valid
+            if self.experiment.is_validated_molecule(mid):
+                status = "valid"
 
             # Convert Data to QTableWidgetItem
             exp_pid_item = QTableWidgetItem(str(exp_pid))
@@ -197,11 +204,9 @@ class ExperimentView(QMainWindow):
             name_item = QTableWidgetItem(name)
             status_item = QTableWidgetItem(status)
 
-            color = QColor("self.COLOR_PENDING")
+            color = QColor("black")
             # Get status color
-            if status is "pending":
-                color = QColor(self.COLOR_PENDING)
-            elif status is "invalid":
+            if status is "invalid":
                 color = QColor(self.COLOR_INVALID)
             elif status is "valid":
                 color = QColor(self.COLOR_VALID)
@@ -216,9 +221,14 @@ class ExperimentView(QMainWindow):
             self.table_widget.setItem(i, 3, name_item)
             self.table_widget.setItem(i, 4, status_item)
 
+        # --- Set Size Policy --- #
         self.table_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.table_widget.resizeColumnsToContents()
         self.table_widget.resizeRowsToContents()
+
+        # -- Additional Options -- #
+        self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
+
         #width = self.table_widget.horizontalHeader().width()
         #self.table_widget.setFixedWidth(width)
 
@@ -512,28 +522,6 @@ class ExperimentView(QMainWindow):
         '''End Loading Screen'''
         self.loading_screen.end()
 
-    def settings(self):
-        print "SETTINGS"
-
-    def analysis_settings(self):
-        print "ANALYSIS SETTINGS"
-
-    def redo_analysis(self):
-        print "RE-ANALYZE"
-
-    def undo(self):
-        print "UNDO"
-
-    def redo(self):
-        print "REDO"
-
-    def invalidate_selections(self):
-        # Remove selected rows, and get those selections #
-        matches, colors = self.selection_widget.remove_selections()
-
-        for i in range(0, len(matches)):
-            self.invalidated_selection_widget.add_row(matches[i], colors[i])
-
     def validate_selections(self):
         print "VALIDATE SELECTIONS"
 
@@ -550,11 +538,33 @@ class ExperimentView(QMainWindow):
         for i in range(0, len(matches)):
             self.validated_selection_widget.add_row(matches[i], colors[i])
 
-        # repopulate table widget to show validations
+        # Repopulate table widget to show updated validations
         self.populate_table_widget()
+
+    # ----- STUB METHODS ---- #
+
+    def settings(self):
+        print "SETTINGS"
+
+    def analysis_settings(self):
+        print "ANALYSIS SETTINGS"
+
+    def redo_analysis(self):
+        print "RE-ANALYZE"
+
+    def undo(self):
+        print "UNDO"
+
+    def redo(self):
+        print "REDO"
+
+    def remove_from_analysis(self):
+        print "Clicked 'remove button'"
 
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"
+
+
 
 
 

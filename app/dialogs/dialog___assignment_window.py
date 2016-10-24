@@ -125,10 +125,13 @@ class AssignmentWindow(QDialog):
             self.table_widget.setItem(i, 4, match_frequency_item)
             self.table_widget.setItem(i, 5, match_intensity_item)
 
-        #self.table_widget.resizeColumnsToContents()
+        # --- Set Size Policy --- #
         self.table_widget.resizeRowsToContents()
         width = self.table_widget.horizontalHeader().width()
         self.table_widget.setFixedWidth(width)
+
+        # -- Additional Options -- #
+        self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
 
     def graph(self):
         """

@@ -33,8 +33,11 @@ class ExperimentView(QMainWindow):
         super(ExperimentView, self).__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        ''' Window Settings '''
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Experiment View")
+        self.resize(2000, 800)
 
         ''' Widgets '''
         # -- Graph  -- #
@@ -58,7 +61,7 @@ class ExperimentView(QMainWindow):
         self.main_menu_btn = None       # Main Menu (exits, returns to main menu)
         self.delete_btn = None          # Delete Button, removes associated lines from analysis
 
-        ''' Menu Bar'''
+        ''' Menu Bar '''
         self.action_show_validations = None
         self.show_validations_on_graph = True
 
@@ -70,6 +73,8 @@ class ExperimentView(QMainWindow):
         '''Start Up'''
         self.startup(experiment_name, mid)
         self.show()
+        self.cid_pick = self.matplot_widget.getFigure().canvas.mpl_connect('pick_event', self.on_pick)
+
 
     def add_selection_assignments(self):
         self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
@@ -134,6 +139,10 @@ class ExperimentView(QMainWindow):
         Redisplay button function.
         Clears current experiment graph, and redisplays graph from checkbox selections.
         """
+
+        xlim, ylim = self.experiment_graph.get_zoom_coordinates()
+        print str(xlim) + " " + str(ylim)
+
         # Clear Graph
         self.experiment_graph.clear()
 
@@ -153,6 +162,7 @@ class ExperimentView(QMainWindow):
 
         # Draw
         self.experiment_graph.draw()
+        self.cid_pick = self.matplot_widget.getFigure().canvas.mpl_connect('pick_event', self.on_pick)
 
     def select_all(self):
         """
@@ -160,6 +170,24 @@ class ExperimentView(QMainWindow):
         Checks all selections in selection widget
         """
         self.selection_widget.select_all()
+
+    def highlight_table_row(self, frequency):
+        """
+        Highlights corresponding rows with the parameter pid
+        :param pid:
+        """
+        # -- Set table to Multi Selection Mode -- #
+        self.table_widget.setSelectionMode(QAbstractItemView.MultiSelection)
+
+        # -- Get items that match pid -- #
+        items = self.table_widget.findItems(QString(str(frequency)), Qt.MatchExactly)
+
+        # -- Select rows of matched items -- #
+        for item in items:
+            self.table_widget.selectRow(item.row())
+
+        # -- Set table back to Extended Selection Mode -- #
+        self.table_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
     def populate_table_widget(self):
         """
@@ -550,6 +578,7 @@ class ExperimentView(QMainWindow):
         print "ANALYSIS SETTINGS"
 
     def redo_analysis(self):
+        self.highlight_table_row(30761)
         print "RE-ANALYZE"
 
     def undo(self):
@@ -563,6 +592,18 @@ class ExperimentView(QMainWindow):
 
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"
+
+    def on_pick(self, event):
+        """
+        :param event:
+        """
+        # print str(event.xdata)
+        rect = event.artist
+        x,y = rect.xy
+        self.highlight_table_row(x)
+
+        #print (rect.xy)
+        print "picked x" + str(x)
 
 
 

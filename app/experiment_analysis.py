@@ -3,14 +3,16 @@
 
 from config import conn
 from tables.get import get_peaks
-
+#from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTK
 
 class MainGraph:
 
     def __init__(self, plot_widget, options_widget, experiment):
         self.plot_widget = plot_widget
         self.options_widget = options_widget
+
         self.experiment = experiment
+        self.figure = self.plot_widget.getFigure()
         self.subplot_1 = None
         self.subplot_2 = None
 
@@ -21,8 +23,20 @@ class MainGraph:
         self.y_to_experiment_intensities = False
         self.show_validations = True
 
+        self.home_xlim = None
+        self.home_ylim = None
+
+        self.last_xlim = None
+        self.last_ylim = None
         self.full_spectrum_intensities = None
         self.full_spectrum_frequencies = None
+
+        # -- Event Handling --#
+        self.xlims = None
+        self.on_bar = False
+        self.x_bar = None
+        self.hover_color_bar = None
+        self.cid_hover = self.figure.canvas.mpl_connect('motion_notify_event', self.on_plot_hover)
 
     def set_experiment(self, experiment):
         self.experiment = experiment
@@ -57,7 +71,11 @@ class MainGraph:
                                      ylabel="Intensity", \
                                      title = 'Experiment: ' + self.experiment.name +' Peaks')
 
-        self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor=color)
+        self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor=color, picker=3)
+
+        self.remove_hover_status()
+        self.xlims = frequencies
+
 
     def add_subplot_all_assignments(self, pos):
         colors = ['green', 'blue', 'yellow', '#ff6500', 'cyan', 'magenta', '#008B8B', '#8B0000', '#FA8072', '#FF69B4',
@@ -108,6 +126,8 @@ class MainGraph:
                                            ylabel="Intensity", \
                                            sharex=self.subplot_1, \
                                            title='Selected Assignment')
+        self.subplot_2 = subplot_2
+
         color_index = 0
         if self.y_to_experiment_intensities is False:
             for match in matches:
@@ -152,6 +172,14 @@ class MainGraph:
         self.plot_widget.draw()
 
     def clear(self):
+        """
+        Stores last zoom coordinates, clears subplot
+        :return:
+        """
+        # -- Store last zoom coordinates -- #
+        self.last_xlim, self.last_ylim = self.get_zoom_coordinates()
+
+        # -- Clear Plot -- #
         self.subplot_1.clear()
         self.plot_widget.getFigure().clear()
 
@@ -182,8 +210,72 @@ class MainGraph:
                                                      right = 0.97,
                                                      hspace=0.35,)
 
+        if self.last_xlim is not None or self.last_ylim is not None:
+            self.subplot_1.set_xlim(self.last_xlim)
+            self.subplot_1.set_ylim(self.last_ylim)
+            self.subplot_2.set_xlim(self.last_xlim)
+            self.subplot_2.set_ylim(self.last_ylim)
+        #else:
+        #    NavigationToolbar2GTK.push_current()
 
-class Graph():
+    def get_zoom_coordinates(self):
+        """
+        Determines the current zoom coordinates
+        :return: xlim, ylim
+        """
+        #from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
+        #self.plot_widget = MatplotlibWidget()
+
+        figure = self.plot_widget.getFigure()
+        xlim = self.subplot_1.axes.get_xlim()
+        ylim = self.subplot_1.axes.get_ylim()
+
+        return xlim, ylim
+
+    def remove_hover_status(self):
+
+        if self.hover_color_bar is not None:
+            try:
+                self.hover_color_bar.remove()
+            except ValueError:
+                print "not removing"
+            self.hover_color_bar = None
+        self.on_bar = False
+        self.x_bar = None
+
+    def on_plot_hover(self, event):
+        xdata = event.xdata
+
+        if xdata is None:
+        #    if self.on_bar is True:
+        #        self.remove_hover_status()
+            return
+
+        #if self.on_bar is True:
+        #    if not (0 >= (self.x_bar - xdata) <= 0.5):
+        #        self.remove_hover_status()
+        #    return
+
+        for curve in self.xlims:
+            if curve - xdata <= 1 and curve - xdata >= 0:
+
+                if(curve is not self.x_bar):
+
+                    if self.hover_color_bar is not None:
+                        self.remove_hover_status()
+
+                    self.x_bar = curve
+                    self.on_bar = True
+                    self.hover_color_bar = self.subplot_1.bar(curve, 1,\
+                                                              edgecolor='red',\
+                                                              facecolor ='black',
+                                                              width=0.5,
+                                                              picker=True)
+                    self.draw()
+                    return
+
+
+class Graph:
 
     def __init__(self, plot_widget, experiment):
         self.plot_widget = plot_widget

@@ -33,6 +33,7 @@ class MainGraph:
 
         # -- Event Handling --#
         self.xlims = None
+        self.ylims = None
         self.on_bar = False
         self.x_bar = None
         self.hover_color_bar = None
@@ -75,7 +76,7 @@ class MainGraph:
 
         self.remove_hover_status()
         self.xlims = frequencies
-
+        self.ylims = intensities
 
     def add_subplot_all_assignments(self, pos):
         colors = ['green', 'blue', 'yellow', '#ff6500', 'cyan', 'magenta', '#008B8B', '#8B0000', '#FA8072', '#FF69B4',
@@ -256,7 +257,8 @@ class MainGraph:
         #        self.remove_hover_status()
         #    return
 
-        for curve in self.xlims:
+        for i in range(0, len(self.xlims)):
+            curve = self.xlims[i]
             if curve - xdata <= 1 and curve - xdata >= 0:
 
                 if(curve is not self.x_bar):
@@ -266,7 +268,7 @@ class MainGraph:
 
                     self.x_bar = curve
                     self.on_bar = True
-                    self.hover_color_bar = self.subplot_1.bar(curve, 1,\
+                    self.hover_color_bar = self.subplot_1.bar(curve, self.ylims[i],\
                                                               edgecolor='red',\
                                                               facecolor ='black',
                                                               width=0.5,

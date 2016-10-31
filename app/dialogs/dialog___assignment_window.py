@@ -7,10 +7,11 @@ from PyQt4.QtGui import *
 from frames.frame___assignment_window import Ui_Dialog              # Dialog Window
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget     # Matplotlib Widget
 from widget___assignment_window_info import AssignmentInfoWidget    # Assignment Info Widget
-
+from widget___assignment_graph_options import AssignmentGraphOptionsWidget # Graph Options Widget
 from ..experiment_analysis import Graph
 from config import conn
-
+from config import resources
+import os
 
 class AssignmentWindow(QDialog):
 
@@ -26,6 +27,9 @@ class AssignmentWindow(QDialog):
         self.matplot_widget = None
         self.info_widget = None
         self.table_widget = None
+        self.graph_options_widget = None
+        self.validate_btn = None
+        self.invalidate_btn = None
 
         # Data
         self.match = match
@@ -47,27 +51,50 @@ class AssignmentWindow(QDialog):
         layout = QGridLayout()
         self.setLayout(layout)
 
-        # Widgets
+        ''' Widgets '''
         self.matplot_widget = MatplotlibWidget()
         self.info_widget = AssignmentInfoWidget(self.match)
         self.table_widget = QTableWidget()
+        self.graph_options_widget = AssignmentGraphOptionsWidget()
+        self.validate_btn = QPushButton()
+        self.invalidate_btn = QPushButton()
+        spacer_item = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        # Add Data
+        ''' Add Data '''
         self.populate_table_widget()
 
-        # Containers
+        ''' Setup Buttons '''
+        size = QSize(32, 32)
+        #path = os.path.join(resources, 'validate-128.png')
+        #self.validate_btn.setStyleSheet("QPushButton{ background-image: url(" + path + "); }")
+        self.validate_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'validate-64x.png'))))
+        self.invalidate_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'invalidate-32.png'))))
+        #self.validate_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        #self.invalidate_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.validate_btn.setIconSize(size)
+        self.invalidate_btn.setIconSize(size)
+
+        ''' Create Containers '''
+        # Button Layout
+        button_container = QVBoxLayout()
+        button_container.addWidget(self.validate_btn)
+        button_container.addWidget(self.invalidate_btn)
+
+        # Right Container
+        right_container = QVBoxLayout()
+        right_container.addWidget(self.graph_options_widget)
+        right_container.addLayout(button_container)
+        right_container.addSpacerItem(spacer_item)
+
+        # Left Container
         left_container = QVBoxLayout()
         left_container.addWidget(self.info_widget)
         left_container.addWidget(self.table_widget)
 
-
-
-        # Add Widgets to Layout
+        ''' Add Widgets to Layout '''
         layout.addLayout(left_container, 0, 0)
-        #layout.addWidget(self.info_widget, 0,0)
-        #layout.addWidget(QLabel(), 0, 1)
-        #layout.addWidget(self.table_widget, 1, 0)
         layout.addWidget(self.matplot_widget, 0, 1)
+        layout.addLayout(right_container, 0, 2)
 
     def populate_table_widget(self):
         """

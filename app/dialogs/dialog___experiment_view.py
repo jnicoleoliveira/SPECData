@@ -75,7 +75,6 @@ class ExperimentView(QMainWindow):
         self.show()
         self.cid_pick = self.matplot_widget.getFigure().canvas.mpl_connect('pick_event', self.on_pick)
 
-
     def add_selection_assignments(self):
         self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
 
@@ -569,6 +568,20 @@ class ExperimentView(QMainWindow):
         # Repopulate table widget to show updated validations
         self.populate_table_widget()
 
+    def on_pick(self, event):
+        """
+        When picking a line on the graph, highlights associated
+        row in the table-widget.
+        :param event:
+        """
+        # print str(event.xdata)
+        rect = event.artist
+        x,y = rect.xy
+        self.highlight_table_row(x)
+
+        #print (rect.xy)
+        print "picked x" + str(x)
+
     # ----- STUB METHODS ---- #
 
     def settings(self):
@@ -593,17 +606,6 @@ class ExperimentView(QMainWindow):
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"
 
-    def on_pick(self, event):
-        """
-        :param event:
-        """
-        # print str(event.xdata)
-        rect = event.artist
-        x,y = rect.xy
-        self.highlight_table_row(x)
-
-        #print (rect.xy)
-        print "picked x" + str(x)
 
 
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
-    <height>217</height>
+    <width>732</width>
+    <height>347</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@ color: rgb(255, 255, 255);
         <enum>QFrame::Raised</enum>
        </property>
        <property name="text">
-        <string>Experiment View</string>
+        <string>Assignment View</string>
        </property>
       </widget>
      </item>

@@ -90,6 +90,33 @@ class Experiment:
 
         return frequencies, intensities
 
+    def get_cleaned_experiment_intensities_list(self, validated_mids):
+        """
+        Returns a list of frequencies and intensities of
+        lines that were assigned by the molecules with the
+        given validated_mids. If a molecule given is not validated,
+        the matches will not be cleared.
+        :param validated_mids: List of validated molecule mids
+        :return:
+        """
+        minus_pids = []     # List of pids to be extracted
+        frequencies = []
+        intensities = []
+
+        ''' Get List of pids associated with validated_mids '''
+        for mid in validated_mids:
+            match = self.molecule_matches[mid]
+            if match.isValidated():
+                minus_pids.extend(match.get_matched_experiment_pids())
+
+        ''' Get list of Frequencies/Intensites - peaks in minus_pids '''
+        for p in self.experiment_peaks():
+            if p.pid not in minus_pids:
+                frequencies.append(p.frequency)
+                intensities.append(p.intensity)
+
+        return frequencies, intensities
+
     def get_assigned_peaks_count(self):
         count = 0
         for key, value in self.molecule_matches.iteritems():
@@ -401,6 +428,12 @@ class Experiment:
             #self.p /= self.m
             #self.p /= m_sum
 
+        def get_matched_experiment_pids(self):
+            pids = []
+            for m in self.matches:
+                pids.append(m.exp_pid)
+
+            return pids
 
 class Match:
 

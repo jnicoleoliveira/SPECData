@@ -18,7 +18,6 @@ class AssignmentGraphOptionsWidget(QWidget):
 
         # Set up group boxes for full layout
         self.ui.matches_selections_grpbox.setLayout(self.ui.matches_layout)
-        self.ui.options_grpbox.setLayout(self.ui.options_layout)
 
         # Options
         self.full_spectrum_chk = self.ui.full_spectrum_chk
@@ -28,12 +27,8 @@ class AssignmentGraphOptionsWidget(QWidget):
 
         # Matches
         self.redisplay_btn = self.ui.redisplay_btn
-        self.deselect_all_btn = self.ui.deselect_all_btn
-        self.select_all_btn = self.ui.select_all_btn
 
         self.add_icons()
 
     def add_icons(self):
         self.redisplay_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'redisplay-graph.png'))))
-        self.deselect_all_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'deselect-all.png'))))
-        self.select_all_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'select-all.png'))))

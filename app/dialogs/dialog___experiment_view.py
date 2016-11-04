@@ -21,7 +21,7 @@ import os
 
 class ExperimentView(QMainWindow):
     """
-        Experiment View
+    Experiment View
     """
 
     # Define Colors

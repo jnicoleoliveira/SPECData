@@ -8,7 +8,7 @@ from frames.frame___assignment_window import Ui_Dialog              # Dialog Win
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget     # Matplotlib Widget
 from widget___assignment_window_info import AssignmentInfoWidget    # Assignment Info Widget
 from widget___assignment_graph_options import AssignmentGraphOptionsWidget # Graph Options Widget
-from ..experiment_analysis import Graph
+from ..experiment_analysis import AssignmentGraph
 from config import conn
 from config import resources
 import os
@@ -58,10 +58,11 @@ class AssignmentWindow(QDialog):
         self.graph_options_widget = AssignmentGraphOptionsWidget()
         self.validate_btn = QPushButton()
         self.invalidate_btn = QPushButton()
-        spacer_item = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        spacer_item = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         ''' Add Data '''
         self.populate_table_widget()
+        self.experiment_graph = AssignmentGraph(self.matplot_widget, self.experiment)
 
         ''' Setup Buttons '''
         size = QSize(32, 32)
@@ -74,6 +75,8 @@ class AssignmentWindow(QDialog):
         self.validate_btn.setIconSize(size)
         self.invalidate_btn.setIconSize(size)
 
+        self.graph_options_widget.ui.redisplay_btn.clicked.connect(self.redisplay_graph)
+
         ''' Create Containers '''
         # Button Layout
         button_container = QVBoxLayout()
@@ -82,19 +85,23 @@ class AssignmentWindow(QDialog):
 
         # Right Container
         right_container = QVBoxLayout()
-        right_container.addWidget(self.graph_options_widget)
-        right_container.addLayout(button_container)
-        right_container.addSpacerItem(spacer_item)
+        #right_container.addWidget(self.graph_options_widget)
+        #right_container.addLayout(button_container)
+        #right_container.addSpacerItem(spacer_item)
 
         # Left Container
         left_container = QVBoxLayout()
         left_container.addWidget(self.info_widget)
+        left_container.addWidget(self.graph_options_widget)
+        #left_container.addLayout(button_container)
         left_container.addWidget(self.table_widget)
+        #left_container.addSpacerItem(spacer_item)
 
         ''' Add Widgets to Layout '''
         layout.addLayout(left_container, 0, 0)
         layout.addWidget(self.matplot_widget, 0, 1)
-        layout.addLayout(right_container, 0, 2)
+        #layout.addLayout(right_container, 0, 2)
+        #layout.addLayout(right_container, 0, 2)
 
     def populate_table_widget(self):
         """
@@ -160,6 +167,29 @@ class AssignmentWindow(QDialog):
         # -- Additional Options -- #
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
 
+    def set_graph_options(self):
+        """
+        Sets graph options of the Graph data object
+        to the associated states of the checkboxes in the graph_options_widget
+        Options:
+            (1) Show Experiment's Full Spectrum
+            (2) Share y axis
+            (3) Color the experiment to matches
+            (4) Set the matches' intensities to the matching
+                experiment intensities.
+        """
+
+        # -- Get Values for Options -- #
+        full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
+        sharey = self.graph_options_widget.sharey_chk.isChecked()
+        color_experiment = self.graph_options_widget.color_experiment_chk.isChecked()
+        y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
+
+        # Set Options in graph #
+        self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
+                                          y_to_experiment_intensities=y_to_experiment_intensities,
+                                          color_experiment=color_experiment)
+
     def graph(self):
         """
         Graphs three subplots.
@@ -168,8 +198,11 @@ class AssignmentWindow(QDialog):
         (3) Full Original Spectrum of this assignment
         :return:
         """
-        self.experiment_graph = Graph(self.matplot_widget,self.experiment)
-        self.experiment_graph.add_subplot_experiment(311)
-        self.experiment_graph.add_subplot_selected_assignments(312, [self.match,], [self.color,])
-        self.experiment_graph.add_subplot_full_spectrum(313, self.match.mid, self.color)
+
+        self.experiment_graph.graph(self.match, self.color)
         self.experiment_graph.draw()
+
+    def redisplay_graph(self):
+        self.set_graph_options()
+        self.experiment_graph.clear()
+        self.graph()

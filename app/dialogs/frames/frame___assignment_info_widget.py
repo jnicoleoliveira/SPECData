@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(501, 217)
+        Form.resize(732, 347)
         Form.setStyleSheet(_fromUtf8("background-color: rgb(48, 48, 48);\n"
 "gridline-color: rgb(195, 195, 195);\n"
 "color: rgb(255, 255, 255);\n"
@@ -105,7 +105,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.Title.setText(_translate("Form", "Experiment View", None))
+        self.Title.setText(_translate("Form", "Assignment View", None))
         self.experiment_name_lbl.setText(_translate("Form", "molecule name here", None))
         self.total_peaks_lbl.setText(_translate("Form", "Total Peaks:", None))
         self.total_peaks_val.setText(_translate("Form", "TextLabel", None))

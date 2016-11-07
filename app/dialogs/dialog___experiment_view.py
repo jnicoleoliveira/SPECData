@@ -16,6 +16,7 @@ from .widget___experiment_info import ExperimentInfoWidget
 from ..experiment_analysis import MainGraph
 
 from config import resources
+from ..events import display_error_message
 import os
 
 
@@ -502,6 +503,10 @@ class ExperimentView(QMainWindow):
         self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.ALT, Qt.Key_S), self),
                      SIGNAL('activated()'), self.settings)
 
+        ''' Export Write Up'''
+        export_cleaned_lines = self.ui.actionExport_cleaned_lines
+        export_cleaned_lines.triggered.connect(self.export_cleaned_lines)
+
     def startup(self, experiment_name, mid):
         """
         Start-up script, does the following behind a loading progress screen:
@@ -606,7 +611,10 @@ class ExperimentView(QMainWindow):
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"
 
-
+    def export_cleaned_lines(self):
+        from dialog___export_cleaned_lines import ExportCleanedLines
+        window = ExportCleanedLines(self.experiment)
+        window.exec_()
 
 
 

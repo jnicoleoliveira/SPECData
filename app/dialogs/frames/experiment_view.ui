@@ -54,6 +54,8 @@ color: rgb(255, 255, 255);
     <addaction name="actionSave_analysis_write_up"/>
     <addaction name="actionSave_analysis_write_up_as"/>
     <addaction name="separator"/>
+    <addaction name="actionExport_cleaned_lines"/>
+    <addaction name="separator"/>
     <addaction name="actionSettings"/>
     <addaction name="separator"/>
     <addaction name="action_Exit"/>
@@ -177,6 +179,11 @@ color: rgb(255, 255, 255);
   <action name="actionRedo">
    <property name="text">
     <string>Redo                              Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionExport_cleaned_lines">
+   <property name="text">
+    <string>Export cleaned lines..</string>
    </property>
   </action>
  </widget>

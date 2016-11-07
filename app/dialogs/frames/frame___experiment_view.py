@@ -88,6 +88,8 @@ class Ui_MainWindow(object):
         self.actionUndo.setObjectName(_fromUtf8("actionUndo"))
         self.actionRedo = QtGui.QAction(MainWindow)
         self.actionRedo.setObjectName(_fromUtf8("actionRedo"))
+        self.actionExport_cleaned_lines = QtGui.QAction(MainWindow)
+        self.actionExport_cleaned_lines.setObjectName(_fromUtf8("actionExport_cleaned_lines"))
         self.menuView.addAction(self.actionFull_Screen)
         self.menuView.addSeparator()
         self.menuView.addAction(self.action_Graph_Settings)
@@ -97,6 +99,8 @@ class Ui_MainWindow(object):
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionSave_analysis_write_up)
         self.menuFile.addAction(self.actionSave_analysis_write_up_as)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionExport_cleaned_lines)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionSettings)
         self.menuFile.addSeparator()
@@ -143,4 +147,5 @@ class Ui_MainWindow(object):
         self.actionSelect_All_Ctrl_A.setText(_translate("MainWindow", "Select All                       Ctrl+A", None))
         self.actionUndo.setText(_translate("MainWindow", "Undo                             Ctrl+Z", None))
         self.actionRedo.setText(_translate("MainWindow", "Redo                              Ctrl+Y", None))
+        self.actionExport_cleaned_lines.setText(_translate("MainWindow", "Export cleaned lines..", None))
 

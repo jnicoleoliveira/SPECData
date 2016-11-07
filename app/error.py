@@ -46,3 +46,27 @@ def get_file_error_message(file_path):
         return error_message
 
     return None
+
+
+def path_exists(file_path):
+    """
+    Determines if path exists
+    :param file_path: file path of
+    :return: True if path exists, false otherwise
+    """
+    # Determine if File Exists
+    return os.path.exists(file_path)
+
+
+def is_file(file_path):
+    """
+    Determines if the path is a file
+    :param file_path: (sting) File path
+    :return:
+    """
+    return os.path.isfile(file_path)
+
+
+def get_file_name(file_path):
+    if path_exists(file_path):
+        return os.path.basename(file_path)

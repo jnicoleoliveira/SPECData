@@ -106,15 +106,14 @@ class Experiment:
         ''' Get List of pids associated with validated_mids '''
         for mid in validated_mids:
             match = self.molecule_matches[mid]
-            if match.isValidated():
+            if match.is_validated():
                 minus_pids.extend(match.get_matched_experiment_pids())
 
         ''' Get list of Frequencies/Intensites - peaks in minus_pids '''
-        for p in self.experiment_peaks():
+        for p in self.experiment_peaks:
             if p.pid not in minus_pids:
                 frequencies.append(p.frequency)
                 intensities.append(p.intensity)
-
         return frequencies, intensities
 
     def get_assigned_peaks_count(self):
@@ -228,6 +227,7 @@ class Experiment:
     def validate_a_match(self, mid):
         #if mid is not None:
         self.molecule_matches[mid].set_status_as_validated()
+
         self.validated_matches[mid] = self.molecule_matches[mid]
         #    del self.molecule_matches[mid]
 

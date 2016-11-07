@@ -17,8 +17,11 @@ class ExperimentWriteUp:
         frequencies, intensities = \
             self.experiment.get_cleaned_experiment_intensities_list(validated_mids)
 
+        ''' Get String '''
+        string = self.__get_frequencies_intensities_string(frequencies, intensities)
+
         ''' Export to File '''
-        self.__export_frequencies_intensities_to_text_file__(frequencies, intensities, path)
+        self.__export_string_to_text_file(string, path)
 
         return path
 
@@ -32,7 +35,10 @@ class ExperimentWriteUp:
         ''' Generate String ( frequency *tab* intensity ) '''
         txt_string = ""
         for i in range(0, len(frequencies)):
-            txt_string += str(frequencies) + "\t" + str(intensities)
+            txt_string += str(frequencies[i]) + " " + str(intensities[i])
+            txt_string += "\n"
+
+        return txt_string
 
     def __export_string_to_text_file(self, string, path):
         """
@@ -47,7 +53,3 @@ class ExperimentWriteUp:
         text_file.close()
 
         return path
-
-#background-color: rgba(0, 128, 128, 154);
-##008080
-#background-color: rgb(82, 82, 82);

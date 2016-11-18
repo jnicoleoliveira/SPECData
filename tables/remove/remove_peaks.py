@@ -26,6 +26,7 @@ def remove_all(conn, mid):
 
     return True
 
+
 def remove_peak(conn, pid):
     """
     Removes a specified peak entry, by its pid

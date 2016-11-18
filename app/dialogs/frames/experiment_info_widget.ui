@@ -104,26 +104,6 @@ color: rgb(255, 255, 255);
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="info_lbl">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Additional Info:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="info_val_lbl">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="molecules_found_lbl">
          <property name="font">
@@ -138,6 +118,13 @@ color: rgb(255, 255, 255);
          </property>
         </widget>
        </item>
+       <item row="4" column="1">
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="1">
         <widget class="QLabel" name="molecules_found_val">
          <property name="text">
@@ -146,9 +133,27 @@ color: rgb(255, 255, 255);
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+        <widget class="QLabel" name="info_val_lbl">
+         <property name="font">
+          <font>
+           <italic>true</italic>
+          </font>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="info_lbl">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Additional Info:</string>
          </property>
         </widget>
        </item>

@@ -24,7 +24,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="8" column="0">
-    <widget class="QPushButton" name="make_queries_btn">
+    <widget class="QPushButton" name="manage_database_btn">
      <property name="font">
       <font>
        <weight>75</weight>
@@ -38,7 +38,7 @@
       <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="text">
-      <string>Make Queries</string>
+      <string>Manage Database</string>
      </property>
     </widget>
    </item>
@@ -207,10 +207,11 @@
     </widget>
    </item>
   </layout>
-  <zorder>layoutWidget</zorder>
+  <zorder>manage_database_btn</zorder>
+  <zorder>import_btn</zorder>
+  <zorder>mainmenu_lbl</zorder>
   <zorder>new_experiment_btn</zorder>
   <zorder>load_experiment_btn</zorder>
-  <zorder>logo_lbl</zorder>
   <zorder>logo_lbl</zorder>
   <zorder>verticalSpacer</zorder>
   <zorder>verticalSpacer_2</zorder>

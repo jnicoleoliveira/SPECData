@@ -38,7 +38,7 @@ class ExperimentView(QMainWindow):
         ''' Window Settings '''
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Experiment View")
-        self.resize(2000, 800)
+        self.resize(1800, 900)
 
         ''' Widgets '''
         # -- Graph  -- #
@@ -209,8 +209,8 @@ class ExperimentView(QMainWindow):
         self.table_widget.setSortingEnabled(True)
 
         # Set Header Label
-        self.table_widget.setHorizontalHeaderLabels(["Experiment PID", "Frequency", "Intensity", \
-                                                     "Molecule Matched", "Status"])
+        self.table_widget.setHorizontalHeaderLabels(["Exp PID", "Frequency", "Intensity", \
+                                                     "Match", "Status"])
 
         for i in range(0, row_count):
 

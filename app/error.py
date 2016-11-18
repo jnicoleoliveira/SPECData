@@ -20,7 +20,7 @@ def is_valid_file(file_path):
         return False
 
     # Determine if file extention is correct
-    valid_ext = "sp", "lines", "cat"
+    valid_ext = "sp", "lines", "cat", "dpt", "txt"
     if str.split(str(file_path), '.')[1] not in valid_ext:
         return False
 
@@ -40,7 +40,7 @@ def get_file_error_message(file_path):
         return error_message
 
     # Determine if file extention is correct
-    valid_ext = "sp", "lines", "cat"
+    valid_ext = "sp", "lines", "cat", "dpt", "txt"
     if str.split(str(file_path), '.')[1] not in valid_ext:
         error_message = "ERROR: Filepath " + file_path + " is an invalid file. Must be a .sp, .lines, or .cat file"
         return error_message

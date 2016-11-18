@@ -21,18 +21,18 @@ class MainMenu(QDialog):
         self.connect_buttons()
         self.load_logo()
 
-
     def connect_buttons(self):
         # Get Buttons/Labels
         import_btn = self.ui.import_btn
         new_experiment_btn = self.ui.new_experiment_btn
         load_experiment_btn = self.ui.load_experiment_btn
-        make_queries_btn = self.ui.make_queries_btn
+        manage_database_btn = self.ui.manage_database_btn
 
         # Connect Label to Functions
         import_btn.clicked.connect(self.import_files)
         new_experiment_btn.clicked.connect(self.start_new_experiment)
         load_experiment_btn.clicked.connect(self.load_experiment)
+        manage_database_btn.clicked.connect(self.manage_database)
 
     def load_logo(self):
         import os
@@ -49,6 +49,7 @@ class MainMenu(QDialog):
     def start_new_experiment(self):
         self.close()
         window = NewExperimentForm()
+        window.show()
         window.exec_()
 
     def load_experiment(self):
@@ -62,6 +63,10 @@ class MainMenu(QDialog):
         window.show()
         window.exec_()
 
-    def make_queries(self):
-        # stub method
-        print "Make Query"
+    def manage_database(self):
+
+        from dialog___manage_database import ManageDatabase
+        window = ManageDatabase()
+        self.close()
+        window.show()
+        window.exec_()

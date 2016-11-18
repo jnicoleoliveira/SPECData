@@ -250,7 +250,7 @@ class Ui_Dialog(object):
         self.analyse_with_lbl.setText(_translate("Dialog", "Analyze with:", None))
         self.local_chk.setText(_translate("Dialog", "Local Database", None))
         self.hitran_chk.setText(_translate("Dialog", "HITRAN (unavailable)", None))
-        self.splatlog_chk.setText(_translate("Dialog", "SplatLog (unavailable)", None))
+        self.splatlog_chk.setText(_translate("Dialog", "Splatalog (unavailable)", None))
         self.analyze_btn.setText(_translate("Dialog", "Analyze", None))
         self.back_btn.setText(_translate("Dialog", "Back to Main", None))
 

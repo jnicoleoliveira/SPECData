@@ -45,6 +45,10 @@ def import_file(conn, filepath, mid):
         __import_spfile(conn, filepath, mid)
     elif extention == 'lines':
         __import_linesfile(conn, filepath, mid)
+    elif extention == 'dpt':
+        __import_dptfile(conn, filepath, mid)
+    elif extention == 'txt':
+        __import_txtfile(conn, filepath, mid)
     else:
         print "Invalid import file. EXTENTION must be: '.cat' , '.sp', '.lines'"
         return False
@@ -69,6 +73,69 @@ def pid_exists(conn, pid):
     # Info entry exists
     return True
 
+
+def __import_dptfile(conn, filepath, mid):
+    """
+    Inheritently Private Function, determines peaks of .sp File and imports to database
+    :param conn: Database connection
+    :param filepath: Path to import file
+    :param mid: Molecule ID
+    :return:
+    """
+    from analysis import peak_finder
+
+    # Get data from file
+    frequencies = []
+    intensities = []
+    with open(filepath) as f:
+        for line in f:
+            point = line.split(",")
+            frequencies.append(float(point[0]))   # get frequency
+            intensities.append(float(point[1]))   # get actual intensity (logx ^ x)
+
+    # Determine Peaks
+    frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
+
+    # Store peaks into file
+    for i in range(0, len(frequencies)):
+        conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, frequencies[i], intensities[i]))   # insert into peak table
+
+    # Commit Changes
+    conn.commit()
+
+    print "[ Added entry peaks ] "
+
+def __import_txtfile(conn, filepath, mid):
+    """
+    Inheritently Private Function, determines peaks of .sp File and imports to database
+    :param conn: Database connection
+    :param filepath: Path to import file
+    :param mid: Molecule ID
+    :return:
+    """
+    from analysis import peak_finder
+
+    # Get data from file
+    frequencies = []
+    intensities = []
+    with open(filepath) as f:
+        for line in f:
+            if line is not None or line is not "":
+                point = str.split((line.strip()))
+                frequencies.append(float(point[0]))   # get frequency
+                intensities.append(float(point[1]))   # get actual intensity (logx ^ x)
+
+    # Determine Peaks
+    frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
+
+    # Store peaks into file
+    for i in range(0, len(frequencies)):
+        conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, frequencies[i], intensities[i]))   # insert into peak table
+
+    # Commit Changes
+    conn.commit()
+
+    print "[ Added entry peaks ] "
 
 def __import_catfile(conn, filepath, mid):
     """

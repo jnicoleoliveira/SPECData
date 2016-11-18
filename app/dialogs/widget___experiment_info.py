@@ -33,11 +33,12 @@ class ExperimentInfoWidget(QWidget):
 
         # Set labels to data
         self.ui.experiment_name_lbl.setText(name)
-        self.ui.composition_val.setText('[stub]')
+        self.ui.composition_val.setText('C2H2 + CS2')
         self.ui.total_peaks_val.setText(str(total_peaks))
         self.ui.peaks_assigned_val.setText(str(peaks_assigned))
         self.ui.peaks_unassigned_val.setText(str(peaks_unassigned))
         self.ui.molecules_found_val.setText(str(molecules_found))
+        self.ui.info_val_lbl.setText("Discharge")
         # Formatting
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 

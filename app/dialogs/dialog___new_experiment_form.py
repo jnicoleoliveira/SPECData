@@ -30,7 +30,14 @@ class NewExperimentForm(QDialog):
         self.databases = None
 
         # Set Up
+        self.set_up()           # Setup UI Changes
         self.connect_buttons()  # Connect buttons to its respective function
+        self.new_window = None
+
+    def set_up(self):
+        self.ui.local_chk.click()
+        self.ui.hitran_chk.setDisabled(True)
+        self.ui.splatlog_chk.setDisabled(True)
 
     def connect_buttons(self):
         # Get Buttons / Labels
@@ -53,11 +60,13 @@ class NewExperimentForm(QDialog):
 
     def next_frame(self, mid):
         from dialog___experiment_view import ExperimentView
+        from dialog___blank_dialog import OpenExperimentView
         # Go to next fame
         self.close()
-        window = ExperimentView(str(self.experiment_name), mid)
+        window = OpenExperimentView(str(self.experiment_name), mid)
         window.show()
         window.exec_()
+
 
     def back_frame(self):
         from dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)

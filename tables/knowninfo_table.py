@@ -18,7 +18,11 @@
 #           -> notes         (string: additional information)
 #
 #       Public Functions:
-
+#           * get_eid(conn, name, category)
+#           * get_type(conn, mid)
+#           * get_units(conn, mid)
+#           * get_composition(conn, mid)
+#
 
 # Imports
 from molecules_table import mid_exists

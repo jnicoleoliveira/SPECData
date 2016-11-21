@@ -7,7 +7,7 @@ from PyQt4.QtGui import *
 from frames.frame___load_experiment import Ui_Dialog              # Dialog Window
 
 from config import conn
-from tables.get import get_molecules
+import tables.molecules_table as molecules_table
 from ..events import display_error_message
 
 class LoadExperiment(QDialog):
@@ -38,7 +38,7 @@ class LoadExperiment(QDialog):
         """
         Populates list widget with experiments available to load.
         """
-        mids, names = get_molecules.get_experiment_list(conn)
+        mids, names = molecules_table.get_experiment_list(conn)
 
         for i in range(0, len(mids)):
             line = str(i+1) + "\t" + str(mids[i]) + "\t" + names[i]

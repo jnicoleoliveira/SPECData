@@ -10,7 +10,8 @@ from frames.frame___experiment_info_widget import Ui_Form
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 
 from config import conn
-from tables.get import get_peaks
+#from tables.get import get_peaks
+import tables.peaks_table as peaks_table
 
 class ExperimentInfoWidget(QWidget):
 
@@ -26,7 +27,7 @@ class ExperimentInfoWidget(QWidget):
         # Get Data
         mid = experiment.mid
         name = experiment.name
-        total_peaks = get_peaks.get_peak_count(conn, mid)
+        total_peaks = peaks_table.get_peak_count(conn, mid)
         peaks_assigned = experiment.get_assigned_peaks_count()
         peaks_unassigned = total_peaks - peaks_assigned
         molecules_found = len(experiment.molecule_matches)

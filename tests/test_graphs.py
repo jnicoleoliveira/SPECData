@@ -3,7 +3,7 @@ from config import *
 
 from scripts import graph_peaks
 from scripts import assign_peaks
-import tables.get.get_molecules as get_molecules
+import tables.molecules_table as get_molecules
 import tables.get.get_assignments as get_assignments
 # Connect to sqlite database
 conn = sqlite3.connect(db_filepath)

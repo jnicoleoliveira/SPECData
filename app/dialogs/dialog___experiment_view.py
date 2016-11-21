@@ -194,7 +194,7 @@ class ExperimentView(QMainWindow):
             Experiment PID, Frequency, Intensity with its associative
             match's PID, frequency, and intensity
         """
-        import tables.get.get_peaks as peaks
+        import tables.peaks_table as peaks_table
         from config import conn
         matches = self.experiment.get_all_matches_list()
 
@@ -215,7 +215,7 @@ class ExperimentView(QMainWindow):
 
             # Get Row Data
             exp_pid = matches[i].exp_pid
-            exp_frequency, exp_intensity = peaks.get_frequency_intensity(conn, exp_pid)
+            exp_frequency, exp_intensity = peaks_table.get_frequency_intensity(conn, exp_pid)
             name = matches[i].name
             mid = matches[i].mid
             status = "pending"

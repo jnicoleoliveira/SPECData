@@ -79,12 +79,12 @@ class NewExperimentForm(QDialog):
         """
         Import experiment entry
         """
-        import tables.entry.entry_molecules as molecules
-        import tables.entry.entry_peaks as peaks
+        import tables.molecules_table as molecules_table
+        import tables.peaks_table as peaks_table
         from config import conn, db_dir
 
-        mid = molecules.new_molecule_entry(conn, str(self.experiment_name), "experiment")
-        peaks.import_file(conn, str(self.file_path), mid)
+        mid = molecules_table.new_molecule_entry(conn, str(self.experiment_name), "experiment")
+        peaks_table.import_file(conn, str(self.file_path), mid)
 
         # If there is a full spectrum file, copy to SPECdata/data/experiments/mid.sp
         if self.file_type is not "peaks":

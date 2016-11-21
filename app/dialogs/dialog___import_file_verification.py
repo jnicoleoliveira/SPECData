@@ -9,7 +9,7 @@ from app.events import display_error_message
 from ..error import is_valid_file, get_file_error_message
 
 from config import conn
-
+import os
 
 class ImportFileVerification(QDialog):
     """
@@ -43,6 +43,9 @@ class ImportFileVerification(QDialog):
         # Set File Name Label
         self.ui.file_name_lbl.setText(self.file_path)
         self.ui.index_lbl.setText('(' + str(self.i) + '/' + str(self.total) + ')')
+
+        auto_name = os.path.basename(self.file_path).split(".")
+        self.ui.name_txt.setText(auto_name[0])
 
         # Connect Buttons
         self.connect_buttons()
@@ -107,8 +110,8 @@ class ImportFileVerification(QDialog):
         """
         Import current entry
         """
-        import tables.entry.entry_molecules as molecules
-        import tables.entry.entry_peaks as peaks
+        import tables.molecules_table as molecules
+        import tables.peaks_table as peaks
 
         if molecules.get_mid(conn, self.name, self.category) is None:
             mid = molecules.new_molecule_entry(conn, self.name, self.category)

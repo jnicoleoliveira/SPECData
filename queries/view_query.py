@@ -20,6 +20,7 @@ def table_view(tablename):
 
     return string
 
+
 def row_view(table_name, id):
 
     # Determine identifier

@@ -252,6 +252,51 @@ def new_entry(conn, mid, units, temperature, composition, isotope, vibrational, 
     If molecule already exists, returns null
     :param conn: Sqlite3 database connection
     :param mid: Molecule id of the associated molecule
+    :param temperature:  type of experiment
+    :param units: frequency units (i.e [MHz, cm-1]
+    :param composition: composition of the molecule (i.e C2H2)
+    :param notes: additional information
+    :return:
+    """
+
+    if mid_exists(conn, mid) is False:
+        return "[ERROR: Molecule entry does not exist!"
+    elif info_exists(conn, mid) is True:
+        # If entry already exists, return that mid.
+        return "[ ERROR: KnownInfo entry associated already exists. Cancelling action. ]"
+
+    print notes
+    print composition
+    print temperature
+    print mid
+    print units
+    print isotope
+    print vibrational
+    # If entry does not exist.
+    # Add new entry to table
+    conn.execute('INSERT INTO KnownInfo (mid, units, temperature, composition, isotope, vibrational, notes)'
+                 ' VALUES (?,?,?,?,?,?,?)', (mid, units, temperature, composition, isotope, vibrational, notes))
+
+    print "[ Added info entry: " + str(mid) + " to molecules ]"
+
+    # Commit Changes
+    conn.commit()
+
+    # Get the new entry's id (iid)
+    cursor = conn.execute('SELECT max(kid) FROM KnownInfo')
+    kid = cursor.fetchone()[0]
+
+
+
+    return kid
+
+
+def new_artifact_entry(conn, mid, notes):
+    """
+    Adds a new entry to the KnownInfo table
+    If molecule already exists, returns null
+    :param conn: Sqlite3 database connection
+    :param mid: Molecule id of the associated molecule
     :param type:  type of experiment
     :param units: frequency units (i.e [MHz, cm-1]
     :param composition: composition of the molecule (i.e C2H2)
@@ -267,10 +312,10 @@ def new_entry(conn, mid, units, temperature, composition, isotope, vibrational, 
 
     # If entry does not exist.
     # Add new entry to table
-    conn.execute('INSERT INTO KnownInfo (mid, units, temperature, composition, isotope, vibrational, notes)'
-                 ' VALUES (?,?,?,?,?,?,?)', (mid, units, temperature, composition, isotope, vibrational, notes))
+    conn.execute('INSERT INTO KnownInfo (mid, notes)'
+                 ' VALUES (?,?)', (mid, notes))
 
-    print "[ Added info entry: " + mid + " to molecules ]"
+    print "[ Added info entry: " + str(mid) + " to molecules ]"
 
     # Get the new entry's id (iid)
     cursor = conn.execute('SELECT max(kid) FROM KnownInfo')
@@ -280,7 +325,6 @@ def new_entry(conn, mid, units, temperature, composition, isotope, vibrational, 
     conn.commit()
 
     return kid
-
 
 ##############################################################################
 # Remove KnownInfo Table Entry

@@ -8,12 +8,12 @@
 # the ArtifactInfo table in the SPECdata database system.
 #
 #       ArtifactInfo table entries have the following format:
-#           -> aid           (int:   id of the info table entry)
+#           -> rid           (int:   id of the info table entry)
 #           -> mid           (int:   id of the associated molecules row)
 #           -> notes         (string: additional information)
 #
 #       Public Functions:
-#           * get_aid(conn, name, category)
+#           * get_rid(conn, name, category)
 #           * get_units(conn, mid)
 #           * get_notes(conn, mid)
 #           * info_exists(conn, mid)
@@ -31,14 +31,14 @@ from molecules_table import mid_exists
 # Get ArtifactInfo Entry Information
 # -----------------------------------------------------------------------------
 # Public Functions:
-#       * get_aid(conn, name, category)
+#       * get_rid(conn, name, category)
 #       * get_units(conn, mid)
 #       * get_notes(conn, mid)
 #       * info_exists(conn, mid)
 ###############################################################################
 
-def get_aid(conn, mid):
-    cursor = conn.execute("SELECT aid FROM ArtifactInfo WHERE mid=?",(mid,))
+def get_rid(conn, mid):
+    cursor = conn.execute("SELECT rid FROM ArtifactInfo WHERE mid=?",(mid,))
     line = cursor.fetchone()
     row = line[0]
     return row

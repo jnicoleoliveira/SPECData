@@ -213,7 +213,7 @@ def new_entry(conn, mid, type, units, composition, notes):
 
     # If entry does not exist.
     # Add new entry to table
-    conn.execute('INSERT INTO ExperimentInfo (mid, type, units, composition, note)'
+    conn.execute('INSERT INTO ExperimentInfo (mid, type, units, composition, notes)'
                  ' VALUES (?,?,?,?,?)', (mid, type, units, composition, notes))
 
     print "[ Added info entry: " + mid + " to molecules ]"

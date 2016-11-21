@@ -12,21 +12,45 @@ CREATE TABLE peaks(
   FOREIGN KEY(mid) REFERENCES molecules(mid)
 );
 
-CREATE TABLE info(
-  iid INTEGER PRIMARY KEY,
+CREATE TABLE assignments(
+  aid INTEGER PRIMARY KEY,
+  pid INTEGER,
+  assigned_pid INTEGER,
+  FOREIGN KEY(pid) REFERENCES peaks(pid),
+  FOREIGN KEY(assigned_pid) REFERENCES peaks(pid)
+);
+
+
+/* Info Tables correspond to 3 categories of molecules,
+ * "Known, Artifact, or Experiment" */
+CREATE TABLE KnownInfo(
+  kid INTEGER PRIMARY KEY,
   mid INTEGER,
-  vibration BOOLEAN,
-  notes VARCHAR(255),
+  units VARCHAR(10),
+  temperature FLOAT,
+  composition VARCHAR(20),
+  isotope BOOLEAN,
+  vibrational BOOLEAN,
+  notes VARCHAR(10),
+  last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(mid) REFERENCES molecules(mid)
 );
 
-CREATE TABLE assignments(
-  aid INTEGER PRIMARY KEY,
+CREATE TABLE ExperimentInfo(
+  eid INTEGER PRIMARY KEY,
   mid INTEGER,
-  pid INTEGER,
-  assigned_mid INTEGER,
-  assigned_pid INTEGER,
-  FOREIGN KEY(pid) REFERENCES peaks(pid),
-  FOREIGN KEY(assigned_mid) REFERENCES molecules(mid),
-  FOREIGN KEY(assigned_pid) REFERENCES peaks(pid)
+  type VARCHAR(20),
+  units VARCHAR(10),
+  composition VARCHAR(20),
+  notes VARCHAR(10),
+  last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(mid) REFERENCES molecules(mid)
+);
+
+CREATE TABLE ArtifactInfo(
+  rid INTEGER PRIMARY KEY,
+  mid INTEGER,
+  units VARCHAR(10),
+  notes VARCHAR(10),
+  FOREIGN KEY(mid) REFERENCES molecules(mid)
 );

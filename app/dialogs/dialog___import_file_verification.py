@@ -34,6 +34,15 @@ class ImportFileVerification(QDialog):
         self.name = None
         self.category = None
         self.composition = None
+        self.units = None
+        self.temperature = None
+        self.vibrational = False
+        self.isotope = False
+        self.notes = ""
+
+        # Strings
+        self.unit_list = [self.tr('MHz'), self.tr('GHz'), self.tr('cm-1')]
+        self.temperature_units_list = [self.tr('K'), self.tr('C'), self.tr('F')]
 
         # Setup
         self.__setup__()
@@ -44,11 +53,21 @@ class ImportFileVerification(QDialog):
         self.ui.file_name_lbl.setText(self.file_path)
         self.ui.index_lbl.setText('(' + str(self.i) + '/' + str(self.total) + ')')
 
+        # Set Auto Name
         auto_name = os.path.basename(self.file_path).split(".")
         self.ui.name_txt.setText(auto_name[0])
 
+        # Set Box Values
+        self.ui.units_combobx.addItems(self.unit_list)
+        self.ui.temperature_units_chkbx.addItems(self.temperature_units_list)
+
+        # Setup Defaults
+        self.ui.units_combobx.setCurrentIndex(0)
+        self.ui.temperature_units_chkbx.setCurrentIndex(0)
+
         # Connect Buttons
         self.connect_buttons()
+
 
     def connect_buttons(self):
         cancel_btn = self.ui.cancel_btn
@@ -68,6 +87,12 @@ class ImportFileVerification(QDialog):
             self.category = "artifact"
         elif self.ui.known_rdio.isChecked():
             self.category = "known"
+
+        self.units = self.ui.units_combobx.currentText()
+        self.vibrational = 1 if self.ui.vibrational_chkbx.isChecked() else 0
+        self.isotope = 1 if self.ui.isotope_chkbx.isChecked() else 0
+        self.temperature = self.ui.temperature_spinbx.text()
+        self.notes = self.ui.notes_txt.text()
 
     def cancel(self):
         self.close()
@@ -112,10 +137,19 @@ class ImportFileVerification(QDialog):
         """
         import tables.molecules_table as molecules
         import tables.peaks_table as peaks
-
+        import tables.knowninfo_table as known
         if molecules.get_mid(conn, self.name, self.category) is None:
             mid = molecules.new_molecule_entry(conn, self.name, self.category)
             peaks.import_file(conn, self.file_path, mid)
+
+            # Import info entry
+            if self.category is 'known':
+                known.new_entry(conn, mid, str(self.units), float(self.temperature), str(self.composition),\
+                                self.isotope, self.vibrational, str(self.notes))
+                #known.new_entry(conn, mid, str(self.units), float(self.temperature),
+                #               str(self.composition), 0, 0, self.notes)
+            else:
+                known.new_artifact_entry(conn, mid, str(self.notes))
 
     def okay(self):
         self.collect_form_data()

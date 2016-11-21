@@ -2,12 +2,12 @@
 # Date: 09/23/2016
 # Implement time warping with backtracking
 
-from config import conn
-from tables.get import get_peaks, get_molecules
-
-import numpy as np
 from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
+
+from config import conn
+from temp.get import get_peaks, get_molecules
+
 
 class TimeWarpExperiment:
 
@@ -109,7 +109,7 @@ class TimeWarpExperiment:
             # Get frequencies of midlist union
             frequencies = get_peaks.get_frequencies_in_midlist(conn, new_list,
                                                                self.max_frequency,
-                                                               self.min_frequency,)
+                                                               self.min_frequency, )
             #print len(frequencies)
             # get current distance
             self.check_max_distance(frequencies, new_list)

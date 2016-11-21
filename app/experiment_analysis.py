@@ -2,7 +2,8 @@
 # Date: 08/24/2016
 
 from config import conn
-from tables.get import get_peaks
+import tables.peaks_table as get_peaks
+#from temp.get import get_peaks
 #from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTK
 
 class MainGraph:

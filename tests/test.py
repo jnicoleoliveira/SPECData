@@ -5,13 +5,11 @@
 import sqlite3
 
 import config
-from queries import view_query
-
-# Database Functions
 import tables.entry.entry_info as info_entry
-import tables.remove.remove_info as info_rem
 import tables.entry.entry_molecules as mol_entry
 import tables.entry.entry_peaks as p_entry
+import temp.remove.remove_info as info_rem
+from queries import view_query
 
 
 def main():

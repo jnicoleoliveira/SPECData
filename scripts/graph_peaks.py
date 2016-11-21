@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
-from tables.get import get_peaks
-from tables.get import get_assignments
 from tables.get import get_molecules
+from tables.get import get_peaks
+
 import config
+from temp.get import get_assignments
 
 
 def graph_experiment_and_assignment(conn, exp_mid, assigned_mid, subplot=True, show_exp_peaks=True, show_assigned_lines=True):
@@ -10,7 +11,7 @@ def graph_experiment_and_assignment(conn, exp_mid, assigned_mid, subplot=True, s
 
     # Get Experiment Peaks List and Assigned Peaks List
     exp_pids= get_peaks.get_pid_list(conn, exp_mid)
-    assigned_pids = get_assignments.get_assigned_pid_list(conn,assigned_mid,exp_mid)
+    assigned_pids = get_assignments.get_assigned_pid_list(conn, assigned_mid, exp_mid)
 
     # Get names
     exp_name = get_molecules.getName(conn, exp_mid)
@@ -63,7 +64,7 @@ def graph_experiment_and_assignment(conn, exp_mid, assigned_mid, subplot=True, s
         # IF SHOW EXPERIMENT PEAKS
         if show_exp_peaks is True:
             # Get experiment peak list
-            experiment_peak_frequency_list, experiment_peak_intensity_list = get_peaks.get_frequency_intensity_list(conn,exp_mid)
+            experiment_peak_frequency_list, experiment_peak_intensity_list = get_peaks.get_frequency_intensity_list(conn, exp_mid)
             # Plot beneath experiment spectrum
             plt.bar(experiment_peak_frequency_list, experiment_peak_intensity_list, bottom=lower_limit*3, width=0.001, edgecolor='blue')
 
@@ -90,7 +91,7 @@ def graph_experiment_and_assignment(conn, exp_mid, assigned_mid, subplot=True, s
 
         # IF SHOW EXPERIMENT PEAKS
         if show_exp_peaks is True:
-            experiment_peak_frequency_list, experiment_peak_intensity_list = get_peaks.get_frequency_intensity_list(conn,exp_mid)
+            experiment_peak_frequency_list, experiment_peak_intensity_list = get_peaks.get_frequency_intensity_list(conn, exp_mid)
             plt.bar(experiment_peak_frequency_list, experiment_peak_intensity_list, bottom=-lower_limit*3, width=0.001, edgecolor='blue')
 
         # IF SHOW ASSIGNED LINES
@@ -108,7 +109,7 @@ def graph_experiment_and_assignment(conn, exp_mid, assigned_mid, subplot=True, s
 
 def __get_assigned_lines_frequency_intensity_lists(conn, assigned_mid, mid):
 
-    assigned_pids = get_assignments.get_assigned_pid_list(conn,assigned_mid,mid)
+    assigned_pids = get_assignments.get_assigned_pid_list(conn, assigned_mid, mid)
     frequencies = []
     intensities = []
     for pid in assigned_pids:

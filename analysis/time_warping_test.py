@@ -2,14 +2,12 @@
 # Date: 09/19/2016
 
 
-from dtw import dtw
-import matplotlib.pyplot as plt
-from config import conn, db_dir
 import numpy as np
-from analysis import peak_finder
-from scipy.spatial.distance import euclidean
 from fastdtw import fastdtw
-from tables.get import get_peaks
+from scipy.spatial.distance import euclidean
+
+from config import conn
+from temp.get import get_peaks
 
 # Get data from file
 frequencies = []
@@ -75,7 +73,7 @@ for i in range(0, len(path)):
 
 print len(matches)
 #plt.show()
-from tables.get import get_molecules
+from temp.get import get_molecules
 
 for key, value in matches.iteritems():
     name = get_molecules.getName(conn, key)

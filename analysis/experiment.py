@@ -1,5 +1,6 @@
+#import temp.get.get_peaks as peaks
+import tables.peaks_table as peaks
 from config import conn
-import tables.get.get_peaks as peaks
 
 
 class Experiment:

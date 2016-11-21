@@ -3,12 +3,13 @@
 # Testing of a single known vs experiment using DTW
 
 import matplotlib.pyplot as plt
-from config import conn, db_dir
 import numpy as np
-from analysis import peak_finder
-from scipy.spatial.distance import euclidean
 from fastdtw import fastdtw
-from tables.get import get_peaks
+from scipy.spatial.distance import euclidean
+
+from config import conn
+import tables.peaks_table as get_peaks
+#from temp.get import get_peaks
 
 experiment_mid = 145
 known_mid = 75
@@ -17,12 +18,11 @@ max_freq = get_peaks.get_max_frequency(conn, experiment_mid)
 min_freq = get_peaks.get_min_frequency(conn, experiment_mid)
 
 exp_frequencies, exp_intensities = get_peaks.get_frequency_intensity_list(conn, experiment_mid)
-from experiment import Experiment
 #exp = Experiment("168-175-pzf1", 145, 0.4)
 #exp.get_assigned_molecules()
 #assignment_mids = exp.get_assigned_mids()
 #frequencies = get_peaks.get_frequencies_in_midlist(conn, assignment_mids)
-frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, known_mid,max=max_freq, min=min_freq)
+frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, known_mid, max=max_freq, min=min_freq)
 
 
 print "Got Experiment Data: " + str(len(exp_frequencies))

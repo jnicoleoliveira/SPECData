@@ -1,10 +1,8 @@
-import sqlite3
-from config import *
-
-from scripts import graph_peaks
-from scripts import assign_peaks
 import tables.molecules_table as get_molecules
-import tables.get.get_assignments as get_assignments
+import temp.get.get_assignments as get_assignments
+from config import *
+from scripts import assign_peaks
+from scripts import graph_peaks
 # Connect to sqlite database
 conn = sqlite3.connect(db_filepath)
 cursor = conn.cursor()
@@ -24,7 +22,8 @@ else:
 # PRINT ASSIGNMENT MID  NAME    COUNT
 print "Assignments...."
 for a in assignments:
-    print str(a) + " " + get_molecules.getName(conn, a) + " (" + str(get_assignments.get_assignment_count(conn,exp_mid,a)) + ")"
+    print str(a) + " " + get_molecules.getName(conn, a) + " (" + str(
+        get_assignments.get_assignment_count(conn, exp_mid, a)) + ")"
 
 #assigned_mid = 3
 

@@ -7,7 +7,7 @@ import config
 from app.events import clickable
 from frames.frame___check_single_import import Ui_checksingleimport_frame   # import frame
 from tables.entry import entry_molecules, entry_peaks
-from tables.get import get_peaks
+from temp.get import get_peaks
 
 
 class CheckSingleImport(QDialog):
@@ -73,7 +73,7 @@ class CheckSingleImport(QDialog):
             # Entry was not a success. Add to log, and return False
             log.append("ERROR: Peaks could not be added. Please check your file.")
         else:
-            pid_count = len(get_peaks.get_pid_list(conn,mid))
+            pid_count = len(get_peaks.get_pid_list(conn, mid))
             log.append("Successfully added " + str(pid_count) + " peaks")
 
         return True

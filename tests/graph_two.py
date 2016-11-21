@@ -1,8 +1,9 @@
 # jasmine Oliveira
 # Date: 09/20/2016
 import matplotlib.pyplot as plot
-from tables.get import get_peaks
+
 from config import conn
+from temp.get import get_peaks
 
 print "Enter first graph MID:"
 mid1 = raw_input()

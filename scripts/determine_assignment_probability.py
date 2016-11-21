@@ -6,10 +6,10 @@ matplotlib.use('TkAgg')
 from analysis.experiment import *
 import matplotlib.pyplot as plt
 from config import *
-from tables.get import get_molecules
-from tables.remove import remove_assignments
+from temp.get import get_molecules
+from temp.remove import remove_assignments
 from tables.entry import entry_assignments
-from tables.get import get_peaks
+from temp.get import get_peaks
 
 # Get Experiment Data
 print "Enter Experiment MID: "

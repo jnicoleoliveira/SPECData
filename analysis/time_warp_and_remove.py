@@ -8,13 +8,12 @@
 (4) Repeat 1-3 until the closest path has NO linear segments!
 """
 
-from config import conn
-from tables.get import get_peaks, get_molecules
-
-import numpy as np
+import matplotlib.pyplot as plt
 from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
-import matplotlib.pyplot as plt
+
+from config import conn
+from temp.get import get_peaks, get_molecules
 
 
 class TimeWarpRemove():

@@ -1,5 +1,4 @@
 from tables.entry.entry_assignments import *
-from tables.get.get_peaks import *
 
 
 def get_candidates(conn, frequency, threshold):

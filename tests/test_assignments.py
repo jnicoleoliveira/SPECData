@@ -4,7 +4,7 @@
 
 from config import *
 from scripts.assign_peaks import *
-from tables.remove import remove_assignments
+from temp.remove import remove_assignments
 
 
 #print "Enter pid: "

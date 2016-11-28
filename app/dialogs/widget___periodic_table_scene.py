@@ -13,10 +13,11 @@ class PeriodicTableSceneWidget(QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.setMouseTracking(True)
-        QObject.connect(self.ui.Li, SIGNAL('hovered()'), self.label_EnterEvent)
-        self.ui.Li.setMouseTracking(True)
-        hoverable(self.ui.Li)
-
+        #QObject.connect(self.ui.Li, SIGNAL('hovered()'), self.label_EnterEvent)
+        #self.ui.Li.setMouseTracking(True)
+        #hoverable(self.ui.Li)
+        self.ui.pushButton.setMouseTracking(True)
+        self.ui.pushButton = HoverButton()
     def label_EnterEvent(self):
         print("Enter")
         self.setStyleSheet("background-color:#45b545;")
@@ -51,3 +52,10 @@ class HoverLabel(QLabel):
         self.setStyleSheet("background-color:yellow;")
         print("Leave")
 
+class HoverButton(QPushButton):
+    def __init__(self, parent=None):
+        QPushButton.__init__(self, parent)
+        self.setMouseTracking(True)
+
+    def mouseMoveEvent(self, event):
+        print 'Mouse moved!'

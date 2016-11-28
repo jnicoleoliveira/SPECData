@@ -26,6 +26,7 @@ CREATE TABLE assignments(
 CREATE TABLE KnownInfo(
   kid INTEGER PRIMARY KEY,
   mid INTEGER,
+
   units VARCHAR(10),
   temperature FLOAT,
   composition VARCHAR(20),

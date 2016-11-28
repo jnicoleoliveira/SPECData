@@ -47,29 +47,38 @@ class ImportFileVerification(QDialog):
         # Setup
         self.__setup__()
 
-    def __setup__(self):\
+    def __setup__(self):
+        """
+        Set up the UI with appropriate values, and settings.
+        """
 
-        # Set File Name Label
+        ''' Filename Label '''
         self.ui.file_name_lbl.setText(self.file_path)
         self.ui.index_lbl.setText('(' + str(self.i) + '/' + str(self.total) + ')')
 
-        # Set Auto Name
+        ''' Name Textbox '''
         auto_name = os.path.basename(self.file_path).split(".")
-        self.ui.name_txt.setText(auto_name[0])
+        self.ui.name_txt.setText(auto_name[0])  # Set  Name to filename
 
-        # Set Box Values
+        ''' Frequency Units '''
         self.ui.units_combobx.addItems(self.unit_list)
-        self.ui.temperature_units_chkbx.addItems(self.temperature_units_list)
-
-        # Setup Defaults
         self.ui.units_combobx.setCurrentIndex(0)
+
+        ''' Temperature Spinbox '''
+        self.ui.temperature_spinbx.setMaximum(100000)
+        self.ui.temperature_spinbx.setMinimum(-100000)
+
+        ''' Temperature Units ComboBox'''
+        self.ui.temperature_units_chkbx.addItems(self.temperature_units_list)
         self.ui.temperature_units_chkbx.setCurrentIndex(0)
 
-        # Connect Buttons
+        ''' Connect UI Buttons '''
         self.connect_buttons()
 
-
     def connect_buttons(self):
+        """
+        Connects buttons in the UI to associated functions.
+        """
         cancel_btn = self.ui.cancel_btn
         ok_btn = self.ui.ok_btn
 

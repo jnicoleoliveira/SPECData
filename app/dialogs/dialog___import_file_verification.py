@@ -110,10 +110,13 @@ class ImportFileVerification(QDialog):
 
         # Convert Temperature
         temperature_units = self.ui.temperature_units_chkbx.currentText()
+
         if temperature_units is "F":
-            self.temperature = (self.temperature+459.67) * 5/9
+            from analysis.conversions import fahrenheit_to_kelvin
+            self.temperature = fahrenheit_to_kelvin(self.temperature)
         elif temperature_units is "C":
-            self.temperature += 273
+            from analysis.conversions import celsius_to_kelvin
+            self.temperature = celsius_to_kelvin(self.temperature)
 
     def enable_artifact_fields(self):
 

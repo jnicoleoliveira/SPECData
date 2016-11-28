@@ -171,7 +171,7 @@ color: rgb(255, 255, 255);
    <item row="5" column="2">
     <layout class="QGridLayout" name="gridLayout">
      <item row="7" column="0">
-      <widget class="QLabel" name="label_8">
+      <widget class="QLabel" name="other_lbl">
        <property name="text">
         <string>Other</string>
        </property>
@@ -196,31 +196,35 @@ color: rgb(255, 255, 255);
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QComboBox" name="units_combobx"/>
+      <widget class="QComboBox" name="units_combobx">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item row="14" column="0">
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="notes_lbl">
        <property name="text">
         <string>Notes: </string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="category_lbl">
        <property name="text">
         <string>*Category:</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="name_lbl">
        <property name="text">
         <string>*Name of Entry:</string>
        </property>
       </widget>
      </item>
      <item row="6" column="0">
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="temperature_lbl">
        <property name="text">
         <string>Temperature: </string>
        </property>
@@ -243,7 +247,7 @@ color: rgb(25, 25, 25);</string>
       </widget>
      </item>
      <item row="4" column="0">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="compostition_lbl">
        <property name="text">
         <string>*Composition: </string>
        </property>
@@ -279,7 +283,7 @@ color: rgb(25, 25, 25);</string>
       </layout>
      </item>
      <item row="3" column="0">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="units_lbl">
        <property name="text">
         <string>*Units</string>
        </property>

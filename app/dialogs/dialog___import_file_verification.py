@@ -6,10 +6,11 @@ from PyQt4.QtGui import *
 
 from frames.frame___import_file_verification import Ui_Dialog
 from app.events import display_error_message
-from ..error import is_valid_file, get_file_error_message
+from ..error import is_valid_file, get_file_error_message, molecule_entry_exists
 
 from config import conn
 import os
+
 
 class ImportFileVerification(QDialog):
     """
@@ -81,9 +82,13 @@ class ImportFileVerification(QDialog):
         """
         cancel_btn = self.ui.cancel_btn
         ok_btn = self.ui.ok_btn
+        artifact_rdio = self.ui.artifact_rdio
+        known_rdio = self.ui.known_rdio
 
         cancel_btn.clicked.connect(self.cancel)
         ok_btn.clicked.connect(self.okay)
+        artifact_rdio.clicked.connect(self.enable_artifact_fields)
+        known_rdio.clicked.connect(self.enable_radio_fields)
 
     def collect_form_data(self):
         """
@@ -103,6 +108,51 @@ class ImportFileVerification(QDialog):
         self.temperature = self.ui.temperature_spinbx.text()
         self.notes = self.ui.notes_txt.text()
 
+    def enable_artifact_fields(self):
+
+        # Deselect Values
+        self.ui.units_combobx.setCurrentIndex(-1)
+        self.ui.temperature_units_chkbx.setCurrentIndex(-1)
+
+        disable_fields = [self.ui.units_combobx, self.ui.isotope_chkbx,
+                          self.ui.temperature_spinbx, self.ui.units_combobx,
+                          self.ui.composition_txt, self.ui.vibrational_chkbx, self.ui.temperature_units_chkbx]
+
+        field_labels = [self.ui.units_lbl, self.ui.other_lbl, self.ui.temperature_lbl,
+                        self.ui.compostition_lbl, self.ui.vibrational_chkbx,
+                        self.ui.isotope_chkbx, self.ui.temperature_spinbx]
+
+        for field in disable_fields:
+            field.setDisabled(True)
+
+        for field in field_labels:
+            field.setStyleSheet("color: rgb(128, 128, 128);")
+
+        # Change Background Colors
+        self.ui.composition_txt.setStyleSheet("background-color: rgb(128, 128, 128);")
+
+    def enable_radio_fields(self):
+
+        # Reselect Values
+        self.ui.units_combobx.setCurrentIndex(0)
+        self.ui.temperature_units_chkbx.setCurrentIndex(0)
+
+        disable_fields = [self.ui.units_combobx, self.ui.isotope_chkbx,
+                          self.ui.temperature_spinbx, self.ui.units_combobx,
+                          self.ui.composition_txt, self.ui.vibrational_chkbx]
+
+        field_labels = [self.ui.units_lbl, self.ui.other_lbl, self.ui.temperature_lbl,
+                        self.ui.compostition_lbl, self.ui.vibrational_chkbx, self.ui.isotope_chkbx]
+
+        for field in disable_fields:
+            field.setEnabled(True)
+
+        for field in field_labels:
+            field.setStyleSheet("color: rgb(255, 255, 255);")
+
+        # Change Background Colors back to default
+        self.ui.composition_txt.setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(25, 25, 25);")
+
     def cancel(self):
         self.close()
 
@@ -119,24 +169,38 @@ class ImportFileVerification(QDialog):
         # Determine Error Message
         if self.category is None or not self.category:
             error_msg += "ERROR: Category field incomplete."
+
         if self.name is None or not self.name:
             error_msg += "\nERROR: Entry Name is incomplete."
-        if self.composition is None or not self.composition:
-            error_msg += "\nERROR: Composition is incomplete."
+
+        # Errors for 'known'
+        if self.category is "known":
+            if self.composition is None or not self.composition:
+                error_msg += "\nERROR: Composition is incomplete."
 
         # Determine if valid file
         if is_valid_file(self.file_path) is False:
             error_msg += "\n" + get_file_error_message(self.file_path)
 
-        # If error Message is empty, then error is false.
         if error_msg is "":
+            # If error Message is empty, then error is false.
             has_error = False
-
-        # If error exists, display error message window
-        if has_error is True:
+        else:
+            # If error exists, display error message window
             display_error_message("Invalid input.",
                                   "Be sure to check that all fields are complete.",
                                   error_msg)
+
+        # If valid fields, then
+        # determine if there is a duplicate molecule entry
+        if has_error is False:
+            if molecule_entry_exists(conn, self.name, self.category):
+                error_msg = "ERROR: Molecule entry already exists with that category and name.\n" \
+                             "Please choose another name, or go to 'Manage Database' " \
+                             "to update the existing entry."
+                display_error_message("Duplicate database entry.",
+                                      "Please choose another name for your entry.", error_msg)
+                has_error = True
 
         return has_error
 
@@ -147,6 +211,7 @@ class ImportFileVerification(QDialog):
         import tables.molecules_table as molecules
         import tables.peaks_table as peaks
         import tables.knowninfo_table as known
+
         if molecules.get_mid(conn, self.name, self.category) is None:
             mid = molecules.new_molecule_entry(conn, self.name, self.category)
             peaks.import_file(conn, self.file_path, mid)
@@ -155,8 +220,6 @@ class ImportFileVerification(QDialog):
             if self.category is 'known':
                 known.new_entry(conn, mid, str(self.units), float(self.temperature), str(self.composition),\
                                 self.isotope, self.vibrational, str(self.notes))
-                #known.new_entry(conn, mid, str(self.units), float(self.temperature),
-                #               str(self.composition), 0, 0, self.notes)
             else:
                 known.new_artifact_entry(conn, mid, str(self.notes))
 

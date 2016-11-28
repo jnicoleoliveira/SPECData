@@ -32,7 +32,7 @@ CREATE TABLE KnownInfo(
   composition VARCHAR(20),
   isotope BOOLEAN,
   vibrational BOOLEAN,
-  notes VARCHAR(10),
+  notes VARCHAR(255),
   last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(mid) REFERENCES molecules(mid)
 );

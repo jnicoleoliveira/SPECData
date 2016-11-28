@@ -70,3 +70,24 @@ def is_file(file_path):
 def get_file_name(file_path):
     if path_exists(file_path):
         return os.path.basename(file_path)
+
+
+def molecule_entry_exists(conn, name, category):
+    """
+    Determines if a molecule entry exists in a
+    database.
+    :param conn: SQLite Connection
+    :param name: (string) Name of molecule
+    :param category: (string) Molecule category
+    :return: True if it exists, False otherwise
+    """
+    from tables.molecules_table import get_mid
+
+    mid = get_mid(conn, name, category)
+
+    if mid is None:
+        return False
+
+    return True
+
+

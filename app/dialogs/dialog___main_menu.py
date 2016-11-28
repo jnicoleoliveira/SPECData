@@ -65,8 +65,12 @@ class MainMenu(QDialog):
 
     def manage_database(self):
 
-        from dialog___manage_database import ManageDatabase
-        window = ManageDatabase()
-        self.close()
-        window.show()
+        # temp testing
+        from dialog___composition_selector import CompositionSelector
+        window = CompositionSelector()
         window.exec_()
+        #from dialog___manage_database import ManageDatabase
+        #window = ManageDatabase()
+        #self.close()
+        #window.show()
+        #window.exec_()

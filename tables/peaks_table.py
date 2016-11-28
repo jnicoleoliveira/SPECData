@@ -55,6 +55,7 @@ from molecules_table import mid_exists
 #       * get_frequencies_in_midlist(conn, mid_list, max=None, min=None)
 ###############################################################################
 
+
 def get_all_known_frequencies(conn):
     # Set of all peaks for molecule
     cursor = conn.execute("SELECT frequency FROM molecules JOIN peaks"\
@@ -68,6 +69,7 @@ def get_all_known_frequencies(conn):
         frequencies.append(row)
 
     return frequencies
+
 
 def get_all_known_frequencies_with_mids(conn):
     # Set of all peaks for molecule
@@ -85,6 +87,7 @@ def get_all_known_frequencies_with_mids(conn):
         frequencies.append(row[1])
 
     return mids, frequencies
+
 
 def get_frequencies_in_midlist(conn, mid_list, max=None, min=None):
 

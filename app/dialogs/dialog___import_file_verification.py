@@ -108,6 +108,13 @@ class ImportFileVerification(QDialog):
         self.temperature = self.ui.temperature_spinbx.text()
         self.notes = self.ui.notes_txt.text()
 
+        # Convert Temperature
+        temperature_units = self.ui.temperature_units_chkbx.currentText()
+        if temperature_units is "F":
+            self.temperature = (self.temperature+459.67) * 5/9
+        elif temperature_units is "C":
+            self.temperature += 273
+
     def enable_artifact_fields(self):
 
         # Deselect Values
@@ -116,7 +123,8 @@ class ImportFileVerification(QDialog):
 
         disable_fields = [self.ui.units_combobx, self.ui.isotope_chkbx,
                           self.ui.temperature_spinbx, self.ui.units_combobx,
-                          self.ui.composition_txt, self.ui.vibrational_chkbx, self.ui.temperature_units_chkbx]
+                          self.ui.composition_txt, self.ui.vibrational_chkbx,
+                          self.ui.temperature_units_chkbx]
 
         field_labels = [self.ui.units_lbl, self.ui.other_lbl, self.ui.temperature_lbl,
                         self.ui.compostition_lbl, self.ui.vibrational_chkbx,
@@ -139,10 +147,12 @@ class ImportFileVerification(QDialog):
 
         disable_fields = [self.ui.units_combobx, self.ui.isotope_chkbx,
                           self.ui.temperature_spinbx, self.ui.units_combobx,
-                          self.ui.composition_txt, self.ui.vibrational_chkbx]
+                          self.ui.composition_txt, self.ui.vibrational_chkbx,
+                          self.ui.temperature_units_chkbx]
 
         field_labels = [self.ui.units_lbl, self.ui.other_lbl, self.ui.temperature_lbl,
-                        self.ui.compostition_lbl, self.ui.vibrational_chkbx, self.ui.isotope_chkbx]
+                        self.ui.compostition_lbl, self.ui.vibrational_chkbx,
+                        self.ui.isotope_chkbx, self.ui.temperature_spinbx]
 
         for field in disable_fields:
             field.setEnabled(True)

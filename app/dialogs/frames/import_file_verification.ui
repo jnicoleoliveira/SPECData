@@ -248,6 +248,9 @@ color: rgb(25, 25, 25);</string>
      </item>
      <item row="4" column="0">
       <widget class="QLabel" name="compostition_lbl">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 255, 255);</string>
+       </property>
        <property name="text">
         <string>*Composition: </string>
        </property>

@@ -49,17 +49,24 @@ class CompositionSelector(QDialog):
         box.setStyleSheet("color: rgb(255, 255, 255);")
         box.setLineWidth(10)
 
-        selection_box = QHBoxLayout()
-        selection_box.addWidget(SelectedElementBox())
-        selection_box.addWidget(SelectedElementBox())
+        selection_box = QGridLayout()
+        selection_box.addWidget(SelectedElementBox(), 0, 0)
+        selection_box.addWidget(SelectedElementBox(), 0, 1)
+        selection_box.addWidget(SelectedElementBox(), 0, 2)
+        selection_box.addWidget(SelectedElementBox(), 1, 0)
+        selection_box.addWidget(SelectedElementBox(), 1, 1)
+        selection_box.addWidget(SelectedElementBox(), 1, 2)
+
 
         layout.addWidget(box)
+        layout.addSpacerItem(QSpacerItem(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding))
         layout.addLayout(selection_box)
         right_frame.setLayout(layout)
 
 
         ''' Connect Element Buttons '''
         element_buttons = self.periodic_table_widget.element_buttons
+
 
 class ElementViewBoxWidget(QWidget):
     def __init__(self):

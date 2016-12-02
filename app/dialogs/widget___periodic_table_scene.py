@@ -103,6 +103,7 @@ class HoverButton(QToolButton):
         e = element(self.symbol)
 
         if e is None:
+            # Special Cases only found on atomic number #
             n = {"Cn":112, "Uut": 113, "Fl" : 114, "Uup": 115, "Lv":116, "Uus":117, "Uuo":118 }
 
             if self.symbol in n:

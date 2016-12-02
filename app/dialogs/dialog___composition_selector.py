@@ -19,6 +19,7 @@ class CompositionSelector(QDialog):
         self.setLayout(self.ui.gridLayout)
         self.setWindowTitle('Composition Selector')
         self.setMouseTracking(True)
+        self.periodic_table_widget = None
         self.__setup__()
 
     def __setup__(self):
@@ -26,7 +27,12 @@ class CompositionSelector(QDialog):
         left_frame = self.ui.left_frame
         layout = QGridLayout()
 
-        layout.addWidget(PeriodicTableSceneWidget())
+        ''' Create Widgets '''
+        self.element_view_box_widget = ElementViewBoxWidget()
+        self.periodic_table_widget = PeriodicTableSceneWidget(self.element_view_box_widget)
+
+        ''' Add Widgets to Layout '''
+        layout.addWidget(self.periodic_table_widget)
         left_frame.setLayout(layout)
 
         right_frame = self.ui.right_frame
@@ -34,7 +40,8 @@ class CompositionSelector(QDialog):
         layout = QVBoxLayout()
 
         x = QGridLayout()
-        x.addWidget(ElementViewBoxWidget())
+
+        x.addWidget(self.element_view_box_widget)
 
         box = QFrame()
         box.setLayout(x)
@@ -50,13 +57,22 @@ class CompositionSelector(QDialog):
         layout.addLayout(selection_box)
         right_frame.setLayout(layout)
 
+
+        ''' Connect Element Buttons '''
+        element_buttons = self.periodic_table_widget.element_buttons
+
 class ElementViewBoxWidget(QWidget):
     def __init__(self):
         super(ElementViewBoxWidget, self).__init__()
         self.ui = ViewBox_Ui()
         self.ui.setupUi(self)
 
-
+    def setLabelText(self, symbol, name, mass, atomic_number, boiling):
+        self.ui.symbol_lbl.setText(str(symbol))
+        self.ui.name_lbl.setText(str(name))
+        self.ui.atomic_mass_lbl.setText(str(mass))
+        self.ui.atomic_number_lbl.setText(str(atomic_number))
+        self.ui.boiling_lbl.setText(str(boiling))
 
 class SelectedElementBox(QWidget):
 

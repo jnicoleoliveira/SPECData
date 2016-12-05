@@ -117,11 +117,9 @@ class HoverButton(QToolButton):
         self.name = e.name
         self.atomic_number = e.atomic
 
-
-
     def enterEvent(self,event):
         self.setStyleSheet(self.darker_style_sheet)
-        print self.symbol
+        #print self.symbol
         self.view_box.setLabelText(self.symbol, self.name, self.mass, self.atomic_number, self.boiling)
         self.view_box.setStyleSheet("background-color: " + str(self.og_color) + ";")
 

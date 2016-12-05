@@ -7,7 +7,7 @@ from PyQt4.QtGui import *
 from frames.frame___import_file_verification import Ui_Dialog
 from app.events import display_error_message
 from ..error import is_valid_file, get_file_error_message, molecule_entry_exists
-
+from dialog___composition_selector import CompositionSelector
 from config import conn
 import os
 
@@ -84,11 +84,13 @@ class ImportFileVerification(QDialog):
         ok_btn = self.ui.ok_btn
         artifact_rdio = self.ui.artifact_rdio
         known_rdio = self.ui.known_rdio
+        composition_btn = self.ui.compostion_btn
 
         cancel_btn.clicked.connect(self.cancel)
         ok_btn.clicked.connect(self.okay)
         artifact_rdio.clicked.connect(self.enable_artifact_fields)
         known_rdio.clicked.connect(self.enable_radio_fields)
+        composition_btn.clicked.connect(self.open_compostition_selector)
 
     def collect_form_data(self):
         """
@@ -214,6 +216,7 @@ class ImportFileVerification(QDialog):
                 display_error_message("Duplicate database entry.",
                                       "Please choose another name for your entry.", error_msg)
                 has_error = True
+                self.close()
 
         return has_error
 
@@ -242,4 +245,6 @@ class ImportFileVerification(QDialog):
             self.import_entry()
             self.close()
 
-
+    def open_compostition_selector(self):
+        widget = CompositionSelector(self.ui.composition_txt)
+        widget.exec_()

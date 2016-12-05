@@ -66,6 +66,11 @@ class ImportFiles(QDialog):
         accept_btn.clicked.connect(self.verify_import_list)
 
     def verify_import_list(self):
+        """
+        Iterates through the file paths, and opens
+        an associated ImportFileVerification Dialog to
+        verify info, and accept user input for entry data
+         """
         from dialog___import_file_verification import ImportFileVerification
 
         i = 0
@@ -74,7 +79,6 @@ class ImportFiles(QDialog):
             window = ImportFileVerification(f, i, total)
             window.exec_()
             i += 1
-
 
     def open_file_dialog(self):
         """

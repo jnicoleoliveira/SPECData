@@ -170,32 +170,7 @@ color: rgb(255, 255, 255);
    </item>
    <item row="5" column="2">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="7" column="0">
-      <widget class="QLabel" name="other_lbl">
-       <property name="text">
-        <string>Other</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QCheckBox" name="vibrational_chkbx">
-         <property name="text">
-          <string>Vibrational</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="8" column="1">
-      <widget class="QCheckBox" name="isotope_chkbx">
-       <property name="text">
-        <string>Isotope</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
+     <item row="3" column="2">
       <widget class="QComboBox" name="units_combobx">
        <property name="enabled">
         <bool>true</bool>
@@ -216,36 +191,6 @@ color: rgb(255, 255, 255);
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="name_lbl">
-       <property name="text">
-        <string>*Name of Entry:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="temperature_lbl">
-       <property name="text">
-        <string>Temperature: </string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="name_txt">
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(25, 25, 25);</string>
-       </property>
-      </widget>
-     </item>
-     <item row="14" column="1">
-      <widget class="QLineEdit" name="notes_txt">
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(25, 25, 25);</string>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="0">
       <widget class="QLabel" name="compostition_lbl">
        <property name="styleSheet">
@@ -256,15 +201,7 @@ color: rgb(25, 25, 25);</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="composition_txt">
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(25, 25, 25);</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
+     <item row="2" column="2">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
@@ -292,7 +229,7 @@ color: rgb(25, 25, 25);</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="6" column="2">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QDoubleSpinBox" name="temperature_spinbx"/>
@@ -310,6 +247,80 @@ color: rgb(25, 25, 25);</string>
            <width>50</width>
            <height>16777215</height>
           </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="2">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QCheckBox" name="vibrational_chkbx">
+         <property name="text">
+          <string>Vibrational</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="other_lbl">
+       <property name="text">
+        <string>Other</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2">
+      <widget class="QCheckBox" name="isotope_chkbx">
+       <property name="text">
+        <string>Isotope</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="name_lbl">
+       <property name="text">
+        <string>*Name of Entry:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="temperature_lbl">
+       <property name="text">
+        <string>Temperature: </string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="name_txt">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(25, 25, 25);</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="2">
+      <widget class="QLineEdit" name="notes_txt">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(25, 25, 25);</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLineEdit" name="composition_txt">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(25, 25, 25);</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="compostion_btn">
+         <property name="text">
+          <string>...</string>
          </property>
         </widget>
        </item>

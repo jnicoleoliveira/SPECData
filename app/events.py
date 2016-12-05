@@ -109,4 +109,29 @@ def display_overwrite_file_question_message(file_name):
     return False
 
 
+def display_question_message(text, title):
+    """
+    Displays a Message Box, with Yes or no button.
+    :param text: question text
+    :param title: window title
+    :return: True: If selected YES to changes
+             False: If selected NO to changes
+    """
+    msg = QMessageBox()
+    msg.resize(320, 120)
+    msg.setIcon(QMessageBox.Question)
+    msg.setText(text)
+    msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    msg.setWindowTitle(title)
+    msg.exec_()
+
+    result = msg.result()
+
+    if result == QMessageBox.Yes:
+        return True
+
+    return False
+
+
+
 

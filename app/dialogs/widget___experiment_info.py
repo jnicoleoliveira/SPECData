@@ -12,6 +12,7 @@ from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 from config import conn
 #from tables.get import get_peaks
 import tables.peaks_table as peaks_table
+import tables.experimentinfo_table as info_table
 
 class ExperimentInfoWidget(QWidget):
 
@@ -20,26 +21,33 @@ class ExperimentInfoWidget(QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
 
-        self.setup(experiment)
+        self.__setup__(experiment)
         #self.show()
 
-    def setup(self, experiment):
-        # Get Data
+    def __setup__(self, experiment):
+        """
+
+        :param experiment:
+        :return:
+        """
         mid = experiment.mid
         name = experiment.name
         total_peaks = peaks_table.get_peak_count(conn, mid)
         peaks_assigned = experiment.get_assigned_peaks_count()
         peaks_unassigned = total_peaks - peaks_assigned
         molecules_found = len(experiment.molecule_matches)
+        composition = info_table.get_composition(conn, mid)
+        type = info_table.get_type(conn, mid)
+
 
         # Set labels to data
         self.ui.experiment_name_lbl.setText(name)
-        self.ui.composition_val.setText('C2H2 + CS2')
+        self.ui.composition_val.setText(composition)
         self.ui.total_peaks_val.setText(str(total_peaks))
         self.ui.peaks_assigned_val.setText(str(peaks_assigned))
         self.ui.peaks_unassigned_val.setText(str(peaks_unassigned))
         self.ui.molecules_found_val.setText(str(molecules_found))
-        self.ui.info_val_lbl.setText("Discharge")
+        self.ui.info_val_lbl.setText(type)
         # Formatting
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 

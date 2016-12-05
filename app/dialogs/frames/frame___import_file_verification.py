@@ -86,6 +86,7 @@ class Ui_Dialog(object):
         font.setBold(True)
         font.setWeight(75)
         self.ok_btn.setFont(font)
+        self.ok_btn.setStyleSheet(_fromUtf8("background-color: rgba(0, 128, 128, 154);"))
         self.ok_btn.setObjectName(_fromUtf8("ok_btn"))
         self.horizontalLayout.addWidget(self.ok_btn)
         self.gridLayout_2.addLayout(self.horizontalLayout, 7, 2, 1, 1)

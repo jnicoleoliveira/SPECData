@@ -104,14 +104,6 @@ font: 75 12pt &quot;Droid Sans&quot;;</string>
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
       <widget class="QPushButton" name="back_btn">
-       <property name="font">
-        <font>
-         <family>DEC Terminal</family>
-         <pointsize>11</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>
@@ -136,17 +128,16 @@ background-color: rgb(48, 48, 48);</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="0" column="2">
       <widget class="QPushButton" name="load_btn">
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(48, 48, 48);</string>
+        <string notr="true">background-color: rgba(0, 128, 128, 154);</string>
        </property>
        <property name="text">
-        <string>Load</string>
+        <string>  Load  </string>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -161,6 +152,19 @@ background-color: rgb(48, 48, 48);</string>
         <bool>false</bool>
        </property>
       </widget>
+     </item>
+     <item row="0" column="1">
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

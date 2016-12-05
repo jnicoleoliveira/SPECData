@@ -219,13 +219,13 @@ def new_entry(conn, mid, type, units, composition, notes):
     print "[ Added info entry: " + mid + " to molecules ]"
 
     # Get the new entry's id (iid)
-    cursor = conn.execute('SELECT max(iid) FROM ExperimentInfo')
-    iid = cursor.fetchone()[0]
+    cursor = conn.execute('SELECT max(eid) FROM ExperimentInfo')
+    eid = cursor.fetchone()[0]
 
     # Commit Changes
     conn.commit()
 
-    return iid
+    return eid
 
 
 ##############################################################################

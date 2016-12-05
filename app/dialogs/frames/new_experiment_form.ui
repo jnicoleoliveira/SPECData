@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1054</width>
-    <height>732</height>
+    <width>1027</width>
+    <height>728</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,21 +26,31 @@ color: rgb(255, 255, 255);
 </string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="1" column="2">
-    <spacer name="horizontalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="1" column="1">
+    <widget class="QLabel" name="new_experiment_title_lbl">
+     <property name="font">
+      <font>
+       <family>Droid Sans</family>
+       <pointsize>12</pointsize>
+       <weight>9</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);
+font: 75 12pt &quot;Droid Sans&quot;;</string>
      </property>
-    </spacer>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="text">
+      <string>Create New Experiment</string>
+     </property>
+    </widget>
    </item>
-   <item row="2" column="1">
-    <spacer name="verticalSpacer_2">
+   <item row="0" column="1">
+    <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -52,7 +62,7 @@ color: rgb(255, 255, 255);
      </property>
     </spacer>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -65,37 +75,34 @@ color: rgb(255, 255, 255);
      </property>
     </spacer>
    </item>
-   <item row="1" column="1">
-    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0">
-     <property name="spacing">
-      <number>6</number>
+   <item row="2" column="2">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
      </property>
-     <item>
-      <widget class="QLabel" name="new_experiment_title_lbl">
-       <property name="font">
-        <font>
-         <family>Droid Sans</family>
-         <pointsize>12</pointsize>
-         <weight>9</weight>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);
-font: 75 12pt &quot;Droid Sans&quot;;</string>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="text">
-        <string>Experiment Information</string>
-       </property>
-      </widget>
-     </item>
+    </spacer>
+   </item>
+   <item row="3" column="1">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
       <widget class="Line" name="line_2">
        <property name="orientation">
@@ -104,47 +111,25 @@ font: 75 12pt &quot;Droid Sans&quot;;</string>
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4"/>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QLabel" name="exp_author_lbl">
-         <property name="styleSheet">
-          <string notr="true">color: rgb(255, 255, 255);
-font: 10pt &quot;Droid Sans&quot;;</string>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <property name="lineWidth">
-          <number>22</number>
-         </property>
-         <property name="text">
-          <string>Author</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="author_txt">
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(25, 25, 25);</string>
-         </property>
-        </widget>
-       </item>
-       <item>
+      <layout class="QFormLayout" name="formLayout">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::ExpandingFieldsGrow</enum>
+       </property>
+       <property name="labelAlignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+       <item row="0" column="0">
         <widget class="QLabel" name="exp_name_lbl">
          <property name="styleSheet">
           <string notr="true">color: rgb(255, 255, 255);
 font: 10pt &quot;Droid Sans&quot;;</string>
          </property>
          <property name="text">
-          <string>Name</string>
+          <string>Name:</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="0" column="1">
         <widget class="QLineEdit" name="name_txt">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(255, 255, 255);
@@ -152,7 +137,41 @@ color: rgb(25, 25, 25);</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Type:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="type_combobx">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Units:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="units_combobx">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
         <widget class="QLabel" name="exp_composition_lbl">
          <property name="layoutDirection">
           <enum>Qt::LeftToRight</enum>
@@ -162,34 +181,104 @@ color: rgb(25, 25, 25);</string>
 font: 10pt &quot;Droid Sans&quot;;</string>
          </property>
          <property name="text">
-          <string>Composition</string>
+          <string>Composition:</string>
          </property>
          <property name="margin">
           <number>-1</number>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QLineEdit" name="composition_txt">
+       <item row="3" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="composition_txt">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(25, 25, 25);</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="composition_btn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>30</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Notes:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="notes_txt">
          <property name="styleSheet">
           <string notr="true">background-color: rgb(255, 255, 255);
 color: rgb(25, 25, 25);</string>
          </property>
         </widget>
        </item>
-       <item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QFormLayout" name="formLayout_2">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::ExpandingFieldsGrow</enum>
+       </property>
+       <property name="labelAlignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+       <item row="0" column="0">
         <widget class="QLabel" name="exp_select_file_lbl">
          <property name="styleSheet">
           <string notr="true">color: rgb(255, 255, 255);
 font: 10pt &quot;Droid Sans&quot;;</string>
          </property>
          <property name="text">
-          <string>Select  File</string>
+          <string>Select  File:     </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="0" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QLineEdit" name="select_file_txt">
            <property name="styleSheet">
@@ -201,14 +290,20 @@ color: rgb(25, 25, 25);</string>
          <item>
           <widget class="QPushButton" name="select_file_btn">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+            <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
@@ -219,9 +314,7 @@ color: rgb(25, 25, 25);</string>
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(195, 195, 195);
-font: 10pt &quot;Droid Sans&quot;;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>...</string>
@@ -230,83 +323,55 @@ font: 10pt &quot;Droid Sans&quot;;</string>
          </item>
         </layout>
        </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
-          <widget class="QLabel" name="exp_filetype_lbl">
-           <property name="styleSheet">
-            <string notr="true">color: rgb(255, 255, 255);
+       <item row="1" column="0">
+        <widget class="QLabel" name="exp_filetype_lbl">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
 font: 10pt &quot;Droid Sans&quot;;</string>
+         </property>
+         <property name="text">
+          <string>File Type:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <layout class="QVBoxLayout" name="filetype_checkbox">
+         <item>
+          <widget class="QRadioButton" name="peak_type_rbtn">
+           <property name="enabled">
+            <bool>true</bool>
            </property>
            <property name="text">
-            <string>File Type:</string>
+            <string>Peak File</string>
            </property>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <layout class="QVBoxLayout" name="filetype_checkbox">
-             <item>
-              <widget class="QRadioButton" name="peak_type_rbtn">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="text">
-                <string>Peak File</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="full_type_rbtn">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="text">
-                <string>Full Spectrum</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
+          <widget class="QRadioButton" name="full_type_rbtn">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Full Spectrum</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
       </layout>
      </item>
      <item>
-      <spacer name="horizontalSpacer_8">
+      <spacer name="verticalSpacer_4">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>20</width>
          <height>10</height>
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="analysis_options_title_lbl">
-       <property name="font">
-        <font>
-         <family>Droid Sans</family>
-         <pointsize>12</pointsize>
-         <weight>9</weight>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);
-font: 75 12pt &quot;Droid Sans&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Analysis Options</string>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="Line" name="line_3">
@@ -314,19 +379,6 @@ font: 75 12pt &quot;Droid Sans&quot;;</string>
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_9">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>10</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item>
       <layout class="QVBoxLayout" name="choose_layout">
@@ -356,16 +408,6 @@ font: 10pt &quot;Droid Sans&quot;;</string>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="hitran_chk">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>HITRAN (unavailable)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QCheckBox" name="splatlog_chk">
          <property name="enabled">
           <bool>false</bool>
@@ -375,23 +417,17 @@ font: 10pt &quot;Droid Sans&quot;;</string>
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QCheckBox" name="hitran_chk">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>HITRAN (unavailable)</string>
+         </property>
+        </widget>
+       </item>
       </layout>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_6">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Preferred</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>10</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item>
       <layout class="QGridLayout" name="gridLayout">
@@ -401,8 +437,7 @@ font: 10pt &quot;Droid Sans&quot;;</string>
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(48, 48, 48);</string>
+          <string notr="true">background-color: rgba(0, 128, 128, 154);</string>
          </property>
          <property name="text">
           <string>Analyze</string>
@@ -423,14 +458,6 @@ background-color: rgb(48, 48, 48);</string>
        </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="back_btn">
-         <property name="font">
-          <font>
-           <family>DEC Terminal</family>
-           <pointsize>11</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
          <property name="autoFillBackground">
           <bool>false</bool>
          </property>
@@ -456,13 +483,13 @@ background-color: rgb(48, 48, 48);</string>
         </widget>
        </item>
        <item row="0" column="1">
-        <spacer name="verticalSpacer">
+        <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>266</width>
+           <width>20</width>
            <height>40</height>
           </size>
          </property>
@@ -472,24 +499,7 @@ background-color: rgb(48, 48, 48);</string>
      </item>
     </layout>
    </item>
-   <item row="0" column="1">
-    <spacer name="verticalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
   </layout>
-  <zorder>horizontalSpacer</zorder>
-  <zorder>horizontalSpacer_2</zorder>
-  <zorder>verticalSpacer_2</zorder>
-  <zorder>verticalSpacer_3</zorder>
  </widget>
  <resources/>
  <connections/>

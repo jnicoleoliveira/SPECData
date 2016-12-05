@@ -60,6 +60,7 @@ class Ui_Dialog(object):
         spacerItem4 = QtGui.QSpacerItem(10, 2, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem4, 0, 1, 1, 1)
         self.accept_btn = QtGui.QPushButton(Dialog)
+        self.accept_btn.setStyleSheet(_fromUtf8("background-color: rgba(0, 128, 128, 154);"))
         self.accept_btn.setObjectName(_fromUtf8("accept_btn"))
         self.gridLayout.addWidget(self.accept_btn, 5, 3, 1, 1)
         spacerItem5 = QtGui.QSpacerItem(10, 2, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)

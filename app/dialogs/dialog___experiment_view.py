@@ -254,11 +254,11 @@ class ExperimentView(QMainWindow):
         self.table_widget.resizeColumnsToContents()
         self.table_widget.resizeRowsToContents()
 
-        # -- Additional Options -- #
+        # -- Set Additional Options -- #
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
 
-        #width = self.table_widget.horizontalHeader().width()
-        #self.table_widget.setFixedWidth(width)
+        # width = self.table_widget.horizontalHeader().width()
+        # self.table_widget.setFixedWidth(width)
 
     def show_validations(self):
         """

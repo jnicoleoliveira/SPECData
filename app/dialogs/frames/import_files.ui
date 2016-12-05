@@ -123,6 +123,9 @@ color: rgb(25, 25, 25);</string>
    </item>
    <item row="5" column="3">
     <widget class="QPushButton" name="accept_btn">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(0, 128, 128, 154);</string>
+     </property>
      <property name="text">
       <string>Accept</string>
      </property>

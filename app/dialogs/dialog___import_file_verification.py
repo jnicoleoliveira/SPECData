@@ -90,7 +90,7 @@ class ImportFileVerification(QDialog):
         ok_btn.clicked.connect(self.okay)
         artifact_rdio.clicked.connect(self.enable_artifact_fields)
         known_rdio.clicked.connect(self.enable_radio_fields)
-        composition_btn.clicked.connect(self.open_compostition_selector)
+        composition_btn.clicked.connect(self.open_composition_selector)
 
     def collect_form_data(self):
         """
@@ -245,6 +245,6 @@ class ImportFileVerification(QDialog):
             self.import_entry()
             self.close()
 
-    def open_compostition_selector(self):
+    def open_composition_selector(self):
         widget = CompositionSelector(self.ui.composition_txt)
         widget.exec_()

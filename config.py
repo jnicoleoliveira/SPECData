@@ -31,6 +31,7 @@ global conn
 # SET VARIABLES TO DEFINED
 db_dir = os.path.join(DATABASE_DIR , "data")
 db_filepath = os.path.join(db_dir, "spectrum.db")
+experiment_spectrums_path = os.path.join(db_filepath, "experiments")
 prog_dir = PROGRAM_DIR
 conn = sqlite3.connect(db_filepath)
 resources = os.path.join(PROGRAM_DIR, "resources")

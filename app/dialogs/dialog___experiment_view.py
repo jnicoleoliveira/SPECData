@@ -6,13 +6,13 @@ import time
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
-from .frames.frame___experiment_view import Ui_MainWindow
+from frames.frame___experiment_view import Ui_MainWindow
 
 from analysis import experiment
-from .splash_screens import LoadingProgressScreen
-from .widget___main_graph_options import MainGraphOptionsWidget
-from .widget___molecule_selection import MoleculeSelectionWidget
-from .widget___experiment_info import ExperimentInfoWidget
+from widget___main_graph_options import MainGraphOptionsWidget
+from widget___molecule_selection import MoleculeSelectionWidget
+from widget___experiment_info import ExperimentInfoWidget
+from ..splash_screens import LoadingProgressScreen
 from ..experiment_analysis import MainGraph
 
 from config import resources
@@ -88,6 +88,14 @@ class ExperimentView(QMainWindow):
 
     def do_analysis(self):
         self.experiment.get_assigned_molecules()
+
+    def export_cleaned_lines(self):
+        """
+        Creates and executes ExportCleanedLines dialog with current experiment.
+        """
+        from dialog___export_cleaned_lines import ExportCleanedLines
+        window = ExportCleanedLines(self.experiment)
+        window.exec_()
 
     def get_options(self):
 
@@ -610,11 +618,6 @@ class ExperimentView(QMainWindow):
 
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"
-
-    def export_cleaned_lines(self):
-        from dialog___export_cleaned_lines import ExportCleanedLines
-        window = ExportCleanedLines(self.experiment)
-        window.exec_()
 
 
 

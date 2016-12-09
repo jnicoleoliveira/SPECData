@@ -73,6 +73,12 @@ def get_notes(conn, mid):
     row = line[0]
     return row
 
+def get_last_updated(conn, mid):
+    cursor = conn.execute("SELECT last_updated FROM ExperimentInfo WHERE mid=?",(mid,))
+    line = cursor.fetchone()
+    row = line[0]
+    return row
+
 
 def info_exists(conn, mid):
     """

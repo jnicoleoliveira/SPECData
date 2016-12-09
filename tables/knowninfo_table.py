@@ -20,7 +20,7 @@
 #       Public Functions:
 #           * get_eid(conn, name, category)
 #           * get_type(conn, mid)
-#           * get_units(conn, mid)
+#           * get_units(conn, mid)ge
 #           * get_composition(conn, mid)
 #
 
@@ -73,7 +73,7 @@ def get_notes(conn, mid):
 
 
 def is_vibrational(conn,mid):
-    cursor = conn.execute("SELECT vibration FROM KnownInfo WHERE mid=?",(mid,))
+    cursor = conn.execute("SELECT vibrational FROM KnownInfo WHERE mid=?",(mid,))
     line = cursor.fetchone()
     row = line[0]
     return row
@@ -85,6 +85,11 @@ def is_isotype(conn,mid):
     row = line[0]
     return row
 
+def get_last_updated(conn, mid):
+    cursor = conn.execute("SELECT last_updated FROM KnownInfo WHERE mid=?",(mid,))
+    line = cursor.fetchone()
+    row = line[0]
+    return row
 
 def info_exists(conn, mid):
     """

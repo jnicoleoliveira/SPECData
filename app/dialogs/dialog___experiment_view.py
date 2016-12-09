@@ -9,7 +9,7 @@ from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 from .frames.frame___experiment_view import Ui_MainWindow
 
 from analysis import experiment
-from .splash_screens import LoadingProgressScreen
+from ..events import LoadingProgressScreen
 from .widget___main_graph_options import MainGraphOptionsWidget
 from .widget___molecule_selection import MoleculeSelectionWidget
 from .widget___experiment_info import ExperimentInfoWidget

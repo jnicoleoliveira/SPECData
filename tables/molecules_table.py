@@ -65,6 +65,21 @@ def get_experiment_list(conn):
 
     return mids, names
 
+def get_all_mid_list(conn):
+    """
+    Gets list of all mids in the specified database
+    :param conn: Sqlite connection to spectrum database
+    :return: list of mids (ints)
+    """
+    # Select row with mid
+    cursor = conn.execute("SELECT mid FROM molecules")
+    rows = cursor.fetchall()
+
+    mids = []
+    for row in rows:
+        mids.append(row[0])
+
+    return mids
 
 def get_mid_list(conn):
     """
@@ -83,6 +98,21 @@ def get_mid_list(conn):
 
     return mids
 
+
+def get_molecules_where(conn, category=None):
+    """
+    Gets list of all
+    """
+
+    if category is None:
+        cursor = conn.execute("SELECT mid FROM molecules")
+
+    mids = []
+    rows = cursor.fetchall()
+    for row in rows:
+        mids.append(row[0])
+
+    return mids
 
 ###############################################################################
 # Get Molecules Entry Information
@@ -121,6 +151,12 @@ def get_name(conn, mid):
     name = line[0]
     return name
 
+
+def get_category(conn, mid):
+    cursor = conn.execute("SELECT category FROM molecules WHERE mid=?",(mid,))
+    line = cursor.fetchone()
+    name = line[0]
+    return name
 
 def mid_exists(conn, mid):
     """

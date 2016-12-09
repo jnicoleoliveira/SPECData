@@ -1,3 +1,11 @@
+# -----------------------------------------------------------------------------
+# Author: Jasmine Oliveira
+# Date: 12/9/2016
+# -----------------------------------------------------------------------------
+# composition.py
+# -----------------------------------------------------------------------------
+#
+
 
 class Composition:
 
@@ -15,6 +23,7 @@ class Composition:
         for a in array:
             new_element = Element.string_to_element(a)
             self.elements.append(new_element)
+
 
 class Element:
 

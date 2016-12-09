@@ -150,6 +150,7 @@ class CompositionSelector(QDialog):
 
         return string
 
+
 class ElementViewBoxWidget(QWidget):
 
     def __init__(self):

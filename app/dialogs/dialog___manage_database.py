@@ -4,10 +4,11 @@
 from PyQt4.QtGui import *
 
 from frames.frame___manage_database import Ui_Dialog   # import frame
-from tables import molecules_table, experimentinfo_table, knowninfo_table
+from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
 from config import conn
 
 class ManageDatabase(QDialog):
+
     ACCENT_COLOR = "#008080"
 
     def __init__(self, parent=None):
@@ -38,6 +39,27 @@ class ManageDatabase(QDialog):
         ''' Set default to All'''
         self.__load_default__()
 
+        ''' Connect to Appropriate Functions'''
+        self.molecules_table_widget.itemClicked.connect(self.handle_molecule_table_row_click)
+        self.ui.back_btn.clicked.connect(self.go_back_to_main_menu)
+
+    def go_back_to_main_menu(self):
+        from dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)
+        self.close()
+        window = MainMenu()
+        window.exec_()
+
+    def handle_molecule_table_row_click(self):
+        """
+        Displays info and peaks to respective tables based on
+        :return:
+        """
+        item = self.molecules_table_widget.selectedItems()[0]
+        mid = int(item.text())
+        print mid
+        self.populate_info_table_widget(mid)
+        self.populate_peak_table_widget(mid)
+
     def __load_default__(self):
         """
         Checks off "all", and loads all molecules in database.
@@ -47,6 +69,19 @@ class ManageDatabase(QDialog):
         mids = molecules_table.get_all_mid_list(conn)
         self.populate_molecule_table_widget(mids)
         self.populate_info_table_widget(18)
+        self.populate_peak_table_widget(18)
+
+    def populate_molecule_list_widget(self, mids):
+        """
+        Populates list widget with Molecule entries of given mids
+        """
+
+        for i in range(0, len(mids)):
+            mid = mids[i]
+            name = molecules_table.get_name(conn, mid)
+            category = molecules_table.get_category(conn, mid)
+            line = str(mid) + "\t" + str(category) + "\t" + str(name)
+            self.list_widget.addItem(QListWidgetItem(line))
 
     def populate_molecule_table_widget(self, mids):
         """
@@ -94,6 +129,7 @@ class ManageDatabase(QDialog):
         # -- Set Additional Options -- #
         table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
         table_widget.setSelectionBehavior(QAbstractItemView.SelectRows)
+        table_widget.setSelectionMode(QAbstractItemView.SingleSelection)
         table_widget.setShowGrid(False)
         table_widget.verticalHeader().setVisible(False)
 
@@ -146,7 +182,65 @@ class ManageDatabase(QDialog):
                      ";border - radius:14px;}"
         table_widget.setStyleSheet(stylesheet)
 
-    def __populate_info_table_as_experiment(self, mid, table_widget):
+    def populate_peak_table_widget(self, mid):
+        """
+        Populates the molecule table widget with the appropriate values
+        of the given list of mids
+        :param mids: List of mids
+        """
+        table_widget = self.peaks_list_widget
+
+        # Get Peaks
+        frequencies, intensities = peaks_table.get_frequency_intensity_list(conn, mid)
+
+        row_count = len(frequencies)   # Number of Rows
+        column_count = 3             # Number of Columnns [mid, name, category]
+
+        # Format Table
+        table_widget.setRowCount(row_count)
+        table_widget.setColumnCount(column_count)
+        table_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.MinimumExpanding)
+        table_widget.setSortingEnabled(True)
+
+        # Set Header Label
+        header = table_widget.horizontalHeader()
+        header.setStretchLastSection(True)
+        header.setResizeMode(QHeaderView.Stretch)
+        table_widget.setHorizontalHeaderLabels(["PID", "Frequency", "Intensity"])
+
+        for i in range(0, row_count):
+
+            # Get row data
+            pid = i
+            frequency = frequencies[i]
+            intensity = intensities[i]
+
+            # Convert Data to QTableWidgetItem
+            pid_item = QTableWidgetItem(str(pid))
+            freq_item = QTableWidgetItem(str(frequency))
+            inte_item = QTableWidgetItem(str(intensity))
+
+            # Add Widget Items to Table
+            table_widget.setItem(i, 0, pid_item)
+            table_widget.setItem(i, 1, freq_item)
+            table_widget.setItem(i, 2, inte_item)
+
+        # --- Set Size Policy --- #
+        table_widget.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+
+        # -- Set Additional Options -- #
+        table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
+        table_widget.setSelectionBehavior(QAbstractItemView.SelectRows)
+        table_widget.setShowGrid(False)
+        #table_widget.verticalHeader().setVisible(False)
+
+        # -- Set Colors -- #
+        stylesheet = "QHeaderView::section{Background-color:"+ ManageDatabase.ACCENT_COLOR + \
+                     ";border - radius:14px;}"
+        table_widget.setStyleSheet(stylesheet)
+
+    @staticmethod
+    def __populate_info_table_as_experiment(mid, table_widget):
 
         row_count = 6  # Number of Rows
         column_count = 1  # Number of Columnns [mid, name, category]
@@ -189,7 +283,8 @@ class ManageDatabase(QDialog):
         table_widget.setItem(0, 4, notes_item)
         table_widget.setItem(0, 5, updated_item)
 
-    def __populate_info_table_as_known(self, mid, table_widget):
+    @staticmethod
+    def __populate_info_table_as_known(mid, table_widget):
 
         row_count = 8  # Number of Rows
         column_count = 1  # Number of Columnns [mid, name, category]
@@ -239,8 +334,8 @@ class ManageDatabase(QDialog):
         table_widget.setItem(0, 6, notes_item)
         table_widget.setItem(0, 7, updated_item)
 
-
-    def __populate_info_table_as_artifact(self, mid, table_widget):
+    @staticmethod
+    def __populate_info_table_as_artifact(mid, table_widget):
 
         row_count = 3  # Number of Rows
         column_count = 1  # Number of Columnns [mid, name, category]
@@ -272,5 +367,3 @@ class ManageDatabase(QDialog):
         table_widget.setItem(0, 0, eid_item)
         table_widget.setItem(0, 1, notes_item)
         table_widget.setItem(0, 2, updated_item)
-
-

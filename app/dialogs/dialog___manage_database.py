@@ -7,6 +7,7 @@ from frames.frame___manage_database import Ui_Dialog   # import frame
 from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
 from config import conn
 
+
 class ManageDatabase(QDialog):
 
     ACCENT_COLOR = "#008080"
@@ -31,45 +32,75 @@ class ManageDatabase(QDialog):
 
         self.__setup__()
 
-    def __setup__(self):
-        """
-        Sets up the ui file
-        """
+    def clear_selected(self):
 
-        ''' Set default to All'''
-        self.__load_default__()
+        self.ui.experiment_chk.setChecked(False)
+        self.ui.known_chk.setChecked(False)
+        self.ui.artifact_chk.setChecked(False)
 
-        ''' Connect to Appropriate Functions'''
-        self.molecules_table_widget.itemClicked.connect(self.handle_molecule_table_row_click)
-        self.ui.back_btn.clicked.connect(self.go_back_to_main_menu)
+        self.ui.mhz_chk.setChecked(False)
+        self.ui.ghz_chk.setChecked(False)
+        self.ui.cm1_chk.setChecked(False)
+
+        self.ui.temp_min_spinbx.setValue(0.0)
+        self.ui.temp_max_spinbx.setValue(0.0)
+
+        self.ui.dicharge_chk.setChecked(False)
+        self.ui.heated_nozzle_chk.setChecked(False)
+        self.ui.stable_chk.setChecked(False)
+        self.ui.laser_ablation_chk.setChecked(False)
+
+        self.ui.isotope_chk.setChecked(False)
+        self.ui.vibrational_chk.setChecked(False)
+
+    def get_selected_categories(self):
+
+        selected = []
+
+        if self.ui.experiment_chk.isChecked():
+            selected.append('experiment')
+
+        if self.ui.known_chk.isChecked():
+            selected.append('known')
+
+        if self.ui.artifact_chk.isChecked():
+            selected.append('artifact')
+
+        return selected
+
+    def get_selected_frequency_units(self):
+
+        selected = []
+
+        if self.ui.mhz_chk.isChecked():
+            selected.append('MHz')
+        if self.ui.cm1_chk.isChecked():
+            selected.append('cm-1')
+        if self.ui.ghz_chk.isChecked():
+            selected.append('GHz')
+
+        return selected
+
+    def get_selected_experiment_types(self):
+
+        selected = []
+
+        if self.ui.dicharge_chk.isChecked():
+            selected.append('Discharge')
+        elif self.ui.stable_chk.isChecked():
+            selected.append('Stable')
+        elif self.ui.heated_nozzle_chk.isChecked():
+            selected.append('Heated Nozzle')
+        elif self.ui.laser_ablation_chk.isChecked():
+            selected.append('Laser Ablation')
+
+        return selected
 
     def go_back_to_main_menu(self):
         from dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)
         self.close()
         window = MainMenu()
         window.exec_()
-
-    def handle_molecule_table_row_click(self):
-        """
-        Displays info and peaks to respective tables based on
-        :return:
-        """
-        item = self.molecules_table_widget.selectedItems()[0]
-        mid = int(item.text())
-        print mid
-        self.populate_info_table_widget(mid)
-        self.populate_peak_table_widget(mid)
-
-    def __load_default__(self):
-        """
-        Checks off "all", and loads all molecules in database.
-        """
-
-        ''' Load data to Lists/Frames '''
-        mids = molecules_table.get_all_mid_list(conn)
-        self.populate_molecule_table_widget(mids)
-        self.populate_info_table_widget(18)
-        self.populate_peak_table_widget(18)
 
     def populate_molecule_list_widget(self, mids):
         """
@@ -238,6 +269,84 @@ class ManageDatabase(QDialog):
         stylesheet = "QHeaderView::section{Background-color:"+ ManageDatabase.ACCENT_COLOR + \
                      ";border - radius:14px;}"
         table_widget.setStyleSheet(stylesheet)
+
+    ###############################################################################
+    # Private Methods
+    ###############################################################################
+
+    def __filter_action(self):
+        """ Gets appropriate mid list to display on the list widget"""
+
+        print "FILTERING! "
+        mids = []
+
+        ''' Category '''
+        categories = self.get_selected_categories()
+        if len(categories) is not 0:
+            mids = molecules_table.get_mids_where_category_in(conn, categories)
+        else:
+            mids = molecules_table.get_all_mid_list(conn)
+
+        ''' Frequency Units '''
+        frequency_units = self.get_selected_frequency_units()
+        if len(frequency_units) is not 0:
+            m2 = set(molecules_table.get_mids_where_units_in(conn, frequency_units))
+            mids = list(set(mids) & set(m2))    # Intersection
+
+        ''' Temperature '''
+        min = None if self.ui.temp_min_spinbx.value() is 0 else self.ui.temp_min_spinbx.value()
+        max = None if self.ui.temp_max_spinbx.value() is 0 else self.ui.temp_max_spinbx.value()
+        if min or max:
+            m2 = set(molecules_table.get_mids_in_temperature_range(conn, min, max))
+            mids = list(set(mids) & set(m2))    # Intersection
+
+        ''' Type '''
+        types = self.get_selected_experiment_types()
+        if len(types) is not 0:
+            m2 = set(molecules_table.get_mids_where_types_in(conn, types))
+            mids = list(set(mids) & set(m2))    # Intersection
+
+        ''' Isotope '''
+        if self.ui.isotope_chk.isChecked():
+            m2 = set(molecules_table.get_mids_where_is_isotope(conn, True))
+            mids = list(set(mids) & set(m2))  # Intersection
+
+        ''' Vibrational '''
+        if self.ui.vibrational_chk.isChecked():
+            m2 = set(molecules_table.get_mids_where_is_vibrational(conn, True))
+            mids = list(set(mids) & set(m2))    # Intersection
+
+        self.populate_molecule_table_widget(mids)
+
+    def __handle_molecule_table_row_click(self):
+        """
+        Displays info and peaks to respective tables based on
+        :return:
+        """
+        item = self.molecules_table_widget.selectedItems()[0]
+        mid = int(item.text())
+        print mid
+        self.populate_info_table_widget(mid)
+        self.populate_peak_table_widget(mid)
+
+    def __setup__(self):
+        """
+        Sets up the ui file
+        """
+
+        ''' Load data to Lists/Frames '''
+        mids = molecules_table.get_all_mid_list(conn)
+        self.populate_molecule_table_widget(mids)
+
+        ''' Connect to Appropriate Functions'''
+        self.molecules_table_widget.itemClicked.connect(self.__handle_molecule_table_row_click)
+        self.ui.back_btn.clicked.connect(self.go_back_to_main_menu)
+        self.ui.filter_btn.clicked.connect(self.__filter_action)
+        self.ui.reset_btn.clicked.connect(self.clear_selected)
+
+    ###############################################################################
+    # Static Methods
+    ###############################################################################
 
     @staticmethod
     def __populate_info_table_as_experiment(mid, table_widget):

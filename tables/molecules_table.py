@@ -65,6 +65,7 @@ def get_experiment_list(conn):
 
     return mids, names
 
+
 def get_all_mid_list(conn):
     """
     Gets list of all mids in the specified database
@@ -81,6 +82,7 @@ def get_all_mid_list(conn):
 
     return mids
 
+
 def get_mid_list(conn):
     """
     Gets list of all mids in the specified database
@@ -88,7 +90,7 @@ def get_mid_list(conn):
     :return: list of mids (ints)
     """
     # Select row with mid
-    cursor = conn.execute("SELECT mid, name FROM molecules WHERE category='known'"
+    cursor = conn.execute("SELECT mid FROM molecules WHERE category='known'"
                           " OR category='artifact'")
     rows = cursor.fetchall()
 
@@ -99,92 +101,130 @@ def get_mid_list(conn):
     return mids
 
 
-def get_molecules_where(conn, category, units=None, min_temp=None, max_temp=None, composition=None,  isotope=None, vibrational=None, type=None,):
-    """
-    Gets list of all
+def get_mids_where_category_in(conn, category):
     """
 
-    query = ""
-    info_table = "ExperimentInfo"
+    :param conn:
+    :param category:
+    :return:
+    """
 
-    ''' Filter by Molecule '''
-    if category is None:
-        query = "SELECT mid FROM molecules"
-    else:
-        query = "SELECT mid FROM molecules WHERE category IN" + get_in_string(category)
-
-    ''' Filter by KnownInfo '''
-    if ("known" in category or "artifact" in category) and \
-            len(filter(None, [units, min_temp, max_temp, composition, isotope, vibrational])) is not 0:
-
-        query = "SELECT A.mid FROM (" + query + ") as A JOIN KnownInfo" \
-                + " as B ON A.mid = B.mid WHERE "
-
-        strings = []
-
-        if units is not None:
-            s = "units IN " + get_in_string(units)
-            strings.append(s)
-
-        if min_temp is not None:
-            s = "temperature >= " + str(min_temp)
-            strings.append(s)
-
-        if max_temp is not None:
-            s = "temperature <= " + str(max_temp)
-            strings.append(s)
-
-        if isotope is not None:
-            s = "isotope = " + str(isotope)
-            strings.append(s)
-
-        if vibrational is not None:
-            s = "vibrational = " + str(vibrational)
-            strings.append(s)
-
-        for i in range(0, len(strings)-1):
-            query += strings[i] + " AND "
-
-        query += strings[len(strings)-1]
-
-    ''' Filter by Experiment '''
-    if ("experiment" in category) and \
-        len(filter(None, [units, type, composition])) is not 0:
-
-        query = "SELECT A.mid FROM (" + query + ") as A JOIN ExperimentInfo" \
-                + " as B ON A.mid = B.mid WHERE "
-
-        strings = []
-
-        if units is not None:
-            s = "units IN " + get_in_string(units)
-            strings.append(s)
-
-        if type is not None:
-            s = "type IN " + get_in_string(type)
-            strings.append(s)
-
-        for i in range(0, len(strings)-1):
-            query += strings[i] + " AND "
-
-        query += strings[len(strings)-1]
-
-    print query
+    # Select rows with mid
+    query = "SELECT mid, name FROM molecules WHERE category IN " + get_in_string(category)
     cursor = conn.execute(query)
+    rows = cursor.fetchall()
 
     mids = []
-    rows = cursor.fetchall()
     for row in rows:
         mids.append(row[0])
 
     return mids
 
+
+def get_mids_where_units_in(conn, units, category=None):
+
+    in_units = "WHERE UNITS IN " + get_in_string(units)
+    known_query = "SELECT M.mid FROM molecules AS M JOIN KnownInfo AS K ON M.mid=K.mid " + in_units
+    experiment_query = "SELECT M.mid FROM molecules AS M JOIN ExperimentInfo AS E ON M.mid=E.mid " + in_units
+
+    if category is None:
+        query = known_query + " UNION " + experiment_query
+    elif category is 'known':
+        query = known_query
+    else:
+        query = experiment_query
+
+    cursor = conn.execute(query)
+    rows = cursor.fetchall()
+
+    mids = []
+    for row in rows:
+        mids.append(row[0])
+
+    return mids
+
+
+def get_mids_in_temperature_range(conn, min, max):
+
+    if min is not None and max is None:
+        string = " WHERE temperature >= " + str(min)
+    elif max is not None and min is None:
+        string = " WHERE temperature <=" + str(max)
+    elif max is not None and min is not None:
+        string = " WHERE temperature >= " + str(min) + " AND temperature <= " + str(max)
+    else:
+        string = ""
+
+    query = "SELECT M.mid FROM molecules M JOIN KnownInfo K ON M.mid=K.mid" + string
+    print query
+    cursor = conn.execute(query)
+    rows = cursor.fetchall()
+
+    mids = []
+    for row in rows:
+        mids.append(row[0])
+
+    return mids
+
+
+def get_mids_where_types_in(conn, types):
+
+    query = "SELECT M.mid FROM molecules M JOIN ExperimentInfo E ON M.mid=E.mid" \
+            " WHERE type IN " + get_in_string(types)
+
+    cursor = conn.execute(query)
+    rows = cursor.fetchall()
+
+    mids = []
+    for row in rows:
+        mids.append(row[0])
+
+    return mids
+
+
+def get_mids_where_is_isotope(conn, bool):
+
+    bool = 1 if bool is True else 0
+
+    # Select rows with mid
+    query = "SELECT M.mid FROM molecules M JOIN KnownInfo K ON M.mid=K.mid WHERE isotope IS " + str(bool)
+    cursor = conn.execute(query)
+    rows = cursor.fetchall()
+
+    mids = []
+    for row in rows:
+        mids.append(row[0])
+
+    return mids
+
+
+def get_mids_where_is_vibrational(conn, bool):
+
+    bool = 1 if bool is True else 0
+
+    # Select rows with mid
+    query = "SELECT M.mid FROM molecules M JOIN KnownInfo K ON M.mid=K.mid WHERE vibrational IS " + str(bool)
+    cursor = conn.execute(query)
+    rows = cursor.fetchall()
+
+    mids = []
+    for row in rows:
+        mids.append(row[0])
+
+    return mids
+
+
 def get_in_string(array):
+    """
+    Returns a string of the array in the format (a1, a2, a3 .. an)
+    :param array: array of elements
+    :return:
+    """
     string = "("
     for i in range(0, len(array)-1):
-        string += "'" + array[i] + "', "
+        string += "'" + str(array[i]) + "', "
 
-    string += "'" + array[len(array)-1] + "')"
+    string += "'" + str(array[len(array)-1]) + "')"
 
     return string
 

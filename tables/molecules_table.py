@@ -341,6 +341,29 @@ def update_name(conn, mid, name):
     return True
 
 
+def update(conn, mid, row, value):
+
+    if row is 'name':
+        update_name(conn, mid, value)
+    elif row is 'category':
+        update_category(conn, mid, value)
+    else:
+        if get_category(conn, mid) is 'experiment':
+            if row is 'last_updated':
+                from experimentinfo_table import update_last_updated
+                update_last_updated(conn,mid)
+            else:
+                from experimentinfo_table import update as u
+                u(conn, mid, row, value)
+        else:
+            if row is 'last_updated':
+                from knowninfo_table import update_last_updated
+                update_last_updated(conn,mid)
+            else:
+                from knowninfo_table import update as u
+                u(conn, mid, row, value)
+
+
 ###############################################################################
 # Insert Molecule Table Entry
 # -----------------------------------------------------------------------------
@@ -408,8 +431,10 @@ def remove_molecule(conn, mid):
         print "[ ERROR: Molecule entry does not exist. Cancelling action! ]"
         return False
 
+    info_table_name = 'ExperimentInfo' if get_category(conn,mid) is 'experiment' else 'KnownInfo'
+
     # Delete Info Entry
-    conn.execute("DELETE FROM info WHERE mid={m}".format(m=mid))
+    conn.execute("DELETE FROM {i} WHERE mid={m}".format(i=info_table_name, m=mid))
     # Delete peak entry
     conn.execute("DELETE FROM peaks WHERE mid={m}".format(m=mid))
     # Delete Molecule entry

@@ -73,6 +73,7 @@ def get_notes(conn, mid):
     row = line[0]
     return row
 
+
 def get_last_updated(conn, mid):
     cursor = conn.execute("SELECT last_updated FROM ExperimentInfo WHERE mid=?",(mid,))
     line = cursor.fetchone()
@@ -100,6 +101,21 @@ def info_exists(conn, mid):
     return True
 
 
+def get_info_list(conn, mid):
+    """
+    Returns a list of the information on a known entry
+    In the order: kid, units, composition, temperature, notes, vibrational, isotope, last_updated
+    :param conn:
+    :param mid:
+    :return:
+    """
+    cursor = conn.execute("SELECT eid, units, composition, type, notes, last_updated"
+                          "last_updated FROM ExperimentInfo WHERE mid=?", (mid,))
+
+    line = cursor.fetchone()
+    row = line[0]
+    return row
+
 ###############################################################################
 # Update ExperimentInfo Table
 # -----------------------------------------------------------------------------
@@ -111,6 +127,18 @@ def info_exists(conn, mid):
 #       * update_name(conn, mid, name)
 #       * update_date(conn, mid, date)
 ###############################################################################
+
+
+def update(conn, mid, row, value):
+
+    if info_exists(conn, mid) is False:
+        print "[ ERROR: KnownInfo entry does not exist. Cancelling action! ]"
+        return False
+
+    conn.execute("UPDATE ExperimentInfo SET {r}={v} WHERE mid={m}".format(r=row, v=value, m=mid))
+    conn.commit()
+
+    return True
 
 
 def update_type(conn, mid, type):
@@ -186,6 +214,16 @@ def update_notes(conn, mid, notes):
     conn.execute("UPDATE ExperimentInfo SET notes={c} WHERE mid={m}".format(c=notes, m=mid))
     conn.commit()
     return True
+
+def update_last_updated(conn, mid):
+    if info_exists(conn, mid) is False:
+        print "[ ERROR: KnownInfo entry does not exist. Cancelling action! ]"
+        return False
+
+    conn.execute("UPDATE KnownInfo SET last_updated=(CURRENT_TIMESTAMP);")
+    conn.commit()
+    return True
+
 
 
 ###############################################################################

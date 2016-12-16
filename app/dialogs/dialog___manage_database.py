@@ -5,7 +5,11 @@ from PyQt4.QtGui import *
 
 from frames.frame___manage_database import Ui_Dialog   # import frame
 from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
-from config import conn
+from config import conn, resources
+import os
+from ..events import display_question_message
+from dialog___edit_entry import EditEntry
+from dialog___composition_selector import CompositionSelector
 
 
 class ManageDatabase(QDialog):
@@ -24,6 +28,7 @@ class ManageDatabase(QDialog):
 
         ''' Data '''
         self.selected_mids = []
+        self.current_mid = []
 
         ''' Widgets '''
         self.molecules_table_widget = self.ui.molecules_table
@@ -52,6 +57,17 @@ class ManageDatabase(QDialog):
 
         self.ui.isotope_chk.setChecked(False)
         self.ui.vibrational_chk.setChecked(False)
+
+    def delete_selected(self):
+        action = display_question_message("Are you sure you want to remove this "
+                                        "entry from the database? All information of this "
+                                        "entry will be lost.",
+                                        "Delete Entry")
+        if action is True:
+            molecules_table.remove_molecule(conn, self.current_mid)
+
+        self.selected_mids.remove(self.current_mid)
+        self.populate_molecule_table_widget(self.selected_mids)
 
     def get_selected_categories(self):
 
@@ -102,17 +118,22 @@ class ManageDatabase(QDialog):
         window = MainMenu()
         window.exec_()
 
-    def populate_molecule_list_widget(self, mids):
-        """
-        Populates list widget with Molecule entries of given mids
-        """
+    def open_edit_entry(self):
+        window = EditEntry(self.current_mid)
+        window.exec_()
 
-        for i in range(0, len(mids)):
-            mid = mids[i]
-            name = molecules_table.get_name(conn, mid)
-            category = molecules_table.get_category(conn, mid)
-            line = str(mid) + "\t" + str(category) + "\t" + str(name)
-            self.list_widget.addItem(QListWidgetItem(line))
+        print "here!"
+
+        if molecules_table.mid_exists(conn, self.current_mid):
+            self.selected_mids.remove(self.current_mid)
+            self.populate_info_table_widget(self.current_mid)
+            self.populate_peak_table_widget(self.current_mid)
+
+        self.populate_molecule_table_widget(self.selected_mids)
+
+    def open_composition_selector(self):
+        window = CompositionSelector(self.ui.composition_txt)
+        window.exec_()
 
     def populate_molecule_table_widget(self, mids):
         """
@@ -181,19 +202,19 @@ class ManageDatabase(QDialog):
         print category
         if category == "experiment":
             if experimentinfo_table.info_exists(conn, mid):
-                self.__populate_info_table_as_experiment(mid, table_widget)
+                self.populate_info_table_as_experiment(mid, table_widget)
             else:
                 table_widget.clearContents()
                 return
         elif category == "known":
             if knowninfo_table.info_exists(conn, mid):
-                self.__populate_info_table_as_known(mid, table_widget)
+                self.populate_info_table_as_known(mid, table_widget)
             else:
                 table_widget.clearContents()
                 return
         else:
             if knowninfo_table.info_exists(conn, mid):
-                self.__populate_info_table_as_artifact(mid, table_widget)
+                self.populate_info_table_as_artifact(mid, table_widget)
             else:
                 table_widget.clearContents()
                 return
@@ -316,6 +337,7 @@ class ManageDatabase(QDialog):
             m2 = set(molecules_table.get_mids_where_is_vibrational(conn, True))
             mids = list(set(mids) & set(m2))    # Intersection
 
+        self.selected_mids = mids
         self.populate_molecule_table_widget(mids)
 
     def __handle_molecule_table_row_click(self):
@@ -325,6 +347,7 @@ class ManageDatabase(QDialog):
         """
         item = self.molecules_table_widget.selectedItems()[0]
         mid = int(item.text())
+        self.current_mid = mid
         print mid
         self.populate_info_table_widget(mid)
         self.populate_peak_table_widget(mid)
@@ -336,6 +359,7 @@ class ManageDatabase(QDialog):
 
         ''' Load data to Lists/Frames '''
         mids = molecules_table.get_all_mid_list(conn)
+        self.selected_mids = mids
         self.populate_molecule_table_widget(mids)
 
         ''' Connect to Appropriate Functions'''
@@ -343,13 +367,20 @@ class ManageDatabase(QDialog):
         self.ui.back_btn.clicked.connect(self.go_back_to_main_menu)
         self.ui.filter_btn.clicked.connect(self.__filter_action)
         self.ui.reset_btn.clicked.connect(self.clear_selected)
+        self.ui.edit_btn.clicked.connect(self.open_edit_entry)
+        self.ui.delete_btn.clicked.connect(self.delete_selected)
+        self.ui.composition_btn.clicked.connect(self.open_composition_selector)
+
+        ''' Display Options '''
+        icon = QIcon(os.path.join(resources, "delete.png"))
+        self.ui.delete_btn.setIcon(icon)
 
     ###############################################################################
     # Static Methods
     ###############################################################################
 
     @staticmethod
-    def __populate_info_table_as_experiment(mid, table_widget):
+    def populate_info_table_as_experiment(mid, table_widget):
 
         row_count = 6  # Number of Rows
         column_count = 1  # Number of Columnns [mid, name, category]
@@ -393,7 +424,7 @@ class ManageDatabase(QDialog):
         table_widget.setItem(0, 5, updated_item)
 
     @staticmethod
-    def __populate_info_table_as_known(mid, table_widget):
+    def populate_info_table_as_known(mid, table_widget):
 
         row_count = 8  # Number of Rows
         column_count = 1  # Number of Columnns [mid, name, category]
@@ -444,7 +475,7 @@ class ManageDatabase(QDialog):
         table_widget.setItem(0, 7, updated_item)
 
     @staticmethod
-    def __populate_info_table_as_artifact(mid, table_widget):
+    def populate_info_table_as_artifact(mid, table_widget):
 
         row_count = 3  # Number of Rows
         column_count = 1  # Number of Columnns [mid, name, category]

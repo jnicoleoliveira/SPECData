@@ -33,7 +33,10 @@ def select_file(plain_txt_box):
     w.resize(320, 240)
     w.setWindowTitle("Open File")
     file_path = QFileDialog.getOpenFileName(w, 'Open File', os.path.curdir)
-    plain_txt_box.setPlainText(file_path)
+    try:
+        plain_txt_box.setPlainText(file_path)
+    except:
+        plain_txt_box.setText(file_path)
 
 
 def save_as_file(line_edit_txt_box):

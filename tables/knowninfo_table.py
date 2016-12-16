@@ -91,6 +91,22 @@ def get_last_updated(conn, mid):
     row = line[0]
     return row
 
+
+def get_info_list(conn, mid):
+    """
+    Returns a list of the information on a known entry
+    In the order: kid, units, composition, temperature, vibrational, isotope, notes, last_updated
+    :param conn:
+    :param mid:
+    :return:
+    """
+    cursor = conn.execute("SELECT kid, units, composition, temperature, vibrational, isotope, notes"
+                          "last_updated FROM KnownInfo WHERE mid=?", (mid,))
+
+    line = cursor.fetchone()
+    row = line[0]
+    return row
+
 def info_exists(conn, mid):
     """
     Determines if molecule entry is in the database (based on mid)
@@ -239,6 +255,25 @@ def update_notes(conn, mid, notes):
         return False
 
     conn.execute("UPDATE KnownInfo SET notes={c} WHERE mid={m}".format(c=notes, m=mid))
+    conn.commit()
+    return True
+
+def update_last_updated(conn, mid):
+    if info_exists(conn, mid) is False:
+        print "[ ERROR: KnownInfo entry does not exist. Cancelling action! ]"
+        return False
+
+    conn.execute("UPDATE KnownInfo SET last_updated=(CURRENT_TIMESTAMP);")
+    conn.commit()
+    return True
+
+def update(conn, mid, row, value):
+
+    if info_exists(conn, mid) is False:
+        print "[ ERROR: KnownInfo entry does not exist. Cancelling action! ]"
+        return False
+
+    conn.execute("UPDATE KnownInfo SET {r}='{v}' WHERE mid={m}".format(r=row, v=value, m=mid))
     conn.commit()
     return True
 

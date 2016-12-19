@@ -1,12 +1,12 @@
 # Author: Jasmine Oliveira
 # Date: 09/15/2016
 
+import os
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from frames.frame___import_files import Ui_Dialog
-
-import os
+from app.dialogs.frames.manage_database.frame___import_files import Ui_Dialog
 
 
 class ImportFiles(QDialog):

@@ -1,11 +1,12 @@
 # Author: Jasmine Oliveira
 # Date: 09/14/2016
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from frames.frame___main_graph_options_widget import Ui_Form
-from config import resources
 import os
+
+from PyQt4.QtGui import *
+
+from app.dialogs.frames.experiment_view.frame___main_graph_options_widget import Ui_Form
+from config import resources
 
 
 class MainGraphOptionsWidget(QWidget):

@@ -1,11 +1,9 @@
 # Author: Jasmine Oliveira
 # Date: 7/19/2016
 
-import time
-
 from PyQt4.QtGui import *
 
-from frames.frame___main_window import Ui_MainWindow # import frame
+from app.dialogs.frames.main.frame___main_window import Ui_MainWindow # import frame
 from dialog___main_menu import MainMenu
 
 

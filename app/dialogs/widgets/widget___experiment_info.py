@@ -4,15 +4,13 @@
 # * Form widget that displays the experiment info for Experiment View
 #
 
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from frames.frame___experiment_info_widget import Ui_Form
-from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 
-from config import conn
-#from tables.get import get_peaks
-import tables.peaks_table as peaks_table
 import tables.experimentinfo_table as info_table
+import tables.peaks_table as peaks_table
+from app.dialogs.frames.experiment_view.frame___experiment_info_widget import Ui_Form
+from config import conn
+
 
 class ExperimentInfoWidget(QWidget):
 

@@ -6,11 +6,11 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from app import error as error
-from app.events import display_error_message
-from frames.frame___new_experiment_form import Ui_Dialog    # Import frame
-from dialog___composition_selector import CompositionSelector
 import const
+from app import error as error
+from app.dialogs.frames.new_experiment.frame___new_experiment_form import Ui_Dialog    # Import frame
+from app.events import display_error_message
+from dialog___composition_selector import CompositionSelector
 
 
 class NewExperimentForm(QDialog):
@@ -185,8 +185,7 @@ class NewExperimentForm(QDialog):
         return mid
 
     def next_frame(self, mid):
-        from dialog___experiment_view import ExperimentView
-        from dialog___blank_dialog import OpenExperimentView
+        from dialog___open_experiment_view import OpenExperimentView
         # Go to next fame
         self.close()
         window = OpenExperimentView(str(self.experiment_name), mid)

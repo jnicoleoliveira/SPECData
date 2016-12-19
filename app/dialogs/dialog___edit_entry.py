@@ -1,15 +1,15 @@
 # Author: Jasmine Oliveira
 # Date: 12/16/2016
 
+import os
+
 from PyQt4.QtGui import *
 
-from frames.frame___edit_entry import Ui_Dialog   # import frame
-from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
-from ..events import display_question_message, select_file
+from app.dialogs.frames.manage_database.frame___edit_entry import Ui_Dialog   # import frame
 from config import conn, resources
 from dialog___composition_selector import CompositionSelector
-
-import os
+from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
+from ..events import display_question_message, select_file
 
 
 class EditEntry(QDialog):

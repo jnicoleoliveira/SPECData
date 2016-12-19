@@ -1,11 +1,12 @@
 # Author: Jasmine Oliveira
 # Date: 09/14/2016
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from frames.frame___assignment_graph_options import Ui_Form
-from config import resources
 import os
+
+from PyQt4.QtGui import *
+
+from app.dialogs.frames.assignment_view.frame___assignment_graph_options import Ui_Form
+from config import resources
 
 
 class AssignmentGraphOptionsWidget(QWidget):

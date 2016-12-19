@@ -1,14 +1,14 @@
 # Author: Jasmine Oliveira
 # Date: 11/21/2016
 
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from frames.frame___composition_selector import Ui_Dialog
 
-from widget___periodic_table_scene import PeriodicTableSceneWidget
-from frames.frame___element_viewbox_widget import Ui_Form as ViewBox_Ui
-from frames.frame___selected_element_box import Ui_Form as SelectedBox_Ui
+from app.dialogs.frames.composition_selector.frame___composition_selector import Ui_Dialog
+from app.dialogs.frames.composition_selector.frame___element_viewbox_widget import Ui_Form as ViewBox_Ui
+from app.dialogs.frames.composition_selector.frame___selected_element_box import Ui_Form as SelectedBox_Ui
+from app.dialogs.widgets.widget___periodic_table_scene import PeriodicTableSceneWidget
 from ..events import display_question_message, display_error_message
+
 
 class CompositionSelector(QDialog):
 

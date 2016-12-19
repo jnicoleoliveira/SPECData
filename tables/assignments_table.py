@@ -14,6 +14,8 @@
 #           -> assigned_pid  (int:   id of the assigned peak)
 
 
+from molecules_table import mid_exists
+
 ###############################################################################
 # Get Assignments Table Information
 # -----------------------------------------------------------------------------

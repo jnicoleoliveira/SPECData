@@ -7,11 +7,11 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget     # Matplotlib Widget
 
+from app.dialogs.frames.assignment_view.frame___assignment_window import Ui_Dialog              # Dialog Window
+from app.dialogs.widgets.widget___assignment_graph_options import AssignmentGraphOptionsWidget # Graph Options Widget
+from app.dialogs.widgets.widget___assignment_window_info import AssignmentInfoWidget    # Assignment Info Widget
 from config import conn
 from config import resources
-from frames.frame___assignment_window import Ui_Dialog              # Dialog Window
-from widget___assignment_graph_options import AssignmentGraphOptionsWidget # Graph Options Widget
-from widget___assignment_window_info import AssignmentInfoWidget    # Assignment Info Widget
 from ..experiment_analysis import AssignmentGraph
 
 

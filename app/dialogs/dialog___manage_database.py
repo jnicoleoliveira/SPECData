@@ -1,15 +1,16 @@
 # Author: Jasmine Oliveira
 # Date: 11/12/2016
 
+import os
+
 from PyQt4.QtGui import *
 
-from frames.frame___manage_database import Ui_Dialog   # import frame
-from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
+from app.dialogs.frames.manage_database.frame___manage_database import Ui_Dialog   # import frame
 from config import conn, resources
-import os
-from ..events import display_question_message
-from dialog___edit_entry import EditEntry
 from dialog___composition_selector import CompositionSelector
+from dialog___edit_entry import EditEntry
+from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
+from ..events import display_question_message
 
 
 class ManageDatabase(QDialog):

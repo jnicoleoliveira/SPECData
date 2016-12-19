@@ -2,12 +2,12 @@ import sqlite3
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-
-import config
-from app.events import clickable
-from frames.frame___check_single_import import Ui_checksingleimport_frame   # import frame
 from tables.entry import entry_molecules, entry_peaks
 from temp.get import get_peaks
+
+import config
+from app.dialogs.frames.manage_database.frame___check_single_import import Ui_checksingleimport_frame   # import frame
+from app.events import clickable
 
 
 class CheckSingleImport(QDialog):

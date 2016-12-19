@@ -4,8 +4,8 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+from app.dialogs.frames.main.frame___main_menu import Ui_mainmenu    # This window
 from dialog___new_experiment_form import NewExperimentForm    # New Experiment Window
-from frames.frame___main_menu import Ui_mainmenu    # This window
 
 
 class MainMenu(QDialog):
@@ -63,7 +63,6 @@ class MainMenu(QDialog):
     def manage_database(self):
 
         # temp testing
-        from dialog___composition_selector import CompositionSelector
         #window = CompositionSelector()
         #window.exec_()
         from dialog___manage_database import ManageDatabase

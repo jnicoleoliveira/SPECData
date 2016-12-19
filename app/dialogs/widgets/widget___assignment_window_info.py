@@ -1,11 +1,12 @@
 # Author: Jasmine Oliveira
 # Date: 09/07/2016
 
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from frames.frame___assignment_info_widget import Ui_Form
-from config import conn
+
 import tables.peaks_table as peaks_table
+from app.dialogs.frames.assignment_view.frame___assignment_info_widget import Ui_Form
+from config import conn
+
 
 class AssignmentInfoWidget(QWidget):
 

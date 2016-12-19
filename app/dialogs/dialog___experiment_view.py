@@ -1,23 +1,21 @@
 # Author: Jasmine Oliveira
 # Date: 08/24/2016
 
+import os
 import time
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
-from .frames.frame___experiment_view import Ui_MainWindow
 
 from analysis import experiment
-from ..events import LoadingProgressScreen
-from .widget___main_graph_options import MainGraphOptionsWidget
-from .widget___molecule_selection import MoleculeSelectionWidget
-from .widget___experiment_info import ExperimentInfoWidget
-from ..experiment_analysis import MainGraph
-
+from app.dialogs.frames.experiment_view.frame___experiment_view import Ui_MainWindow
+from app.dialogs.widgets.widget___experiment_info import ExperimentInfoWidget
+from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidget
+from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
 from config import resources
-from ..events import display_error_message
-import os
+from ..events import LoadingProgressScreen
+from ..experiment_analysis import MainGraph
 
 
 class ExperimentView(QMainWindow):

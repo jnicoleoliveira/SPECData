@@ -4,11 +4,11 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from frames.frame___load_experiment import Ui_Dialog              # Dialog Window
-
-from config import conn
 import tables.molecules_table as molecules_table
+from app.dialogs.frames.load_experiment.frame___load_experiment import Ui_Dialog              # Dialog Window
+from config import conn
 from ..events import display_error_message
+
 
 class LoadExperiment(QDialog):
 

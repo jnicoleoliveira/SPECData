@@ -3,12 +3,11 @@
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from frames.frame___export_cleaned_lines import Ui_Dialog
-from config import resources
 
 from analysis.experiment_write_up import ExperimentWriteUp
-from ..events import display_error_message, save_as_file, display_overwrite_file_question_message, display_informative_message
-from ..error import path_exists, get_file_error_message, is_file
+from app.dialogs.frames.experiment_view.frame___export_cleaned_lines import Ui_Dialog
+from ..events import display_error_message, save_as_file, display_informative_message
+
 
 class ExportCleanedLines(QDialog):
 

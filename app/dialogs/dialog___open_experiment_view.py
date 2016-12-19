@@ -3,6 +3,7 @@ from PyQt4.QtGui import *
 
 from dialog___experiment_view import ExperimentView
 
+
 class OpenExperimentView(QDialog):
 
     def __init__(self, name, mid):

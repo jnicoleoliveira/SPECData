@@ -1,15 +1,16 @@
 # Author: Jasmine Oliveira
 # Date: 09/15/2016
 
+import os
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from frames.frame___import_file_verification import Ui_Dialog
+from app.dialogs.frames.manage_database.frame___import_file_verification import Ui_Dialog
 from app.events import display_error_message
-from ..error import is_valid_file, get_file_error_message, molecule_entry_exists
-from dialog___composition_selector import CompositionSelector
 from config import conn
-import os
+from dialog___composition_selector import CompositionSelector
+from ..error import is_valid_file, get_file_error_message, molecule_entry_exists
 
 
 class ImportFileVerification(QDialog):

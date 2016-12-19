@@ -1,10 +1,11 @@
 # Author: Jasmine Oliveira
 # Date: 11/21/2016
 
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from frames.frame___periodic_table_scene import Ui_Form
 from periodic import element
+
+from app.dialogs.frames.composition_selector.frame___periodic_table_scene import Ui_Form
+
 
 class PeriodicTableSceneWidget(QWidget):
 

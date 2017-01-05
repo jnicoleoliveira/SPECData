@@ -48,7 +48,7 @@ class MainGraph:
 
     def get_experiment_frequencies_intensities(self):
         """
-        Returns the appropriate frequencies and intensities list of the experiment to graph
+        Returns the appropriate frequencies and intensities list of the experiment to __setup_graph
         based on the state of the options.
         :return: list of frequencies, list of intensities
         """
@@ -61,7 +61,7 @@ class MainGraph:
 
     def add_subplot_experiment(self, pos, color):
 
-        # Get experiment frequency and intensities to graph
+        # Get experiment frequency and intensities to __setup_graph
         frequencies, intensities = self.get_experiment_frequencies_intensities()
 
         figure = self.plot_widget.getFigure()

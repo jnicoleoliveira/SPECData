@@ -41,7 +41,7 @@ class MainGraphOptionsWidget(QWidget):
         self.add_icons()
 
     def add_icons(self):
-        self.redisplay_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'redisplay-graph.png'))))
+        self.redisplay_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'redisplay-__setup_graph.png'))))
         self.deselect_all_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'deselect-all.png'))))
         self.select_all_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'select-all.png'))))
         self.show_invalid_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'show-validations.png'))))

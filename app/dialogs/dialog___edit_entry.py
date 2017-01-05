@@ -65,7 +65,7 @@ class EditEntry(QDialog):
         values = self.get_table_data()
         action = display_question_message("Are you want to accept these changes?",
                                           "Save changes")
-
+        from ..error import is_valid_file
         if action is True:
             for i in range(0, len(values)):
                 if self.original_data[i] != values[i]:
@@ -76,8 +76,9 @@ class EditEntry(QDialog):
 
             file_path = self.ui.file_txt.text()
             if file_path and file_path is not "":
-                peaks_table.remove_all(conn, self.mid)
-                peaks_table.import_file(conn, str(file_path), self.mid)
+                if is_valid_file(file_path):
+                    peaks_table.remove_all(conn, self.mid)
+                    peaks_table.import_file(conn, str(file_path), self.mid)
 
             molecules_table.update(conn, self.mid, 'last_updated', None)
 

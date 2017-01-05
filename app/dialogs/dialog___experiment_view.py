@@ -13,10 +13,13 @@ from app.dialogs.frames.experiment_view.frame___experiment_view import Ui_MainWi
 from app.dialogs.widgets.widget___experiment_info import ExperimentInfoWidget
 from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidget
 from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
+
+from ..time_machine import TimeMachine
 from config import resources
 from ..events import LoadingProgressScreen
 from ..experiment_analysis import MainGraph
 
+from copy import deepcopy
 
 class ExperimentView(QMainWindow):
     """
@@ -27,6 +30,11 @@ class ExperimentView(QMainWindow):
     COLOR_PENDING = "#D4AC0D"
     COLOR_INVALID = "#A93226"
     COLOR_VALID = "#229954"
+
+    # User Options
+    USER_ACTIONS = ['PENDING_TO_ACCEPT', 'PENDING_TO_REJECT'
+                    'ACCEPT_TO_REJECT', 'ACCEPT_TO_PENDING',
+                    'REJECT_TO_ACCEPT', 'REJECT_TO_PENDING']
 
     def __init__(self, experiment_name, mid, parent=None):
         super(ExperimentView, self).__init__(parent)
@@ -45,20 +53,25 @@ class ExperimentView(QMainWindow):
         self.graph_options_widget = None
         # -- Experiment Info Widget -- #
         self.info_widget = None
-        # -- Molecule Selection Widget -- #
-        self.selection_widget = None
-        # -- Validated Selection Widget --#
-        self.validated_selection_widget = None
-        # -- Invalidated Selection Widget --#
-        self.invalidated_selection_widget = None
+        # -- Molecule Selection Widgets -- #
+        self.selection_widget = None                # Pending
+        self.validated_selection_widget = None      # Accepted
+        self.invalidated_selection_widget = None    # Rejected
+        # -- Selection Containers -- #
+        self.pending_scroll_selection_container = None
+        self.validated_scroll_selection_container = None
+        self.invalidated_scroll_selection_container = None
         # -- Table Widget -- #
         self.table_widget = None
         # -- Buttons -- #
-        self.redisplay_btn = None       # Redisplay (Redisplay graph with current selections)
+        self.redisplay_btn = None       # Redisplay (Redisplay __setup_graph with current selections)
         self.select_all_btn = None      # Select all (for molecule selection)
         self.deselect_all_btn = None    # Deselect all (for molecule selection)
         self.main_menu_btn = None       # Main Menu (exits, returns to main menu)
         self.delete_btn = None          # Delete Button, removes associated lines from analysis
+
+        ''' Undo/Redo (Time Machine) '''
+        self.time_machine = None
 
         ''' Menu Bar '''
         self.action_show_validations = None
@@ -70,36 +83,20 @@ class ExperimentView(QMainWindow):
         self.loading_screen = None      # LoadingProgressScreen Object
 
         '''Start Up'''
-        self.startup(experiment_name, mid)
+        self.__setup__(experiment_name, mid)
         self.show()
-        self.cid_pick = self.matplot_widget.getFigure().canvas.mpl_connect('pick_event', self.on_pick)
+        self.cid_pick = self.matplot_widget.getFigure().canvas.mpl_connect('pick_event', self.__on_graph_line_pick)
 
-    def add_selection_assignments(self):
-        self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
-
-    def deselect_all(self):
-        """
-        Select all button function.
-        Checks all selections in selection widget
-        """
-        self.selection_widget.deselect_all()
-
+    ###############################################################################
+    # Toolbar Methods
+    ###############################################################################
     def do_analysis(self):
         self.experiment.get_assigned_molecules()
 
-    def get_options(self):
-
-        # -- Get Values for Options -- #
-        full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
-        sharey = self.graph_options_widget.sharey_chk.isChecked()
-        color_experiment = self.graph_options_widget.color_experiment_chk.isChecked()
-        y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
-        show_validations = self.show_validations_on_graph
-
-        # Set Options in graph #
-        self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
-                                          y_to_experiment_intensities=y_to_experiment_intensities,
-                                          color_experiment=color_experiment, show_validations=show_validations)
+    def export_cleaned_lines(self):
+        from dialog___export_cleaned_lines import ExportCleanedLines
+        window = ExportCleanedLines(self.experiment)
+        window.exec_()
 
     def go_to_main_menu(self):
         #from dialog___main_menu import MainMenu
@@ -109,21 +106,16 @@ class ExperimentView(QMainWindow):
         #window.exec_()
         #self.close()
 
-    def graph(self):
-        # Get Info for Experiment graph
-        self.experiment_graph = MainGraph(self.matplot_widget, self.graph_options_widget, self.experiment)
-        matches, colors = self.selection_widget.get_selections()
+    ###############################################################################
+    # Selection Widget Functions
+    ###############################################################################
 
-        # Graph
-        self.experiment_graph.graph(matches, colors)
-
-        # Draw Subplots
-        self.experiment_graph.draw()
-
-        if self.experiment_graph.full_spectrum_exists() is False:
-            self.graph_options_widget.full_spectrum_chk.setEnabled(False)
-            self.graph_options_widget.full_spectrum_chk.setWhatsThis("Data not available.")
-            self.graph_options_widget.full_spectrum_chk.setStyleSheet("color: rgb(85, 85, 85);")
+    def deselect_all(self):
+        """
+        Select all button function.
+        Checks all selections in selection widget
+        """
+        self.selection_widget.deselect_all()
 
     def invalidate_selections(self):
         # Remove selected rows, and get those selections #
@@ -132,35 +124,13 @@ class ExperimentView(QMainWindow):
         for i in range(0, len(matches)):
             self.invalidated_selection_widget.add_row(matches[i], colors[i])
 
-    def redisplay_graph(self):
-        """
-        Redisplay button function.
-        Clears current experiment graph, and redisplays graph from checkbox selections.
-        """
+        self.__save_state()
 
-        xlim, ylim = self.experiment_graph.get_zoom_coordinates()
-        print str(xlim) + " " + str(ylim)
+    def get_selections(self):
+        return self.selection_widget.get_selections()
 
-        # Clear Graph
-        self.experiment_graph.clear()
-
-        # Get options
-        self.get_options()
-
-        # Determine graphing selections
-        matches, colors = self.selection_widget.get_selections()
-
-        if self.show_validations_on_graph:
-            valid_matches, valid_colors = self.validated_selection_widget.get_selections()
-            matches.extend(valid_matches)
-            colors.extend(valid_colors)
-
-        # Graph
-        self.experiment_graph.graph(matches, colors)
-
-        # Draw
-        self.experiment_graph.draw()
-        self.cid_pick = self.matplot_widget.getFigure().canvas.mpl_connect('pick_event', self.on_pick)
+    def populate_selection_widget(self):
+        self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
 
     def select_all(self):
         """
@@ -169,10 +139,35 @@ class ExperimentView(QMainWindow):
         """
         self.selection_widget.select_all()
 
+    def validate_selections(self):
+        print "VALIDATE SELECTIONS"
+
+        # -- Get Selected Mids -- #
+        selected_mids = self.selection_widget.get_selected_mids()
+
+        # -- Validate Selections in Experiment -- #
+        for mid in selected_mids:
+            self.experiment.validate_a_match(mid)
+
+        # Remove selected rows, and get those selections #
+        matches, colors = self.selection_widget.remove_selections()
+
+        for i in range(0, len(matches)):
+            self.validated_selection_widget.add_row(matches[i], colors[i])
+
+        # Repopulate table widget to show updated validations
+        self.populate_table_widget()
+
+        self.__save_state()
+
+    ###############################################################################
+    # Table Widget Functions
+    ###############################################################################
+
     def highlight_table_row(self, frequency):
         """
         Highlights corresponding rows with the parameter pid
-        :param pid:
+        :param frequency
         """
         # -- Set table to Multi Selection Mode -- #
         self.table_widget.setSelectionMode(QAbstractItemView.MultiSelection)
@@ -189,7 +184,7 @@ class ExperimentView(QMainWindow):
 
     def populate_table_widget(self):
         """
-        Populate table_widget with the following graph data:
+        Populate table_widget with the following __setup_graph data:
             Experiment PID, Frequency, Intensity with its associative
             match's PID, frequency, and intensity
         """
@@ -258,7 +253,55 @@ class ExperimentView(QMainWindow):
         # width = self.table_widget.horizontalHeader().width()
         # self.table_widget.setFixedWidth(width)
 
-    def show_validations(self):
+    ###############################################################################
+    # Graphing Functions
+    ###############################################################################
+
+    def determine_graphing_options(self):
+
+        # -- Get Values for Options -- #
+        full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
+        sharey = self.graph_options_widget.sharey_chk.isChecked()
+        color_experiment = self.graph_options_widget.color_experiment_chk.isChecked()
+        y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
+        show_validations = self.show_validations_on_graph
+
+        # Set Options in __setup_graph #
+        self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
+                                          y_to_experiment_intensities=y_to_experiment_intensities,
+                                          color_experiment=color_experiment, show_validations=show_validations)
+
+    def redisplay_graph(self):
+        """
+        Redisplay button function.
+        Clears current experiment __setup_graph, and redisplays __setup_graph from checkbox selections.
+        """
+
+        xlim, ylim = self.experiment_graph.get_zoom_coordinates()
+        print str(xlim) + " " + str(ylim)
+
+        # Clear Graph
+        self.experiment_graph.clear()
+
+        # Get options
+        self.determine_graphing_options()
+
+        # Determine graphing selections
+        matches, colors = self.selection_widget.get_selections()
+
+        if self.show_validations_on_graph:
+            valid_matches, valid_colors = self.validated_selection_widget.get_selections()
+            matches.extend(valid_matches)
+            colors.extend(valid_colors)
+
+        # Graph
+        self.experiment_graph.graph(matches, colors)
+
+        # Draw
+        self.experiment_graph.draw()
+        self.cid_pick = self.matplot_widget.getFigure().canvas.mpl_connect('pick_event', self.__on_graph_line_pick)
+
+    def toggle_validations_on_graph(self):
         """
         Process action_show_validations button.
         :return:
@@ -274,7 +317,96 @@ class ExperimentView(QMainWindow):
 
         print "Show Validations: " + str(self.show_validations_on_graph)
 
-    def setup_layout(self):
+    def __on_graph_line_pick(self, event):
+        """
+        When picking a line on the __setup_graph, highlights associated
+        row in the table-widget.
+        :param event:
+        """
+        # print str(event.xdata)
+        rect = event.artist
+        x,y = rect.xy
+        self.highlight_table_row(x)
+
+        #print (rect.xy)
+        print "picked x" + str(x)
+
+    ###############################################################################
+    # Setup Functions
+    ###############################################################################
+
+    def __setup__(self, experiment_name, mid):
+        """
+        Start-up script, does the following behind a loading progress screen:
+        (1) Creates experiment from mid and experiment_name
+        (2) Does Experiment analysis
+        (3) Sets up layout with respective analysis data
+        (4) Draws __setup_graph
+        :param experiment_name: Experiment name
+        :param mid: Experiment molecule ID
+        """
+
+        '''Start Loading Screen'''
+        self.loading_screen = LoadingProgressScreen()
+        self.loading_screen.start()     # Start Loading Screen
+
+        ## Do Things ##
+
+        ''' Create Experiment '''
+        self.loading_screen.set_caption('Creating experiment...')
+        self.experiment = experiment.Experiment(experiment_name, mid)  # Create experiment obj
+        time.sleep(1)
+        self.loading_screen.next_value(20)
+
+        '''Analyze Experiment'''
+        self.loading_screen.set_caption('Analyzing...')
+        self.do_analysis()                      # Run Analysis
+        self.loading_screen.next_value(40)
+        time.sleep(1)
+
+        '''Setup Layout'''
+        self.loading_screen.set_caption('Setting up...')
+        self.__setup_layout()                     # Setup Layout
+        self.loading_screen.next_value(60)
+
+        '''Add Assignments to Selection Widget'''
+        self.populate_selection_widget()        # Add assignments
+        time.sleep(1)
+        self.loading_screen.next_value(80)
+
+        '''Graph Main Graph'''
+        self.__setup_graph()                            # Graph
+        self.loading_screen.next_value(90)
+        time.sleep(2)
+
+        ''' Setup User History Time Machine '''
+        base_state = State(self.experiment,
+                           self.selection_widget,
+                           self.validated_selection_widget,
+                           self.invalidated_selection_widget)
+        self.time_machine = TimeMachine(base_state, 20)
+
+        '''End Loading Screen'''
+        self.loading_screen.end()
+
+
+    def __setup_graph(self):
+        # Get Info for Experiment __setup_graph
+        self.experiment_graph = MainGraph(self.matplot_widget, self.graph_options_widget, self.experiment)
+        matches, colors = self.selection_widget.get_selections()
+
+        # Graph
+        self.experiment_graph.graph(matches, colors)
+
+        # Draw Subplots
+        self.experiment_graph.draw()
+
+        if self.experiment_graph.full_spectrum_exists() is False:
+            self.graph_options_widget.full_spectrum_chk.setEnabled(False)
+            self.graph_options_widget.full_spectrum_chk.setWhatsThis("Data not available.")
+            self.graph_options_widget.full_spectrum_chk.setStyleSheet("color: rgb(85, 85, 85);")
+
+    def __setup_layout(self):
         """
         Sets up default layout of ExperimentView
         """
@@ -371,6 +503,11 @@ class ExperimentView(QMainWindow):
         selection_tab_widget.addTab(invalidated_scroll_selection_container, "Invalidated")
         selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
 
+        # Save
+        self.pending_scroll_selection_container = pending_scroll_selection_container
+        self.validated_scroll_selection_container = validated_scroll_selection_container
+        self.invalidated_scroll_selection_container = invalidated_scroll_selection_container
+
         '''
         Add widgets to Layout
         '''
@@ -388,15 +525,15 @@ class ExperimentView(QMainWindow):
         '''
         Toolbar and ShortCuts
         '''
-        self.setup_toolbar_and_shortcuts()
+        self.__setup_toolbar_and_shortcuts()
 
         ''' Button Connections '''
         self.graph_options_widget.deselect_all_btn.clicked.connect(self.deselect_all)
         self.graph_options_widget.redisplay_btn.clicked.connect(self.redisplay_graph)
         self.graph_options_widget.select_all_btn.clicked.connect(self.select_all)
-        self.graph_options_widget.show_validations_btn.clicked.connect(self.show_validations)
+        self.graph_options_widget.show_validations_btn.clicked.connect(self.toggle_validations_on_graph)
 
-    def setup_toolbar_and_shortcuts(self):
+    def __setup_toolbar_and_shortcuts(self):
 
         action_bar = self.ui.action_bar
 
@@ -416,13 +553,25 @@ class ExperimentView(QMainWindow):
         ##############################################
         ''' Undo '''
         # -- Toolbar - #
-        pix_map = QPixmap(os.path.join(resources, 'undo-disabled.png'))
-        action_bar.addAction(QIcon(pix_map), "Undo (Ctrl+Alt+Z)", self.undo)
+        undo = self.ui.actionUndo
+        undo.triggered.connect(self.undo)
 
+        pix_map = QPixmap(os.path.join(resources, 'undo-disabled.png'))
+        action_bar.addAction(QIcon(pix_map), "Undo (Ctrl+Z)", self.undo)
+        shortcut = QShortcut(QKeySequence(Qt.CTRL, Qt.Key_Z), self)
+        undo.setShortcut(shortcut)
+        undo.setShortcutContext(Qt.WindowShortcut)
+        self.connect(shortcut, SIGNAL('activated()'), self.undo)
+        # Short cut
+        #self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_Z), self),
+        #             SIGNAL('activated()'), self.undo)
         ''' Redo '''
         # -- Toolbar - #
         pix_map = QPixmap(os.path.join(resources, 'redo.png'))
         action_bar.addAction(QIcon(pix_map), "Redo (Ctrl+Alt+Y)", self.redo)
+        # Short cut
+        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.ALT, Qt.Key_Y), self),
+                     SIGNAL('activated()'), self.redo)
 
         action_bar.addSeparator()
         ##############################################
@@ -456,10 +605,10 @@ class ExperimentView(QMainWindow):
         self.action_show_validations = QAction("Show Validations", self)
         self.action_show_validations.setIcon(QIcon(pix_map))
         self.action_show_validations.setIconText("Show Validations")
-        self.action_show_validations.triggered.connect(self.show_validations)
+        self.action_show_validations.triggered.connect(self.toggle_validations_on_graph)
         action_bar.addAction(self.action_show_validations)
-        #action_bar.triggered[QAction].connect(self.show_validations)
-        #action_bar.addAction(QIcon(pix_map), "Show Validations", self.show_validations)
+        #action_bar.triggered[QAction].connect(self.toggle_validations_on_graph)
+        #action_bar.addAction(QIcon(pix_map), "Show Validations", self.toggle_validations_on_graph)
 
         ##############################################
         action_bar.addSeparator()
@@ -505,87 +654,63 @@ class ExperimentView(QMainWindow):
         export_cleaned_lines = self.ui.actionExport_cleaned_lines
         export_cleaned_lines.triggered.connect(self.export_cleaned_lines)
 
-    def startup(self, experiment_name, mid):
+    ###############################################################################
+    # Time Machine Functions
+    ###############################################################################
+
+    def undo(self):
+        print "UNDOING!"
+        state = self.time_machine.undo()
+        self.__restore_state(state)
+
+    def redo(self):
+        print "REDO"
+        state = self.time_machine.redo()
+        self.__restore_state(state)
+
+    def __restore_state(self, state):
         """
-        Start-up script, does the following behind a loading progress screen:
-        (1) Creates experiment from mid and experiment_name
-        (2) Does Experiment analysis
-        (3) Sets up layout with respective analysis data
-        (4) Draws graph
-        :param experiment_name: Experiment name
-        :param mid: Experiment molecule ID
+        Restores the data from a given state object.
+        :param state:
+        :return:
         """
+        if state is None:
+            return
 
-        '''Start Loading Screen'''
-        self.loading_screen = LoadingProgressScreen()
-        self.loading_screen.start()     # Start Loading Screen
+        ''' Selection Widgets '''
+        pending_data = state.pending_matches
+        accepted_data = state.accepted_matches
+        rejected_data = state.rejected_matches
 
-        ## Do Things ##
+        self.selection_widget.set_matches(pending_data[0], pending_data[1])
+        self.invalidated_selection_widget.set_matches(rejected_data[0], rejected_data[1])
+        self.validated_selection_widget.set_matches(accepted_data[0], accepted_data[1])
 
-        ''' Create Experiment '''
-        self.loading_screen.set_caption('Creating experiment...')
-        self.experiment = experiment.Experiment(experiment_name, mid)  # Create experiment obj
-        time.sleep(1)
-        self.loading_screen.next_value(20)
+        ''' Experiment Data '''
 
-        '''Analyze Experiment'''
-        self.loading_screen.set_caption('Analyzing...')
-        self.do_analysis()                      # Run Analysis
-        self.loading_screen.next_value(40)
-        time.sleep(1)
+        experiment = state.experiment
+        self.experiment.validated_matches = deepcopy(experiment.validated_matches)
+        self.experiment.molecule_matches = deepcopy(experiment.molecule_matches)
+        self.experiment.experiment_peaks = deepcopy(experiment.experiment_peaks)
 
-        '''Setup Layout'''
-        self.loading_screen.set_caption('Setting up...')
-        self.setup_layout()                     # Setup Layout
-        self.loading_screen.next_value(60)
+        print "*****************"
+        print self.experiment.validated_matches
+        for m in self.experiment.get_sorted_molecule_matches():
+            print str(m.mid) + "    " + m.status
+        print "*****************"
 
-        '''Add Assignments to Selection Widget'''
-        self.add_selection_assignments()        # Add assignments
-        time.sleep(1)
-        self.loading_screen.next_value(80)
+        #self.experiment.validated_matches = experiment_data.validated_matches
 
-        '''Graph Main Graph'''
-        self.graph()                            # Graph
-        self.loading_screen.next_value(90)
-        time.sleep(2)
+    def __save_state(self):
+        state = State(self.experiment,
+                      self.selection_widget,
+                      self.validated_selection_widget,
+                      self.invalidated_selection_widget)
+        self.time_machine.add_state(state)
 
-        '''End Loading Screen'''
-        self.loading_screen.end()
-
-    def validate_selections(self):
-        print "VALIDATE SELECTIONS"
-
-        # -- Get Selected Mids -- #
-        selected_mids = self.selection_widget.get_selected_mids()
-
-        # -- Validate Selections in Experiment -- #
-        for mid in selected_mids:
-            self.experiment.validate_a_match(mid)
-
-        # Remove selected rows, and get those selections #
-        matches, colors = self.selection_widget.remove_selections()
-
-        for i in range(0, len(matches)):
-            self.validated_selection_widget.add_row(matches[i], colors[i])
-
-        # Repopulate table widget to show updated validations
-        self.populate_table_widget()
-
-    def on_pick(self, event):
-        """
-        When picking a line on the graph, highlights associated
-        row in the table-widget.
-        :param event:
-        """
-        # print str(event.xdata)
-        rect = event.artist
-        x,y = rect.xy
-        self.highlight_table_row(x)
-
-        #print (rect.xy)
-        print "picked x" + str(x)
-
-    # ----- STUB METHODS ---- #
+    ###############################################################################
+    # Stub Methods
+    ###############################################################################
 
     def settings(self):
         print "SETTINGS"
@@ -597,25 +722,19 @@ class ExperimentView(QMainWindow):
         self.highlight_table_row(30761)
         print "RE-ANALYZE"
 
-    def undo(self):
-        print "UNDO"
-
-    def redo(self):
-        print "REDO"
-
     def remove_from_analysis(self):
         print "Clicked 'remove button'"
 
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"
 
-    def export_cleaned_lines(self):
-        from dialog___export_cleaned_lines import ExportCleanedLines
-        window = ExportCleanedLines(self.experiment)
-        window.exec_()
 
 
 
+class State:
 
-
-
+    def __init__(self, experiment, pending_widget, accepted_widget, rejected_widget):
+        self.experiment = deepcopy(experiment)
+        self.pending_matches = pending_widget.get_matches()
+        self.accepted_matches = accepted_widget.get_matches()
+        self.rejected_matches = rejected_widget.get_matches()

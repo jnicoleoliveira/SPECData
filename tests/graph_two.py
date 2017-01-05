@@ -5,10 +5,10 @@ import matplotlib.pyplot as plot
 from config import conn
 from temp.get import get_peaks
 
-print "Enter first graph MID:"
+print "Enter first __setup_graph MID:"
 mid1 = raw_input()
 
-print "Enter second graph MID:"
+print "Enter second __setup_graph MID:"
 mid2 = raw_input()
 
 print "Graphing..."

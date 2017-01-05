@@ -32,4 +32,4 @@ class AssignmentGraphOptionsWidget(QWidget):
         self.add_icons()
 
     def add_icons(self):
-        self.redisplay_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'redisplay-graph.png'))))
+        self.redisplay_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'redisplay-__setup_graph.png'))))

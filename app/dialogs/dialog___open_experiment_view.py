@@ -13,7 +13,6 @@ class OpenExperimentView(QDialog):
 
         self.show_experiment(name, mid)
 
-
     def show_experiment(self, name, mid):
         """Opens the experiment View"""
         self.new_window = ExperimentView(name, mid)

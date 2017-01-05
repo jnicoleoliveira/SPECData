@@ -157,7 +157,7 @@ class Ui_Form(object):
         self.redisplay_btn.setSizePolicy(sizePolicy)
         self.redisplay_btn.setMaximumSize(QtCore.QSize(100, 100))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("../../../resources/redisplay-graph.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("../../../resources/redisplay-__setup_graph.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.redisplay_btn.setIcon(icon1)
         self.redisplay_btn.setFlat(False)
         self.redisplay_btn.setObjectName(_fromUtf8("redisplay_btn"))

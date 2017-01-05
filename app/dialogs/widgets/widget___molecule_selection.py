@@ -23,9 +23,10 @@ class MoleculeSelectionWidget(QWidget):
         self.elements = {}
         self.size = 0
         self.selected = []
+
         self.show()
 
-        # Initialize Color Wheel
+        # Color Wheel
         self.colorWheel = GraphColorWheel()
         self.colorWheel.import_color_wheel(os.path.join(resources, 'graphing_colors'))
 
@@ -125,7 +126,7 @@ class MoleculeSelectionWidget(QWidget):
                 print "spacer " + str(item)
                 # no need to do extra stuff
             else:
-                print "layout " + str(item)
+                #print "layout " + str(item)
                 self.clearLayout(item.layout())
 
             # remove the item from layout
@@ -155,7 +156,6 @@ class MoleculeSelectionWidget(QWidget):
         print str(self.elements)
 
         return matches, colors
-
 
     def more_info(self, match, color):
         window = AssignmentWindow(match, color, self.experiment)
@@ -207,6 +207,23 @@ class MoleculeSelectionWidget(QWidget):
             if checkbox.isChecked() is True:
                 checkbox.click()
 
+    def add_rows(self, matches, colors):
+        for i in range(0, len(matches)):
+            self.add_row(matches[i], colors[i])
+
+    def get_matches(self):
+        matches = []
+        colors = []
+        for key, value in self.elements.iteritems():
+            matches.append(value.match)
+            colors.append(value.color)
+
+        return [matches, colors]
+
+    def set_matches(self, matches, colors):
+        self.select_all()
+        self.remove_selections()
+        self.add_rows(matches, colors)
 
 class GraphColorWheel:
 

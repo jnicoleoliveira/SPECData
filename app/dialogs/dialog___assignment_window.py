@@ -107,7 +107,7 @@ class AssignmentWindow(QDialog):
 
     def populate_table_widget(self):
         """
-        Populate table_widget with the following graph data:
+        Populate table_widget with the following __setup_graph data:
             Experiment PID, Frequency, Intensity with its associative
             match's PID, frequency, and intensity
         :return:
@@ -172,7 +172,7 @@ class AssignmentWindow(QDialog):
 
     def set_graph_options(self):
         """
-        Sets graph options of the Graph data object
+        Sets __setup_graph options of the Graph data object
         to the associated states of the checkboxes in the graph_options_widget
         Options:
             (1) Show Experiment's Full Spectrum
@@ -188,7 +188,7 @@ class AssignmentWindow(QDialog):
         color_experiment = self.graph_options_widget.color_experiment_chk.isChecked()
         y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
 
-        # Set Options in graph #
+        # Set Options in __setup_graph #
         self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
                                           y_to_experiment_intensities=y_to_experiment_intensities,
                                           color_experiment=color_experiment)

@@ -3,23 +3,23 @@
 
 import os
 import time
+from copy import deepcopy
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 
-from analysis import experiment
 from app.dialogs.frames.experiment_view.frame___experiment_view import Ui_MainWindow
 from app.dialogs.widgets.widget___experiment_info import ExperimentInfoWidget
 from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidget
 from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
 
-from ..time_machine import TimeMachine
+from analysis import experiment
 from config import resources
-from ..events import LoadingProgressScreen
-from ..experiment_analysis import MainGraph
+from app.time_machine import TimeMachine
+from app.events import LoadingProgressScreen
+from app.experiment_analysis import MainGraph
 
-from copy import deepcopy
 
 class ExperimentView(QMainWindow):
     """
@@ -30,11 +30,6 @@ class ExperimentView(QMainWindow):
     COLOR_PENDING = "#D4AC0D"
     COLOR_INVALID = "#A93226"
     COLOR_VALID = "#229954"
-
-    # User Options
-    USER_ACTIONS = ['PENDING_TO_ACCEPT', 'PENDING_TO_REJECT'
-                    'ACCEPT_TO_REJECT', 'ACCEPT_TO_PENDING',
-                    'REJECT_TO_ACCEPT', 'REJECT_TO_PENDING']
 
     def __init__(self, experiment_name, mid, parent=None):
         super(ExperimentView, self).__init__(parent)
@@ -99,11 +94,12 @@ class ExperimentView(QMainWindow):
         window.exec_()
 
     def go_to_main_menu(self):
-        #from dialog___main_menu import MainMenu
-        #window = MainMenu()
-        #self.close()
-        self.hide()
-        #window.exec_()
+        from dialog___main_menu import MainMenu
+        window = MainMenu()
+        self.close()
+        #self.hide()
+        window.show()
+        window.exec_()
         #self.close()
 
     ###############################################################################
@@ -342,10 +338,75 @@ class ExperimentView(QMainWindow):
         #print (rect.xy)
         print "picked x" + str(x)
 
+
+    ###############################################################################
+    # Time Machine Functions
+    ###############################################################################
+
+    def undo(self):
+        print "UNDOING!"
+        state = self.time_machine.undo()
+        self.__restore_state(state)
+
+    def redo(self):
+        print "REDO"
+        state = self.time_machine.redo()
+        self.__restore_state(state)
+
+    def __restore_state(self, state):
+        """
+        Restores the data from a given state object.
+        :param state:
+        :return:
+        """
+        if state is None:
+            return
+
+        ''' Selection Widgets '''
+        pending_data = state.pending_matches
+        accepted_data = state.accepted_matches
+        rejected_data = state.rejected_matches
+
+        self.selection_widget.set_matches(pending_data[0], pending_data[1])
+        self.invalidated_selection_widget.set_matches(rejected_data[0], rejected_data[1])
+        self.validated_selection_widget.set_matches(accepted_data[0], accepted_data[1])
+
+        ''' Experiment Data '''
+
+        experiment = state.experiment
+        self.experiment.validated_matches = deepcopy(experiment.validated_matches)
+        self.experiment.molecule_matches = deepcopy(experiment.molecule_matches)
+        self.experiment.experiment_peaks = deepcopy(experiment.experiment_peaks)
+
+        print "*****************"
+        print self.experiment.validated_matches
+        for m in self.experiment.get_sorted_molecule_matches():
+            print str(m.mid) + "    " + m.status
+        print "*****************"
+
+        #self.experiment.validated_matches = experiment_data.validated_matches
+
+    def __save_state(self):
+        """
+        Saves the current state by adding it to the TimeMachine.
+        :return:
+        """
+        state = State(self.experiment,
+                      self.selection_widget,
+                      self.validated_selection_widget,
+                      self.invalidated_selection_widget)
+        self.time_machine.add_state(state)
+
+    ###############################################################################
+    # Functionality
+    ###############################################################################
+    def save_analysis(self):
+        self.experiment.save_affirmed_matches()
+        print "[ANALYSIS SAVED]"
+
     ###############################################################################
     # Setup Functions
     ###############################################################################
-
     def __setup__(self, experiment_name, mid):
         """
         Start-up script, does the following behind a loading progress screen:
@@ -659,64 +720,6 @@ class ExperimentView(QMainWindow):
         export_cleaned_lines.triggered.connect(self.export_cleaned_lines)
 
     ###############################################################################
-    # Time Machine Functions
-    ###############################################################################
-
-    def undo(self):
-        print "UNDOING!"
-        state = self.time_machine.undo()
-        self.__restore_state(state)
-
-    def redo(self):
-        print "REDO"
-        state = self.time_machine.redo()
-        self.__restore_state(state)
-
-    def __restore_state(self, state):
-        """
-        Restores the data from a given state object.
-        :param state:
-        :return:
-        """
-        if state is None:
-            return
-
-        ''' Selection Widgets '''
-        pending_data = state.pending_matches
-        accepted_data = state.accepted_matches
-        rejected_data = state.rejected_matches
-
-        self.selection_widget.set_matches(pending_data[0], pending_data[1])
-        self.invalidated_selection_widget.set_matches(rejected_data[0], rejected_data[1])
-        self.validated_selection_widget.set_matches(accepted_data[0], accepted_data[1])
-
-        ''' Experiment Data '''
-
-        experiment = state.experiment
-        self.experiment.validated_matches = deepcopy(experiment.validated_matches)
-        self.experiment.molecule_matches = deepcopy(experiment.molecule_matches)
-        self.experiment.experiment_peaks = deepcopy(experiment.experiment_peaks)
-
-        print "*****************"
-        print self.experiment.validated_matches
-        for m in self.experiment.get_sorted_molecule_matches():
-            print str(m.mid) + "    " + m.status
-        print "*****************"
-
-        #self.experiment.validated_matches = experiment_data.validated_matches
-
-    def __save_state(self):
-        """
-        Saves the current state by adding it to the TimeMachine.
-        :return:
-        """
-        state = State(self.experiment,
-                      self.selection_widget,
-                      self.validated_selection_widget,
-                      self.invalidated_selection_widget)
-        self.time_machine.add_state(state)
-
-    ###############################################################################
     # Stub Methods
     ###############################################################################
 
@@ -733,9 +736,7 @@ class ExperimentView(QMainWindow):
     def remove_from_analysis(self):
         print "Clicked 'remove button'"
 
-    def save_analysis(self):
-        print "SAVE BUTTON CLICKED"
-        self.experiment.save_affirmed_matches()
+
 
 class State:
     """

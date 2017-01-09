@@ -69,6 +69,7 @@ class EditEntry(QDialog):
         if action is True:
             for i in range(0, len(values)):
                 if self.original_data[i] != values[i]:
+                    print self.labels[i]
                     molecules_table.update(conn, self.mid, self.labels[i], values[i])
 
             if self.ui.composition_txt.isEnabled():

@@ -56,7 +56,6 @@ class Experiment:
         validated_assignments = affirmed_assignments.get_validated()
         invalidated_assignments = affirmed_assignments.get_invalidated()
 
-
     ###############################################################################
     # Analysis Functions
     ###############################################################################
@@ -381,12 +380,14 @@ class Experiment:
             rows = self.get_candidates(threshold)   # Get candidates. Tuple: (name, mid, pid, difference_freq)
 
             self.n = len(rows)                      # Set number of matches
-            n_triangle = (self.n * (self.n+1))/2    # Triangular number of n
+            #n_triangle = (self.n * (self.n+1))/2    # Triangular number of n
             i = 0                                   # ith element
 
             for row in rows:
                 #p = float(self.n-i)/n_triangle      # Determine probability of the match, p
-                p = (threshold-float(row[3]))/threshold     # Determine probability by range (difference: =0->100% to =threshold->0%)
+
+                # Determine probability by range (difference: =0->100% to =threshold->0%)
+                p = (threshold-float(row[3]))/threshold
                 p *= (self.intensity/self.intensity_to_avg)
                 i +=1
                 match = Match(row[0], row[1], row[2], float(p), self.pid, self.Rst)     # Create Match object
@@ -442,14 +443,9 @@ class Experiment:
 
             self.status = "pending"
 
-        def add_match(self, match):
-            """
-
-            :param match:
-            :return:
-            """
-            self.matches.append(match)
-            self.m += 1
+        ###############################################################################
+        # Status Functions
+        ###############################################################################
 
         def set_status_as_validated(self):
             self.status = "validated"
@@ -483,6 +479,10 @@ class Experiment:
             if self.status is "validated":
                 return True
             return False
+
+        ###############################################################################
+        # Analysis Functions
+        ###############################################################################
 
         def get_probability(self):
             """
@@ -527,6 +527,15 @@ class Experiment:
             self.p /= N_triangle    # Divide by n-triangle
             #self.p /= self.m
             #self.p /= m_sum
+
+        def add_match(self, match):
+            """
+
+            :param match:
+            :return:
+            """
+            self.matches.append(match)
+            self.m += 1
 
         def get_matched_experiment_pids(self):
             pids = []

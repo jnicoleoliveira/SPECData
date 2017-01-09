@@ -61,5 +61,5 @@ class TimeMachine:
         return self.size > 1
 
     def can_redo(self):
-        return len(self.redo_stack) != 0
+        return self.redo_stack is not None and len(self.redo_stack) != 0
 

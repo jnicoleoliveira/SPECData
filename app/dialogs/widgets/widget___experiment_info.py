@@ -35,7 +35,7 @@ class ExperimentInfoWidget(QWidget):
         peaks_unassigned = total_peaks - peaks_assigned
         molecules_found = len(experiment.molecule_matches)
         composition = info_table.get_composition(conn, mid)
-        type = info_table.get_type(conn, mid)
+        info = info_table.get_notes(conn, mid)
 
 
         # Set labels to data
@@ -45,7 +45,8 @@ class ExperimentInfoWidget(QWidget):
         self.ui.peaks_assigned_val.setText(str(peaks_assigned))
         self.ui.peaks_unassigned_val.setText(str(peaks_unassigned))
         self.ui.molecules_found_val.setText(str(molecules_found))
-        self.ui.info_val_lbl.setText(type)
+        self.ui.info_val_lbl.setText(info)
+
         # Formatting
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 

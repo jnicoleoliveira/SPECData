@@ -134,8 +134,8 @@ def update(conn, mid, row, value):
     if info_exists(conn, mid) is False:
         print "[ ERROR: KnownInfo entry does not exist. Cancelling action! ]"
         return False
-
-    conn.execute("UPDATE ExperimentInfo SET {r}={v} WHERE mid={m}".format(r=row, v=value, m=mid))
+    print row
+    conn.execute("UPDATE ExperimentInfo SET {r}={v} WHERE mid={m}".format(r=row, v=str(value), m=mid))
     conn.commit()
 
     return True

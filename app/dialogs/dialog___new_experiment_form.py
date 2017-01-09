@@ -11,7 +11,7 @@ from app import error as error
 from app.dialogs.frames.new_experiment.frame___new_experiment_form import Ui_Dialog    # Import frame
 from app.events import display_error_message
 from dialog___composition_selector import CompositionSelector
-
+from app.events import LoadingProgressScreen
 
 class NewExperimentForm(QDialog):
 
@@ -171,16 +171,40 @@ class NewExperimentForm(QDialog):
         import tables.peaks_table as peaks_table
         import tables.experimentinfo_table as info_table
         from config import conn, db_dir
+        import time
 
+        ''' Start Loading Screen '''
+        loading_screen = LoadingProgressScreen()
+        loading_screen.start()
+
+        ''' Add Entry '''
+        loading_screen.set_caption('Adding Experiment Entry...')
         mid = molecules_table.new_molecule_entry(conn, str(self.experiment_name), "experiment")
+
+        ''' Import File '''
+        if self.file_type is "peaks":
+            loading_screen.set_caption('Collecting data points...')
+        else:
+            loading_screen.set_caption('Collecting data, and finding peaks...')
+        loading_screen.next_value(40)
+
         peaks_table.import_file(conn, str(self.file_path), mid)
         info_table.new_entry(conn, str(mid), str(self.type), str(self.units),
                              str(self.composition), str(self.notes))
+
         # If there is a full spectrum file, copy to SPECdata/data/experiments/mid.sp
         if self.file_type is not "peaks":
+            loading_screen.next_value(80)
+            loading_screen.set_caption('Saving full spectrum...')
+
             from shutil import copyfile
             experiment_file_path = os.path.join(db_dir, "experiments", (str(mid) + ".sp"))
             copyfile(str(self.file_path), experiment_file_path)
+
+        loading_screen.next_value(100)
+
+        '''End Loading Screen'''
+        loading_screen.end()
 
         return mid
 

@@ -352,10 +352,11 @@ def update(conn, mid, row, value):
     elif row is 'category':
         update_category(conn, mid, value)
     else:
-        if get_category(conn, mid) is 'experiment':
+
+        if get_category(conn, mid) == 'experiment':
             if row is 'last_updated':
                 from experimentinfo_table import update_last_updated
-                update_last_updated(conn,mid)
+                update_last_updated(conn, mid)
             else:
                 from experimentinfo_table import update as u
                 u(conn, mid, row, value)

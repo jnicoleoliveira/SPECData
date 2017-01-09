@@ -62,6 +62,10 @@ class LoadExperiment(QDialog):
         window.exec_()
 
     def load_experiment(self, mid, name):
-
-        from dialog___experiment_view import ExperimentView
-        self.new_window = ExperimentView(name, mid)
+        from dialog___open_experiment_view import OpenExperimentView
+        self.close()
+        window = OpenExperimentView(name, mid)
+        window.show()
+        window.exec_()
+        #from dialog___experiment_view import ExperimentView
+        #self.new_window = ExperimentView(name, mid)

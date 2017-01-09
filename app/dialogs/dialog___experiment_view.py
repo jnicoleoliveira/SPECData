@@ -558,13 +558,13 @@ class ExperimentView(QMainWindow):
 
         pix_map = QPixmap(os.path.join(resources, 'undo-disabled.png'))
         action_bar.addAction(QIcon(pix_map), "Undo (Ctrl+Z)", self.undo)
-        shortcut = QShortcut(QKeySequence(Qt.CTRL, Qt.Key_Z), self)
-        undo.setShortcut(shortcut)
-        undo.setShortcutContext(Qt.WindowShortcut)
-        self.connect(shortcut, SIGNAL('activated()'), self.undo)
+        #shortcut = QShortcut(QKeySequence(Qt.CTRL, Qt.Key_Z), self)
+        #undo.setShortcut(shortcut)
+        #undo.setShortcutContext(Qt.WindowShortcut)
+        #self.connect(shortcut, SIGNAL('activated()'), self.undo)
         # Short cut
-        #self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_Z), self),
-        #             SIGNAL('activated()'), self.undo)
+        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_Z), self),
+                     SIGNAL('activated()'), self.undo)
         ''' Redo '''
         # -- Toolbar - #
         pix_map = QPixmap(os.path.join(resources, 'redo.png'))

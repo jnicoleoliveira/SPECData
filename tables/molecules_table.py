@@ -220,6 +220,10 @@ def get_in_string(array):
     :param array: array of elements
     :return:
     """
+
+    if array is None or len(array) is 0:
+        return None
+
     string = "("
     for i in range(0, len(array)-1):
         string += "'" + str(array[i]) + "', "

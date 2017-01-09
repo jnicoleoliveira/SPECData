@@ -1,5 +1,6 @@
-#import temp.get.get_peaks as peaks
 import tables.peaks_table as peaks
+import tables.assignments_table as assignments
+import tables.affirmedassignment_table as affirmed_assignments
 from config import conn
 
 
@@ -24,8 +25,11 @@ class Experiment:
         self.validated_matches = {}
         self.molecule_matches = {}   # Dict of Molecule Matches (obj: MoleculeMatch)
         self.possible_matches = {}
-        self.__setup__()           # Populate Peaks list
+        self.__setup__()             # Populate Peaks list
 
+    ###############################################################################
+    # Setup Functions
+    ###############################################################################
     def __setup__(self):
 
         # get_pid_list function already returns order by descending intensity
@@ -46,98 +50,16 @@ class Experiment:
             Rst += 1
 
         self.N = Rst   # Store N, the number of Peaks
-
-
         # Remove Peaks where intensity is less than the average
 
-    def is_validated_molecule(self, mid):
-        """ Determines if a molecule is validated"""
-        return mid in self.validated_matches
+    def __load_saved_data(self):
+        validated_assignments = affirmed_assignments.get_validated()
+        invalidated_assignments = affirmed_assignments.get_invalidated()
 
-    def get_experiment_frequencies_intensities_list(self):
-        return peaks.get_frequency_intensity_list(conn,self.mid)
 
-    def get_unvalidated_experiment_intensities_list(self):
-        """x
-        Gets the frequencies and intensities of ONLY invalidated
-        experimental peaks.
-        :return:
-        """
-        frequencies = []
-        intensities = []
-
-        for p in self.experiment_peaks:
-            if not p.is_validated():
-                f, i = peaks.get_frequency_intensity(conn, p.pid)
-                frequencies.append(f)
-                intensities.append(i)
-
-        return frequencies, intensities
-
-    def get_validated_experiment_intensities_list(self):
-        """x
-        Gets the frequencies and intensities of ONLY validated
-        experimental peaks.
-        :return:
-        """
-        frequencies = []
-        intensities = []
-
-        for p in self.experiment_peaks():
-            if p.is_validated():
-                f, i = peaks.get_frequency_intensity(conn, p.pid)
-                frequencies.append(f)
-                intensities.append(i)
-
-        return frequencies, intensities
-
-    def get_cleaned_experiment_intensities_list(self, validated_mids):
-        """
-        Returns a list of frequencies and intensities of
-        lines that were assigned by the molecules with the
-        given validated_mids. If a molecule given is not validated,
-        the matches will not be cleared.
-        :param validated_mids: List of validated molecule mids
-        :return:
-        """
-        minus_pids = []     # List of pids to be extracted
-        frequencies = []
-        intensities = []
-
-        ''' Get List of pids associated with validated_mids '''
-        for mid in validated_mids:
-            match = self.molecule_matches[mid]
-            if match.is_validated():
-                minus_pids.extend(match.get_matched_experiment_pids())
-
-        ''' Get list of Frequencies/Intensites - peaks in minus_pids '''
-        for p in self.experiment_peaks:
-            if p.pid not in minus_pids:
-                frequencies.append(p.frequency)
-                intensities.append(p.intensity)
-        return frequencies, intensities
-
-    def get_assigned_peaks_count(self):
-        count = 0
-        for key, value in self.molecule_matches.iteritems():
-            count += value.m
-
-        return count
-
-    def get_assigned_names(self):
-        assigned_names = []
-        for key, value in self.molecule_matches.iteritems():
-            assigned_names.append(value.name)
-
-        return assigned_names
-
-    def get_assigned_mids(self):
-        assigned_mids = []
-        for key, value in self.molecule_matches.iteritems():
-            assigned_mids.append(value.mid)
-
-        return assigned_mids
-
+    ###############################################################################
+    # Analysis Functions
+    ###############################################################################
     def get_assigned_molecules(self):
         """
         Gets Matches/Assignments for peaks
@@ -183,6 +105,152 @@ class Experiment:
             value.M = len(molecule_matches)
             value.get_probability()
 
+    ###############################################################################
+    # Status Functions
+    ###############################################################################
+    def validate_a_match(self, mid):
+        #if mid is not None:
+        self.molecule_matches[mid].set_status_as_validated()
+
+        self.validated_matches[mid] = self.molecule_matches[mid]
+        #    del self.molecule_matches[mid]
+
+        pids = []
+        for m in self.molecule_matches[mid].matches:
+            pids.append(m.exp_pid)
+
+        for peak in self.experiment_peaks:
+            if peak.pid in pids:
+                peak.set_status_as_validated()
+
+    def invalidate_a_match(self, mid):
+        #if mid is not None:
+        self.molecule_matches[mid].set_status_as_invalidated()
+
+        #self.invalidated_matches[mid] = self.molecule_matches[mid]
+        #    del self.molecule_matches[mid]
+
+        pids = []
+        for m in self.molecule_matches[mid].matches:
+            pids.append(m.exp_pid)
+
+        for peak in self.experiment_peaks:
+            if peak.pid in pids:
+                # reset experiment peak to be pending, if previously validated
+                peak.set_status_as_pending()
+
+    def save_affirmed_matches(self):
+        """
+        Saves all verified matches (rejected, or accepted)
+        :return:
+        """
+
+        # delete all currently associated
+        affirmed_assignments.remove_all(conn, self.mid)
+        assignments.remove_all(conn, self.mid)
+
+        # add current association
+        for key, value in self.molecule_matches.iteritems():
+
+            if value.is_validated() or value.is_invalidated():
+                for m in value.matches:
+                    exp_pid = m.exp_pid
+                    assigned_pid = m.pid
+                    if not assignments.assignment_exists(conn, exp_pid, assigned_pid):
+                        aid = assignments.new_assignment_entry(conn, exp_pid, assigned_pid)
+                        affirmed_assignments.new_entry(conn, aid, value.status)
+
+    ###############################################################################
+    # Getter Functions
+    ###############################################################################
+    def get_experiment_frequencies_intensities_list(self):
+        return peaks.get_frequency_intensity_list(conn, self.mid)
+
+    def get_unvalidated_experiment_intensities_list(self):
+        """x
+        Gets the frequencies and intensities of ONLY invalidated
+        experimental peaks.
+        :return:
+        """
+        frequencies = []
+        intensities = []
+
+        for p in self.experiment_peaks:
+            if not p.is_validated():
+                f, i = peaks.get_frequency_intensity(conn, p.pid)
+                frequencies.append(f)
+                intensities.append(i)
+
+        return frequencies, intensities
+
+    def get_validated_experiment_intensities_list(self):
+        """x
+        Gets the frequencies and intensities of ONLY validated
+        experimental peaks.
+        :return:
+        """
+        frequencies = []
+        intensities = []
+
+        for p in self.experiment_peaks():
+            if p.is_validated():
+                f, i = peaks.get_frequency_intensity(conn, p.pid)
+                frequencies.append(f)
+                intensities.append(i)
+
+        return frequencies, intensities
+
+    def get_cleaned_experiment_intensities_list(self, validated_mids):
+        """
+        Returns a list of frequencies and intensities of
+        lines that were assigned by the molecules with the
+        given validated_mids. If a molecule given is not validated,
+        the matches will not be cleared.
+        :param validated_mids: List of validated molecule mids
+        :return:
+        """
+        minus_pids = []  # List of pids to be extracted
+        frequencies = []
+        intensities = []
+
+        ''' Get List of pids associated with validated_mids '''
+        for mid in validated_mids:
+            match = self.molecule_matches[mid]
+            if match.is_validated():
+                minus_pids.extend(match.get_matched_experiment_pids())
+
+        ''' Get list of Frequencies/Intensites - peaks in minus_pids '''
+        for p in self.experiment_peaks:
+            if p.pid not in minus_pids:
+                frequencies.append(p.frequency)
+                intensities.append(p.intensity)
+        return frequencies, intensities
+
+    def get_assigned_peaks_count(self):
+        count = 0
+        for key, value in self.molecule_matches.iteritems():
+            count += value.m
+
+        return count
+
+    def get_assigned_names(self):
+        assigned_names = []
+        for key, value in self.molecule_matches.iteritems():
+            assigned_names.append(value.name)
+
+        return assigned_names
+
+    def get_assigned_mids(self):
+        assigned_mids = []
+        for key, value in self.molecule_matches.iteritems():
+            assigned_mids.append(value.mid)
+
+        return assigned_mids
+
+    def is_validated_molecule(self, mid):
+        """ Determines if a molecule is validated"""
+        return mid in self.validated_matches
+
     def get_sorted_molecule_matches(self):
         import operator
         # Get Tuples
@@ -225,37 +293,48 @@ class Experiment:
             space_length = buff - len(name)                           # Get length of space
             print name + (' ' * space_length) + prob + "   " + ratio  # Print Line
 
-    def validate_a_match(self, mid):
-        #if mid is not None:
-        self.molecule_matches[mid].set_status_as_validated()
-
-        self.validated_matches[mid] = self.molecule_matches[mid]
-        #    del self.molecule_matches[mid]
-
-        pids = []
-        for m in self.molecule_matches[mid].matches:
-            pids.append(m.exp_pid)
-
-        for peak in self.experiment_peaks:
-            if peak.pid in pids:
-                peak.set_status_as_validated()
-
+    ###############################################################################
+    #
+    # Internal Classes
+    #
+    ###############################################################################
     class Peak:
 
         def __init__(self, pid, Rst):
+            """
+
+            :param pid:
+            :param Rst:
+            """
+            ''' Analysis '''
             self.pid = pid
             self.Rst = Rst      # Ranking of strength compared to all peaks
             self.n = 0          # Total number of assignments
             self.matches = []   # Matches
+
+            ''' Peak Attributes '''
             self.frequency = 0
             self.intensity = 0
             self.intensity_to_avg = None
+
+            ''' Validation '''
             self.status = "pending"
+            self.validated_match = None
+
+            ''' Get Data '''
             self.__get_frequency_and_intensity()    # Get Frequency and Intensity of the peak
+
+        ###############################################################################
+        # Status Functions
+        ###############################################################################
 
         def set_status_as_validated(self):
             """ Sets status a validated"""
             self.status = "validated"
+
+        def set_status_as_pending(self):
+            """ Sets status a pending"""
+            self.status = "pending"
 
         def is_validated(self):
             """
@@ -275,10 +354,18 @@ class Experiment:
                 return True
             return False
 
+        ###############################################################################
+        # Setup Functions
+        ###############################################################################
+
         def __get_frequency_and_intensity(self):
             self.frequency = peaks.get_frequency(conn, self.pid)
             self.intensity = peaks.get_intensity(conn, self.pid)
             self.intensity_to_avg = self.intensity/Experiment.exp_average_intensity
+
+        ###############################################################################
+        # Analysis Functions
+        ###############################################################################
 
         def get_matches(self):
             """
@@ -367,12 +454,24 @@ class Experiment:
         def set_status_as_validated(self):
             self.status = "validated"
 
+        def set_status_as_invalidated(self):
+            self.status = "invalidated"
+
         def is_validated(self):
             """
             Determines if status is validated
             :return: True if status is validated, Otherwise: False
             """
             if self.status is "validated":
+                return True
+            return False
+
+        def is_invalidated(self):
+            """
+            Determines if status is invalidated
+            :return: True if status is invalidated, Otherwise: False
+            """
+            if self.status is "invalidated":
                 return True
             return False
 
@@ -435,6 +534,7 @@ class Experiment:
                 pids.append(m.exp_pid)
 
             return pids
+
 
 class Match:
 

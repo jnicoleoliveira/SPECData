@@ -118,11 +118,22 @@ class ExperimentView(QMainWindow):
         self.selection_widget.deselect_all()
 
     def invalidate_selections(self):
+
+        # -- Get Selected Mids -- #
+        selected_mids = self.selection_widget.get_selected_mids()
+
+        # -- Validate Selections in Experiment -- #
+        for mid in selected_mids:
+            self.experiment.invalidate_a_match(mid)
+
         # Remove selected rows, and get those selections #
         matches, colors = self.selection_widget.remove_selections()
 
         for i in range(0, len(matches)):
             self.invalidated_selection_widget.add_row(matches[i], colors[i])
+
+        # Repopulate table widget to show updated validations
+        self.populate_table_widget()
 
         self.__save_state()
 
@@ -225,8 +236,8 @@ class ExperimentView(QMainWindow):
             name_item = QTableWidgetItem(name)
             status_item = QTableWidgetItem(status)
 
+            # Get status color, default pending status is black
             color = QColor("black")
-            # Get status color
             if status is "invalid":
                 color = QColor(self.COLOR_INVALID)
             elif status is "valid":
@@ -388,7 +399,6 @@ class ExperimentView(QMainWindow):
 
         '''End Loading Screen'''
         self.loading_screen.end()
-
 
     def __setup_graph(self):
         # Get Info for Experiment __setup_graph
@@ -696,6 +706,10 @@ class ExperimentView(QMainWindow):
         #self.experiment.validated_matches = experiment_data.validated_matches
 
     def __save_state(self):
+        """
+        Saves the current state by adding it to the TimeMachine.
+        :return:
+        """
         state = State(self.experiment,
                       self.selection_widget,
                       self.validated_selection_widget,
@@ -721,12 +735,16 @@ class ExperimentView(QMainWindow):
 
     def save_analysis(self):
         print "SAVE BUTTON CLICKED"
-
-
-
+        self.experiment.save_affirmed_matches()
 
 class State:
+    """
+    Represents a single state of the ExperimentView,
+    state changes based on user actions.
 
+    Can be used with TimeMachine, to keep a history of
+    ExperimentView states.
+    """
     def __init__(self, experiment, pending_widget, accepted_widget, rejected_widget):
         self.experiment = deepcopy(experiment)
         self.pending_matches = pending_widget.get_matches()

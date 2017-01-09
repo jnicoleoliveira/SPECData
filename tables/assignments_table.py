@@ -25,21 +25,44 @@ from molecules_table import mid_exists
 # Public Functions:
 #       * aid_exists(conn, aid)
 #       * get_assigned_mids(conn, mid)
+#       * assignment_exists(conn, pid, assigned_pid)
 #       * get_assignment_count(conn, mid, assigned_mid=None)
 #       * get_assignment_tuples_list(conn, mid)
 #       * has_assignments(conn, mid)
 ###############################################################################
+
 
 def aid_exists(conn, aid):
     """
     Determines if assignments entry is in the database (based on aid)
     :param conn: Sqlite connection
     :param cursor: Connection cursor
-    :param mid: Assignments entry ID (aid)
+    :param aid: Assignments entry ID (aid)
     :return: True if assignment exists. False if assignment does not exist.
     """
     # Select row with mid
     cursor = conn.execute("SELECT * FROM assignments WHERE aid=?", (aid,))
+    row = cursor.fetchone()
+
+    if row is None:
+        # Assignments entry does not exist.
+        return False
+
+    # Assignments entry exists
+    return True
+
+
+def assignment_exists(conn, pid, assigned_pid):
+    """
+    Determines if assignments entry is in the database (based on assignment info)
+    :param conn: Sqlite connection
+    :param pid: Assignments entry ID (aid)
+    :param assigned_pid: Connection cursor
+    :return: True if assignment exists. False if assignment does not exist.
+    """
+    # Select row with mid
+    cursor = conn.execute("SELECT * FROM assignments WHERE "
+                          "pid=? AND assigned_pid=?", (pid, assigned_pid))
     row = cursor.fetchone()
 
     if row is None:
@@ -110,6 +133,20 @@ def get_assignment_tuples_list(conn, mid):
     return tuples
 
 
+def get_assignment_aid_list(conn, mid):
+    cursor = conn.execute("SELECT A.aid "
+                          "FROM assignments as A JOIN peaks as P "
+                          "ON P.pid=A.pid WHERE P.mid=?;", (mid,))
+
+    rows = cursor.fetchall()
+
+    aids = []
+    for row in rows:
+        aids.append(row[0])
+
+    return aids
+
+
 def has_assignments(conn, mid):
     """
     Determines if a molecule has assignments
@@ -147,11 +184,18 @@ def new_assignment_entry(conn, pid, assigned_pid):
     :param conn: SQLite database connection
     :param pid: Peak ID
     :param assigned_pid: Assigned Peak ID
-    :return:
+    :return: aid of new assignment entry
     """
-    cursor = conn.execute("INSERT INTO assignments(pid, assigned_pid) VALUES (?,?)", (pid, assigned_pid))
+    conn.execute("INSERT INTO assignments(pid, assigned_pid) VALUES (?,?)", (pid, assigned_pid))
+
+    # Get the new entry's molecule id (mid)
+    cursor = conn.execute('SELECT max(aid) FROM assignments')
+    aid = cursor.fetchone()[0]
+
+    # Commit Changes
     conn.commit()
 
+    return aid
 ##############################################################################
 # Remove Assignment Table Entry
 # -----------------------------------------------------------------------------

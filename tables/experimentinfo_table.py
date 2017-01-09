@@ -215,6 +215,7 @@ def update_notes(conn, mid, notes):
     conn.commit()
     return True
 
+
 def update_last_updated(conn, mid):
     if info_exists(conn, mid) is False:
         print "[ ERROR: KnownInfo entry does not exist. Cancelling action! ]"
@@ -223,7 +224,6 @@ def update_last_updated(conn, mid):
     conn.execute("UPDATE KnownInfo SET last_updated=(CURRENT_TIMESTAMP);")
     conn.commit()
     return True
-
 
 
 ###############################################################################
@@ -270,7 +270,6 @@ def new_entry(conn, mid, type, units, composition, notes):
     conn.commit()
 
     return eid
-
 
 ##############################################################################
 # Remove ExperimentInfo Table Entry

@@ -421,6 +421,7 @@ def import_file(conn, filepath, mid):
 
     return True
 
+
 def __import_dptfile(conn, filepath, mid):
     """
     Inheritently Private Function, determines peaks of .sp File and imports to database
@@ -440,9 +441,11 @@ def __import_dptfile(conn, filepath, mid):
             frequencies.append(float(point[0]))   # get frequency
             intensities.append(float(point[1]))   # get actual intensity (logx ^ x)
 
+    print "[Data Points collected: " + str(len(frequencies)) + "]"
     # Determine Peaks
     frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
 
+    print "[Peaks found: " + str(len(frequencies)) + "]"
     # Store peaks into file
     for i in range(0, len(frequencies)):
         conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, frequencies[i], intensities[i]))   # insert into peak table
@@ -451,6 +454,7 @@ def __import_dptfile(conn, filepath, mid):
     conn.commit()
 
     print "[ Added entry peaks ] "
+
 
 def __import_txtfile(conn, filepath, mid):
     """

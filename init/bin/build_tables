@@ -20,6 +20,12 @@ CREATE TABLE assignments(
   FOREIGN KEY(assigned_pid) REFERENCES peaks(pid)
 );
 
+CREATE TABLE AffirmedAssignments(
+    fid INTEGER PRIMARY KEY,
+    aid INTEGER,
+    status VARCHAR(10),
+    FOREIGN KEY(aid) REFERENCES assignments(aid)
+);
 
 /* Info Tables correspond to 3 categories of molecules,
  * "Known, Artifact, or Experiment" */

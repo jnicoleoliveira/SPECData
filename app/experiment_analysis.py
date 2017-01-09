@@ -164,9 +164,15 @@ class MainGraph:
             self.full_spectrum_frequencies = []
             with open(file_path) as f:
                 for line in f:
-                    point = str.split(line.strip())
-                    self.full_spectrum_frequencies.append(float(point[0]))
-                    self.full_spectrum_intensities.append(float(point[1]))
+                    try:
+                        line2 = line + ""
+                        point = str.split(line2.strip())
+                        self.full_spectrum_frequencies.append(float(point[0]))
+                        self.full_spectrum_intensities.append(float(point[1]))
+                    except ValueError:
+                        point = line.split(",")
+                        self.full_spectrum_frequencies.append(float(point[0]))  # get frequency
+                        self.full_spectrum_intensities.append(float(point[1]))  # get actual intensity (logx ^ x)
 
         self.subplot_1.plot(self.full_spectrum_frequencies, self.full_spectrum_intensities, color=color)
 
@@ -211,12 +217,12 @@ class MainGraph:
                                                      left = 0.05,
                                                      right = 0.97,
                                                      hspace=0.35,)
-
-        if self.last_xlim is not None or self.last_ylim is not None:
-            self.subplot_1.set_xlim(self.last_xlim)
-            self.subplot_1.set_ylim(self.last_ylim)
-            self.subplot_2.set_xlim(self.last_xlim)
-            self.subplot_2.set_ylim(self.last_ylim)
+        # save last xlim
+        #if self.last_xlim is not None or self.last_ylim is not None:
+        #    self.subplot_1.set_xlim(self.last_xlim)
+        #    self.subplot_1.set_ylim(self.last_ylim)
+        #    self.subplot_2.set_xlim(self.last_xlim)
+        #    self.subplot_2.set_ylim(self.last_ylim)
         #else:
         #    NavigationToolbar2GTK.push_current()
 

@@ -546,31 +546,25 @@ class ExperimentView(QMainWindow):
         pix_map = QPixmap(os.path.join(resources, 'save-button.png'))
         action_bar.addAction(QIcon(pix_map), "Save Analysis (Ctrl+S)", self.save_analysis)
         # Short cut
-        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_S), self),
+        self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.Key_S), self),
                      SIGNAL('activated()'), self.save_analysis)
 
         action_bar.addSeparator()
         ##############################################
         ''' Undo '''
         # -- Toolbar - #
-        undo = self.ui.actionUndo
-        undo.triggered.connect(self.undo)
-
         pix_map = QPixmap(os.path.join(resources, 'undo-disabled.png'))
         action_bar.addAction(QIcon(pix_map), "Undo (Ctrl+Z)", self.undo)
-        #shortcut = QShortcut(QKeySequence(Qt.CTRL, Qt.Key_Z), self)
-        #undo.setShortcut(shortcut)
-        #undo.setShortcutContext(Qt.WindowShortcut)
-        #self.connect(shortcut, SIGNAL('activated()'), self.undo)
+
         # Short cut
-        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_Z), self),
+        self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.Key_Z), self),
                      SIGNAL('activated()'), self.undo)
         ''' Redo '''
         # -- Toolbar - #
         pix_map = QPixmap(os.path.join(resources, 'redo.png'))
-        action_bar.addAction(QIcon(pix_map), "Redo (Ctrl+Alt+Y)", self.redo)
+        action_bar.addAction(QIcon(pix_map), "Redo (Ctrl+Shift+Z)", self.redo)
         # Short cut
-        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.ALT, Qt.Key_Y), self),
+        self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Z), self),
                      SIGNAL('activated()'), self.redo)
 
         action_bar.addSeparator()
@@ -588,7 +582,7 @@ class ExperimentView(QMainWindow):
         pix_map = QPixmap(os.path.join(resources, 'select-all.png'))
         action_bar.addAction(QIcon(pix_map), "Select All (Ctrl+A)", self.select_all)
         # Short cut
-        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_A), self),
+        self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.Key_A), self),
                      SIGNAL('activated()'), self.select_all)
 
         ''' Deselect All '''
@@ -596,7 +590,7 @@ class ExperimentView(QMainWindow):
         pix_map = QPixmap(os.path.join(resources, 'deselect-all.png'))
         action_bar.addAction(QIcon(pix_map), "Deselect All (Ctrl+D)", self.deselect_all)
         # Short cut
-        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.Key_D), self),
+        self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.Key_D), self),
                      SIGNAL('activated()'), self.deselect_all)
 
         ''' Show Validations '''
@@ -647,7 +641,7 @@ class ExperimentView(QMainWindow):
         pix_map = QPixmap(os.path.join(resources, 'settings.png'))
         action_bar.addAction(QIcon(pix_map), "Settings (Ctrl+Alt+S)", self.settings)
         # Short cut
-        self.connect(QShortcut(QKeySequence(Qt.CTRL, Qt.ALT, Qt.Key_S), self),
+        self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.ALT + Qt.Key_S), self),
                      SIGNAL('activated()'), self.settings)
 
         ''' Export Write Up'''

@@ -20,6 +20,7 @@ class Experiment:
         self.match_threshold = match_threshold
         self.N = 0                   # Total Number of peak lines
         self.experiment_peaks = []   # List of peaks    (obj: Peak)
+        self.is_saved = False
 
         # Match info
         self.validated_matches = {}
@@ -52,9 +53,10 @@ class Experiment:
         self.N = Rst   # Store N, the number of Peaks
         # Remove Peaks where intensity is less than the average
 
+
     def __load_saved_data(self):
         validated_assignments = affirmed_assignments.get_validated()
-        invalidated_assignments = affirmed_assignments.get_invalidated()
+        invalidated_assignments = affirmed_ass
 
     ###############################################################################
     # Analysis Functions
@@ -66,7 +68,11 @@ class Experiment:
         :return:
         """
         if not self.experiment_peaks:
+            print "[ No peaks in experiment found ]"
             return  # NEED TO THROW ERROR HERE
+
+        if self.is_saved:
+            self.__load_saved_data()
 
         molecule_matches = self.molecule_matches
 
@@ -385,12 +391,15 @@ class Experiment:
 
             for row in rows:
                 #p = float(self.n-i)/n_triangle      # Determine probability of the match, p
-
+                name = row[0]
+                mid = row[1]
+                pid = row[2]
+                distance = row[3]
                 # Determine probability by range (difference: =0->100% to =threshold->0%)
-                p = (threshold-float(row[3]))/threshold
+                p = (threshold-float(distance))/threshold
                 p *= (self.intensity/self.intensity_to_avg)
                 i +=1
-                match = Match(row[0], row[1], row[2], float(p), self.pid, self.Rst)     # Create Match object
+                match = Match(name, mid, pid, float(p), self.pid, self.Rst)     # Create Match object
                 self.matches.append(match)                                              # Add Match to matches
 
             return self.matches

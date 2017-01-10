@@ -15,7 +15,8 @@ from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidg
 from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
 
 from analysis import experiment
-from config import resources
+from config import *
+import images
 from app.time_machine import TimeMachine
 from app.events import LoadingProgressScreen
 from app.experiment_analysis import MainGraph
@@ -67,6 +68,8 @@ class ExperimentView(QMainWindow):
 
         ''' Undo/Redo (Time Machine) '''
         self.time_machine = None
+        self.undo_action = None     # action_bar undo button
+        self.redo_action = None     # action_bar redo button
 
         ''' Menu Bar '''
         self.action_show_validations = None
@@ -348,10 +351,24 @@ class ExperimentView(QMainWindow):
         state = self.time_machine.undo()
         self.__restore_state(state)
 
+        self.redo_action.setIcon(QIcon(images.REDO))
+        self.redo_action.setEnabled(True)
+
+        if self.time_machine.can_undo is False:
+            self.undo_action.setEnabled(False)
+            self.undo_action.setIcon(QIcon(images.UNDO_DISABLED))
+        else:
+            self.undo_action.setEnabled(True)
+            self.undo_action.setIcon(QIcon(images.UNDO))
+
     def redo(self):
-        print "REDO"
+        print "REDO!"
         state = self.time_machine.redo()
         self.__restore_state(state)
+
+        if self.time_machine.can_redo() is False:
+            self.redo_action.setIcon(QIcon(images.REDO_DISABLED))
+            self.redo_action.setEnabled(False)
 
     def __restore_state(self, state):
         """
@@ -624,16 +641,23 @@ class ExperimentView(QMainWindow):
         ##############################################
         ''' Undo '''
         # -- Toolbar - #
-        pix_map = QPixmap(os.path.join(resources, 'undo-disabled.png'))
-        action_bar.addAction(QIcon(pix_map), "Undo (Ctrl+Z)", self.undo)
+        action = QAction("Undo (Ctrl+Z)", self)
+        action.setIcon(QIcon(os.path.join(resources, 'undo-disabled.png')))
+        action.triggered.connect(self.undo)
+        action_bar.addAction(action)
+        self.undo_action = action
 
         # Short cut
         self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.Key_Z), self),
                      SIGNAL('activated()'), self.undo)
         ''' Redo '''
         # -- Toolbar - #
-        pix_map = QPixmap(os.path.join(resources, 'redo.png'))
-        action_bar.addAction(QIcon(pix_map), "Redo (Ctrl+Shift+Z)", self.redo)
+        action = QAction("Redo (Ctrl+Shift+Z)", self)
+        action.setIcon(QIcon(os.path.join(resources, 'redo-disabled.png')))
+        action.triggered.connect(self.redo)
+        action_bar.addAction(action)
+        self.redo_action = action
+
         # Short cut
         self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Z), self),
                      SIGNAL('activated()'), self.redo)

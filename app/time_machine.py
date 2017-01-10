@@ -58,8 +58,10 @@ class TimeMachine:
             return None
 
     def can_undo(self):
+        print "UNDO?" + str(self.size)
         return self.size > 1
 
     def can_redo(self):
+        print len(self.redo_stack)
         return self.redo_stack is not None and len(self.redo_stack) != 0
 

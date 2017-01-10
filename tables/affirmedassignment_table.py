@@ -16,6 +16,7 @@
 from tables.assignments_table import aid_exists, get_assignment_aid_list
 from tables.molecules_table import get_in_string
 
+
 def entry_exists(conn, aid):
     """
     Determines if assignments entry is in the database (based on aid)

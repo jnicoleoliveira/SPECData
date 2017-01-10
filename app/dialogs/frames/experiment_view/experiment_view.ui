@@ -93,7 +93,18 @@ color: rgb(255, 255, 255);
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
+   </attribute>
+  </widget>
+  <widget class="QToolBar" name="graph_action_bar">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>RightToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>true</bool>
    </attribute>
   </widget>
   <action name="action_Graph_Tools">

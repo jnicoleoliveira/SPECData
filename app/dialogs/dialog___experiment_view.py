@@ -685,13 +685,13 @@ class ExperimentView(QMainWindow):
 
         action_bar.addSeparator()
         ##############################################
-        ''' Redisplay Button'''
-        # -- Toolbar - #
-        pix_map = QPixmap(os.path.join(resources, 'redisplay-graph.png'))
-        action_bar.addAction(QIcon(pix_map), "Redisplay Graph (F5)", self.redisplay_graph)
-        # Short cut
-        self.connect(QShortcut(QKeySequence(Qt.Key_F5), self),
-                     SIGNAL('activated()'), self.redisplay_graph)
+        # ''' Redisplay Button'''
+        # # -- Toolbar - #
+        # pix_map = QPixmap(os.path.join(resources, 'redisplay-graph.png'))
+        # action_bar.addAction(QIcon(pix_map), "Redisplay Graph (F5)", self.redisplay_graph)
+        # # Short cut
+        # self.connect(QShortcut(QKeySequence(Qt.Key_F5), self),
+        #              SIGNAL('activated()'), self.redisplay_graph)
 
         ''' Select All '''
         # -- Toolbar - #
@@ -709,16 +709,16 @@ class ExperimentView(QMainWindow):
         self.connect(QShortcut(QKeySequence(Qt.CTRL + Qt.Key_D), self),
                      SIGNAL('activated()'), self.deselect_all)
 
-        ''' Show Validations '''
-        # -- Toolbar -- #
-        pix_map = QPixmap(os.path.join(resources, 'show-validations.png'))
-        self.action_show_validations = QAction("Show Validations", self)
-        self.action_show_validations.setIcon(QIcon(pix_map))
-        self.action_show_validations.setIconText("Show Validations")
-        self.action_show_validations.triggered.connect(self.toggle_validations_on_graph)
-        action_bar.addAction(self.action_show_validations)
-        #action_bar.triggered[QAction].connect(self.toggle_validations_on_graph)
-        #action_bar.addAction(QIcon(pix_map), "Show Validations", self.toggle_validations_on_graph)
+        # ''' Show Validations '''
+        # # -- Toolbar -- #
+        # pix_map = QPixmap(os.path.join(resources, 'show-validations.png'))
+        # self.action_show_validations = QAction("Show Validations", self)
+        # self.action_show_validations.setIcon(QIcon(pix_map))
+        # self.action_show_validations.setIconText("Show Validations")
+        # self.action_show_validations.triggered.connect(self.toggle_validations_on_graph)
+        # action_bar.addAction(self.action_show_validations)
+        # #action_bar.triggered[QAction].connect(self.toggle_validations_on_graph)
+        # #action_bar.addAction(QIcon(pix_map), "Show Validations", self.toggle_validations_on_graph)
 
         ##############################################
         action_bar.addSeparator()
@@ -764,6 +764,57 @@ class ExperimentView(QMainWindow):
         export_cleaned_lines = self.ui.actionExport_cleaned_lines
         export_cleaned_lines.triggered.connect(self.export_cleaned_lines)
 
+        self.__setup_graph_toolbar()
+
+    def __setup_graph_toolbar(self):
+        """
+
+        :return:
+        """
+        action_bar = self.ui.graph_action_bar
+
+        ''' Redisplay Button'''
+        # -- Toolbar - #
+        pix_map = QPixmap(os.path.join(resources, 'redisplay-graph.png'))
+        action_bar.addAction(QIcon(pix_map), "Redisplay Graph (F5)", self.redisplay_graph)
+        # Short cut
+        self.connect(QShortcut(QKeySequence(Qt.Key_F5), self),
+                     SIGNAL('activated()'), self.redisplay_graph)
+
+
+        ''' Show Validations '''
+        # -- Toolbar -- #
+        pix_map = QPixmap(os.path.join(resources, 'show-validations.png'))
+        self.action_show_validations = QAction("Show Validations", self)
+        self.action_show_validations.setIcon(QIcon(pix_map))
+        self.action_show_validations.setIconText("Show Validations")
+        self.action_show_validations.triggered.connect(self.toggle_validations_on_graph)
+
+        action_bar.addAction(self.action_show_validations)
+
+        ''' Plot Full Graph '''
+        pix_map = QPixmap(os.path.join(resources, 'plot-spectrum.png'))
+        self.action_plot_spectrum = QAction("Plot Spectrum", self)
+        self.action_plot_spectrum.setIcon(QIcon(pix_map))
+        self.action_plot_spectrum.setIcon(QIcon(images.PLOT_SPECTRUM))
+        self.action_plot_spectrum.triggered.connect(self.plot_spectrum)
+
+        action_bar.addAction(self.action_plot_spectrum)
+
+        ''' Color assignments in Experiment '''
+        self.action_color_assignments = QAction("Color Experiments", self)
+        self.action_color_assignments.setIcon(QIcon(images.COLOR_ASSIGNMENTS))
+        self.action_color_assignments.triggered.connect(self.plot_spectrum)
+
+        action_bar.addAction(self.action_color_assignments)
+
+        ''' More '''
+        more = QAction("More", self)
+        more.setIcon(QIcon(images.MORE_ELLIPSES))
+        more.triggered.connect(self.plot_spectrum)
+
+        action_bar.addAction(more)
+
     ###############################################################################
     # Stub Methods
     ###############################################################################
@@ -781,7 +832,8 @@ class ExperimentView(QMainWindow):
     def remove_from_analysis(self):
         print "Clicked 'remove button'"
 
-
+    def plot_spectrum(self):
+        print "PLOT SPECTRUM!"
 
 class State:
     """

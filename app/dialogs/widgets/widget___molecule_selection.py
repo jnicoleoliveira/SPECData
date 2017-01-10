@@ -225,6 +225,9 @@ class MoleculeSelectionWidget(QWidget):
         self.remove_selections()
         self.add_rows(matches, colors)
 
+    def get_elements(self):
+        return self.elements
+
 class GraphColorWheel:
 
     def __init__(self):

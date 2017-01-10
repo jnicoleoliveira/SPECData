@@ -116,7 +116,7 @@ class ExperimentView(QMainWindow):
         """
         self.selection_widget.deselect_all()
 
-    def invalidate_selections(self):
+    def invalidate_selections(self, save=True):
 
         # -- Get Selected Mids -- #
         selected_mids = self.selection_widget.get_selected_mids()
@@ -134,13 +134,32 @@ class ExperimentView(QMainWindow):
         # Repopulate table widget to show updated validations
         self.populate_table_widget()
 
-        self.__save_state()
+        if save:
+            self.__save_state()
 
     def get_selections(self):
         return self.selection_widget.get_selections()
 
     def populate_selection_widget(self):
         self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
+
+    def organize_matches(self):
+        elements = self.selection_widget.get_elements()
+        self.deselect_all()
+        # Validated
+        for key, value in elements.iteritems():
+            if value.match.is_validated():
+                value.checkbox.click()
+
+        self.validate_selections(save=False)
+        self.deselect_all()
+
+        # Validated
+        for key, value in elements.iteritems():
+            if value.match.is_invalidated():
+                value.checkbox.click()
+
+        self.invalidate_selections(save=False)
 
     def select_all(self):
         """
@@ -149,7 +168,7 @@ class ExperimentView(QMainWindow):
         """
         self.selection_widget.select_all()
 
-    def validate_selections(self):
+    def validate_selections(self, save=True):
         print "VALIDATE SELECTIONS"
 
         # -- Get Selected Mids -- #
@@ -168,7 +187,8 @@ class ExperimentView(QMainWindow):
         # Repopulate table widget to show updated validations
         self.populate_table_widget()
 
-        self.__save_state()
+        if save:
+            self.__save_state()
 
     ###############################################################################
     # Table Widget Functions
@@ -460,6 +480,7 @@ class ExperimentView(QMainWindow):
 
         '''Add Assignments to Selection Widget'''
         self.populate_selection_widget()        # Add assignments
+        self.organize_matches()
         time.sleep(1)
         self.loading_screen.next_value(80)
 

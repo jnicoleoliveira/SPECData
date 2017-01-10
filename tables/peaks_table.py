@@ -170,6 +170,17 @@ def get_intensity(conn, pid):
     intensity = line[0]
     return intensity
 
+def get_mid(conn, pid):
+    """
+    Returns the intensity of a specified peak
+    :param conn:
+    :param pid:
+    :return:
+    """
+    cursor = conn.execute("SELECT mid FROM peaks WHERE pid=?",(pid,))
+    line = cursor.fetchone()
+    mid = line[0]
+    return mid
 
 def get_frequency(conn, pid):
     """

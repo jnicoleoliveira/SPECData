@@ -52,7 +52,7 @@ def aid_exists(conn, aid):
     return True
 
 
-def assignment_exists(conn, pid, assigned_pid):
+def assignment_exists(conn, pid, assigned_pid=None):
     """
     Determines if assignments entry is in the database (based on assignment info)
     :param conn: Sqlite connection
@@ -60,9 +60,15 @@ def assignment_exists(conn, pid, assigned_pid):
     :param assigned_pid: Connection cursor
     :return: True if assignment exists. False if assignment does not exist.
     """
-    # Select row with mid
-    cursor = conn.execute("SELECT * FROM assignments WHERE "
-                          "pid=? AND assigned_pid=?", (pid, assigned_pid))
+
+    if assigned_pid is not None:
+        # Select row with mid
+        cursor = conn.execute("SELECT * FROM assignments WHERE "
+                              "pid=? AND assigned_pid=?", (pid, assigned_pid))
+    else:
+        cursor = conn.execute("SELECT aid FROM assignments WHERE "
+                          "pid=?", (pid, ))
+
     row = cursor.fetchone()
 
     if row is None:
@@ -70,7 +76,9 @@ def assignment_exists(conn, pid, assigned_pid):
         return False
 
     # Assignments entry exists
-    return True
+    if assigned_pid is not None:
+        return True
+    return row[0]
 
 
 def get_assigned_mids(conn, mid):
@@ -95,6 +103,15 @@ def get_assigned_mids(conn, mid):
 
     return None
 
+def get_assignment_mid(conn, aid):
+    cursor = conn.execute("SELECT p.mid FROM assignments "
+                          "AS a JOIN peaks AS p "
+                          "ON a.pid=p.pid WHERE a.aid=?;", (aid,))
+    rows = cursor.fetchone()
+
+    if rows is not None:
+        return rows[0]
+    return None
 
 def get_assignment_count(conn, mid, assigned_mid=None):
 
@@ -146,6 +163,27 @@ def get_assignment_aid_list(conn, mid):
 
     return aids
 
+def get_pid(conn, aid):
+
+    cursor = conn.execute("SELECT pid FROM assignments WHERE aid=?;", (aid,))
+
+    row = cursor.fetchone()
+
+    if row is None:
+        return None
+
+    return row[0]
+
+def get_assigned_pid(conn, aid):
+
+    cursor = conn.execute("SELECT assigned_pid FROM assignments WHERE aid=?;", (aid,))
+
+    row = cursor.fetchone()
+
+    if row is None:
+        return None
+
+    return row[0]
 
 def has_assignments(conn, mid):
     """
@@ -165,7 +203,6 @@ def has_assignments(conn, mid):
 
     # There are assignments to this molecule
     return True
-
 
 ###############################################################################
 # Insert Peaks Table Entry

@@ -432,6 +432,8 @@ def remove_molecule(conn, mid):
     :return: True if successfully removed
     :return: False, if not removed
     """
+    from assignments_table import remove_all as del_assignment
+    from affirmedassignment_table import remove_all as del_affirmed
     if(mid_exists(conn, mid) is False):
         print "[ ERROR: Molecule entry does not exist. Cancelling action! ]"
         return False
@@ -440,6 +442,10 @@ def remove_molecule(conn, mid):
 
     # Delete Info Entry
     conn.execute("DELETE FROM {i} WHERE mid={m}".format(i=info_table_name, m=mid))
+    # Delete Assignment Entry
+    del_assignment(conn, mid)
+    # Delete AffirmedAssignment Entry
+    del_affirmed(conn, mid)
     # Delete peak entry
     conn.execute("DELETE FROM peaks WHERE mid={m}".format(m=mid))
     # Delete Molecule entry

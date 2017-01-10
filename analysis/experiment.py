@@ -1,6 +1,7 @@
 import tables.peaks_table as peaks
 import tables.assignments_table as assignments
 import tables.affirmedassignment_table as affirmed_assignments
+import tables.molecules_table as molecules
 from config import conn
 
 
@@ -20,6 +21,7 @@ class Experiment:
         self.match_threshold = match_threshold
         self.N = 0                   # Total Number of peak lines
         self.experiment_peaks = []   # List of peaks    (obj: Peak)
+        self.validated_peaks = []    # Subset of experiment peaks (if saved)
         self.is_saved = False
 
         # Match info
@@ -46,17 +48,55 @@ class Experiment:
 
         # Create peak objects with PID, and Ranking of Intensity Strength (Rst)
         for pid in pid_list:
-            peak = self.Peak(pid, Rst)
-            self.experiment_peaks.append(peak)
-            Rst += 1
+
+            peak = self.Peak(pid, Rst)  # create peak object
+
+            # Determine if the peak has an existing assignment
+            aid = assignments.assignment_exists(conn, pid)
+
+            if aid:
+                print "ADDING: " + str(aid)
+                self.__add_existing_assignment(aid, peak)
+            else:
+                # No assignment. Add to experiment peaks to be analyzed
+                self.experiment_peaks.append(peak)
+                Rst += 1
 
         self.N = Rst   # Store N, the number of Peaks
         # Remove Peaks where intensity is less than the average
 
+    def __add_existing_assignment(self, aid, peak):
+
+        self.is_saved = True
+
+        # -- Collect Data -- #
+        pid = peak.pid
+        status = affirmed_assignments.get_status(conn, aid)
+        assigned_pid = assignments.get_assigned_pid(conn, aid)
+        mid = peaks.get_mid(conn, assigned_pid)
+        name = molecules.get_name(conn, mid)
+
+        # Create a Match Object
+        match = Match(name, mid, assigned_pid, 1, pid, 1)
+
+        # Add to Validated_Matches (MoleculeMatch subset)
+        if status == 'validated':
+            self.validated_peaks.append(peak)
+
+            if self.validated_matches.has_key(mid) is False:
+                self.validated_matches[mid] = self.MoleculeMatch(name, mid, self.N)
+                self.validated_matches[mid].set_status_as_validated()
+                self.validated_matches[mid].p = 1
+
+            self.validated_matches[mid].add_match(match)
 
     def __load_saved_data(self):
-        validated_assignments = affirmed_assignments.get_validated()
-        invalidated_assignments = affirmed_ass
+        print "[LOADED SAVED DATA]"
+        print self.molecule_matches.keys()
+        self.experiment_peaks.extend(self.validated_peaks)
+        self.molecule_matches.update(self.validated_matches)
+        print "ADD: " + str(len(self.validated_matches))
+        print self.molecule_matches.keys()
 
     ###############################################################################
     # Analysis Functions
@@ -70,9 +110,6 @@ class Experiment:
         if not self.experiment_peaks:
             print "[ No peaks in experiment found ]"
             return  # NEED TO THROW ERROR HERE
-
-        if self.is_saved:
-            self.__load_saved_data()
 
         molecule_matches = self.molecule_matches
 
@@ -109,6 +146,9 @@ class Experiment:
         for key, value in molecule_matches.iteritems():
             value.M = len(molecule_matches)
             value.get_probability()
+
+        if self.is_saved:
+            self.__load_saved_data()
 
     ###############################################################################
     # Status Functions

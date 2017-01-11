@@ -13,6 +13,7 @@ from app.dialogs.frames.experiment_view.frame___experiment_view import Ui_MainWi
 from app.dialogs.widgets.widget___experiment_info import ExperimentInfoWidget
 from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidget
 from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
+from app.dialogs.widgets.widget___graph_toolbox_dock import GraphToolBoxDock
 
 from analysis import experiment
 from config import *
@@ -47,6 +48,7 @@ class ExperimentView(QMainWindow):
         self.matplot_widget = None
         # -- Graph Options -- #
         self.graph_options_widget = None
+        self.graph_toolbox = None
         # -- Experiment Info Widget -- #
         self.info_widget = None
         # -- Molecule Selection Widgets -- #
@@ -160,6 +162,7 @@ class ExperimentView(QMainWindow):
                 value.checkbox.click()
 
         self.invalidate_selections(save=False)
+        self.select_all()
 
     def select_all(self):
         """
@@ -280,8 +283,9 @@ class ExperimentView(QMainWindow):
         # -- Set Additional Options -- #
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
 
-        # width = self.table_widget.horizontalHeader().width()
-        # self.table_widget.setFixedWidth(width)
+        #width = self.table_widget.horizontalHeader().width()
+        #self.table_widget.setFixedWidth(width)
+        #self.table_widget.setMaximumWidth(width)
 
     ###############################################################################
     # Graphing Functions
@@ -290,11 +294,19 @@ class ExperimentView(QMainWindow):
     def determine_graphing_options(self):
 
         # -- Get Values for Options -- #
-        full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
-        sharey = self.graph_options_widget.sharey_chk.isChecked()
+        full_spectrum = self.graph_toolbox.full_spectrum_slider.is_toggled_on()
+        show_validations = self.graph_toolbox.show_validations_slider.is_toggled_on()
+        if show_validations is False:
+            self.validated_selection_widget.deselect_all()
+
+        sharey = self.graph_toolbox.share_yaxis_slider.is_toggled_on()
+        y_to_experiment_intensities = self.graph_toolbox.share_intensities_slider.is_toggled_on()
+
+        #full_spectrum = self.graph_options_widget.full_spectrum_chk.isChecked()
+        #sharey = self.graph_options_widget.sharey_chk.isChecked()
         color_experiment = self.graph_options_widget.color_experiment_chk.isChecked()
-        y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
-        show_validations = self.show_validations_on_graph
+        #y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
+        #show_validations = self.show_validations_on_graph
 
         # Set Options in __setup_graph #
         self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
@@ -539,6 +551,7 @@ class ExperimentView(QMainWindow):
         self.matplot_widget = MatplotlibWidget()
         # -- Graph Options -- #
         self.graph_options_widget = MainGraphOptionsWidget()
+        self.graph_toolbox = GraphToolBoxDock()
         # -- Molecule Selection Widget -- #
         self.selection_widget = MoleculeSelectionWidget(self.experiment)
         # -- Validated Selection Widget --#
@@ -565,15 +578,21 @@ class ExperimentView(QMainWindow):
 
         # Create Tool Box
         tool_box = QToolBox()
-        text = QString("Graph Options")
-        tool_box.addItem(self.graph_options_widget, text)
-        tool_box.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        #text = QString("Graph Options")
+        text = QString("Experiment Info")
+        self.table_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        #tool_box.addItem(self.info_widget, text)
+
+        #tool_box.addItem(self.graph_options_widget, text)
+        tool_box.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         text = QString("Peak List")
-        tool_box.addItem(self.table_widget, text)
+        #tool_box.addItem(self.table_widget, text)
 
         # Dock the tool box
         dock_tools = QDockWidget(self.window())
-        self.window().addDockWidget(Qt.RightDockWidgetArea, dock_tools)
+        #self.window().addDockWidget(Qt.RightDockWidgetArea, dock_tools)
+        #self.window().addDockWidget(Qt.RightDockWidgetArea, dock_tools)
+        dock_tools.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         dock_tools.setWidget(tool_box)
         dock_tools.setFeatures(QDockWidget.DockWidgetClosable |
                                QDockWidget.DockWidgetMovable |
@@ -612,6 +631,7 @@ class ExperimentView(QMainWindow):
         selection_tab_widget.addTab(invalidated_scroll_selection_container, "Invalidated")
         selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
 
+
         # Save
         self.pending_scroll_selection_container = pending_scroll_selection_container
         self.validated_scroll_selection_container = validated_scroll_selection_container
@@ -623,13 +643,20 @@ class ExperimentView(QMainWindow):
 
         hlayout = QHBoxLayout()
         v1 = QVBoxLayout()
-        v1.addWidget(self.info_widget)
+        v3 = QVBoxLayout()
+        v3.addWidget(self.info_widget)
+        #layout1 = QGridLayout(self.table_widget)
+        v3.addWidget(self.table_widget)
+        #v1.addWidget(self.info_widget)
         v1.addWidget(selection_tab_widget)
         v2 = QVBoxLayout()
         v2.addWidget(self.matplot_widget)
+        hlayout.addLayout(v3)
         hlayout.addLayout(v1)
         hlayout.addLayout(v2)
         outer_layout.addLayout(hlayout, 0, 0)
+        self.window().addDockWidget(Qt.RightDockWidgetArea, self.graph_toolbox)
+        self.table_widget.setMaximumWidth(450)
 
         '''
         Toolbar and ShortCuts
@@ -641,6 +668,8 @@ class ExperimentView(QMainWindow):
         self.graph_options_widget.redisplay_btn.clicked.connect(self.redisplay_graph)
         self.graph_options_widget.select_all_btn.clicked.connect(self.select_all)
         self.graph_options_widget.show_validations_btn.clicked.connect(self.toggle_validations_on_graph)
+        self.graph_toolbox.ui.reset_btn.clicked.connect(self.reset_options)
+        self.graph_toolbox.ui.graph_btn.clicked.connect(self.redisplay_graph)
 
     def __setup_toolbar_and_shortcuts(self):
 
@@ -764,7 +793,7 @@ class ExperimentView(QMainWindow):
         export_cleaned_lines = self.ui.actionExport_cleaned_lines
         export_cleaned_lines.triggered.connect(self.export_cleaned_lines)
 
-        self.__setup_graph_toolbar()
+        #self.__setup_graph_toolbar()
 
     def __setup_graph_toolbar(self):
         """
@@ -834,6 +863,9 @@ class ExperimentView(QMainWindow):
 
     def plot_spectrum(self):
         print "PLOT SPECTRUM!"
+
+    def reset_options(self):
+        self.graph_toolbox.reset()
 
 class State:
     """

@@ -581,6 +581,7 @@ def __import_linesfile(conn, filepath, mid):
 
     print "[ Added entry peaks ] "
 
+
 def __checkfile(filepath):
     """
     Determines if a file can be opened / is a valid file.

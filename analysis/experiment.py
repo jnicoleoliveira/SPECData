@@ -459,7 +459,7 @@ class Experiment:
             script = "SELECT name, mid, pid, MIN(ABS(frequency - {freq})) FROM" \
                         " (SELECT molecules.name, molecules.mid, peaks.pid, peaks.frequency" \
                         " FROM peaks JOIN molecules" \
-                        " WHERE molecules.mid=peaks.mid AND molecules.category='known' AND ABS(peaks.frequency - {freq})<={t}" \
+                        " WHERE molecules.mid=peaks.mid AND molecules.category IN ('known', 'artifact') AND ABS(peaks.frequency - {freq})<={t}" \
                         " ORDER BY ABS(peaks.frequency - {freq} ) ASC)" \
                       " GROUP BY mid".format(freq=frequency, t=threshold)
 

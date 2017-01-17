@@ -278,6 +278,33 @@ class Experiment:
 
         return count
 
+    def get_validated_count(self):
+        """
+
+        :return:
+        """
+        peak_count = 0
+        mol_count = 0
+        for key, value in self.molecule_matches.iteritems():
+            if value.is_validated():
+                mol_count += 1
+                peak_count += len(value.matches)
+
+        return mol_count, peak_count
+
+    def get_invalidated_peaks_count(self):
+        """
+
+        :return:
+        """
+        peak_count = 0
+        mol_count = 0
+        for key, value in self.molecule_matches.iteritems():
+            if value.is_invalidated():
+                mol_count += 1
+                peak_count += len(value.matches)
+        return mol_count, peak_count
+
     def get_assigned_names(self):
         assigned_names = []
         for key, value in self.molecule_matches.iteritems():
@@ -507,7 +534,7 @@ class Experiment:
             Determines if status is validated
             :return: True if status is validated, Otherwise: False
             """
-            if self.status is "validated":
+            if self.status == "validated":
                 return True
             return False
 
@@ -516,7 +543,7 @@ class Experiment:
             Determines if status is invalidated
             :return: True if status is invalidated, Otherwise: False
             """
-            if self.status is "invalidated":
+            if self.status == "invalidated":
                 return True
             return False
 
@@ -525,7 +552,7 @@ class Experiment:
             Determines if status is pending
             :return: True if status is pending, Otherwise: False
             """
-            if self.status is "validated":
+            if self.status is "pending":
                 return True
             return False
 

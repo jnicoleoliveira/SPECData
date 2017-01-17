@@ -36,14 +36,15 @@ class ExperimentInfoWidget(QWidget):
         type = info_table.get_type(conn, mid)
 
         total_peaks = peaks_table.get_peak_count(conn, mid)
-        invalid_peaks = 1
-        valid_peaks = 1
-        pending_peaks = experiment.get_assigned_peaks_count()
-        unnassigned = total_peaks - valid_peaks
+        assigned = experiment.get_assigned_peaks_count()
 
-        pending_mol = len(experiment.molecule_matches)
-        valid_mol = 1
-        invalid_mol = 1
+        invalid_mol, invalid_peaks = experiment.get_invalidated_peaks_count()
+        valid_mol, valid_peaks = experiment.get_validated_count()
+
+        pending_peaks = assigned - valid_peaks - invalid_peaks
+        pending_mol = len(experiment.molecule_matches) - invalid_mol - valid_mol
+
+        unnassigned = total_peaks - valid_peaks
 
 
         # Set labels to data

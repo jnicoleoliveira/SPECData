@@ -56,6 +56,7 @@ class ExperimentView(QMainWindow):
         self.validated_selection_widget = None      # Accepted
         self.invalidated_selection_widget = None    # Rejected
         # -- Selection Containers -- #
+        self.selection_tab_widget = None
         self.pending_scroll_selection_container = None
         self.validated_scroll_selection_container = None
         self.invalidated_scroll_selection_container = None
@@ -122,6 +123,7 @@ class ExperimentView(QMainWindow):
         Select all button function.
         Checks all selections in selection widget
         """
+
         self.selection_widget.deselect_all()
 
     def invalidate_selections(self, save=True):
@@ -144,6 +146,11 @@ class ExperimentView(QMainWindow):
 
         if save:
             self.__save_state()
+
+        self.update_info()
+
+    def update_info(self):
+        self.info_widget.update(self.experiment)
 
     def get_selections(self):
         return self.selection_widget.get_selections()
@@ -198,7 +205,10 @@ class ExperimentView(QMainWindow):
 
         if save:
             self.__save_state()
+        self.update_info()
 
+    def current_selection_widget(self):
+        self.selection_tab_widget
     ###############################################################################
     # Table Widget Functions
     ###############################################################################
@@ -634,7 +644,7 @@ class ExperimentView(QMainWindow):
         selection_tab_widget.addTab(validated_scroll_selection_container, "Validated")
         selection_tab_widget.addTab(invalidated_scroll_selection_container, "Invalidated")
         selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
-
+        self.selection_tab_widget = selection_tab_widget
 
         # Save
         self.pending_scroll_selection_container = pending_scroll_selection_container

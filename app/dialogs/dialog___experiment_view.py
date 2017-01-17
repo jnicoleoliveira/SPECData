@@ -703,6 +703,7 @@ class ExperimentView(QMainWindow):
     def __setup_toolbar_and_shortcuts(self):
 
         action_bar = self.ui.action_bar
+        action_bar.setMovable(False)
 
         ''' Home Button '''
         pix_map = QPixmap(os.path.join(resources, 'home.png'))
@@ -829,7 +830,7 @@ class ExperimentView(QMainWindow):
         """
 
         tool_bar = self.ui.left_bar
-
+        tool_bar.setMovable(False)
         ''' Toggle Info Widget '''
         btn = RotatedButton("Info", self, orientation="east")
         btn.setFixedWidth(24)
@@ -848,6 +849,8 @@ class ExperimentView(QMainWindow):
 
         ''' Right Toolbar '''
         tool_bar = self.ui.right_bar
+        tool_bar.setMovable(False)
+
         ''' Toggle Graph Options '''
         btn = RotatedButton("Graph Options", self)
         btn.setFixedWidth(24)

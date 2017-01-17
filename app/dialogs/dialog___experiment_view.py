@@ -14,6 +14,7 @@ from app.dialogs.widgets.widget___experiment_info import ExperimentInfoWidget
 from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidget
 from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
 from app.dialogs.widgets.widget___graph_toolbox_dock import GraphToolBoxDock
+from app.dialogs.widgets.widget___rotated_button import RotatedButton
 
 from analysis import experiment
 from config import *
@@ -48,7 +49,6 @@ class ExperimentView(QMainWindow):
         self.matplot_widget = None
         # -- Graph Options -- #
         self.graph_options_widget = None
-        self.graph_toolbox = None
         # -- Experiment Info Widget -- #
         self.info_widget = None
         # -- Molecule Selection Widgets -- #
@@ -67,6 +67,12 @@ class ExperimentView(QMainWindow):
         self.deselect_all_btn = None    # Deselect all (for molecule selection)
         self.main_menu_btn = None       # Main Menu (exits, returns to main menu)
         self.delete_btn = None          # Delete Button, removes associated lines from analysis
+
+
+        ''' Toolboxes '''
+        self.info_toolbox = None
+        self.graph_toolbox = None
+        self.table_toolbox = None
 
         ''' Undo/Redo (Time Machine) '''
         self.time_machine = None
@@ -373,7 +379,6 @@ class ExperimentView(QMainWindow):
         #print (rect.xy)
         print "picked x" + str(x)
 
-
     ###############################################################################
     # Time Machine Functions
     ###############################################################################
@@ -580,7 +585,7 @@ class ExperimentView(QMainWindow):
         tool_box = QToolBox()
         #text = QString("Graph Options")
         text = QString("Experiment Info")
-        self.table_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        #self.table_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         #tool_box.addItem(self.info_widget, text)
 
         #tool_box.addItem(self.graph_options_widget, text)
@@ -590,7 +595,6 @@ class ExperimentView(QMainWindow):
 
         # Dock the tool box
         dock_tools = QDockWidget(self.window())
-        #self.window().addDockWidget(Qt.RightDockWidgetArea, dock_tools)
         #self.window().addDockWidget(Qt.RightDockWidgetArea, dock_tools)
         dock_tools.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         dock_tools.setWidget(tool_box)
@@ -637,6 +641,15 @@ class ExperimentView(QMainWindow):
         self.validated_scroll_selection_container = validated_scroll_selection_container
         self.invalidated_scroll_selection_container = invalidated_scroll_selection_container
 
+        ''' Dock Widgets '''
+        self.table_toolbox = QDockWidget()
+        self.table_toolbox.setWidget(self.table_widget)
+
+        self.info_toolbox = QDockWidget()
+        self.info_toolbox.setWidget(self.info_widget)
+        self.info_toolbox.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+
+
         '''
         Add widgets to Layout
         '''
@@ -644,18 +657,24 @@ class ExperimentView(QMainWindow):
         hlayout = QHBoxLayout()
         v1 = QVBoxLayout()
         v3 = QVBoxLayout()
-        v3.addWidget(self.info_widget)
-        #layout1 = QGridLayout(self.table_widget)
-        v3.addWidget(self.table_widget)
-        #v1.addWidget(self.info_widget)
-        v1.addWidget(selection_tab_widget)
         v2 = QVBoxLayout()
+
+        #v3.addWidget(self.info_widget)
+        #v3.addWidget(self.table_widget)
+        v1.addWidget(selection_tab_widget)
         v2.addWidget(self.matplot_widget)
+
         hlayout.addLayout(v3)
         hlayout.addLayout(v1)
         hlayout.addLayout(v2)
+
         outer_layout.addLayout(hlayout, 0, 0)
+
+        self.window().addDockWidget(Qt.LeftDockWidgetArea, self.info_toolbox)
+        self.window().addDockWidget(Qt.LeftDockWidgetArea, self.table_toolbox)
         self.window().addDockWidget(Qt.RightDockWidgetArea, self.graph_toolbox)
+        self.graph_toolbox.hide()
+
         self.table_widget.setMaximumWidth(450)
 
         '''
@@ -795,6 +814,38 @@ class ExperimentView(QMainWindow):
 
         #self.__setup_graph_toolbar()
 
+        """
+        Second Toolbar
+        """
+
+        tool_bar = self.ui.left_bar
+
+        ''' Toggle Info Widget '''
+        btn = RotatedButton("Info", self, orientation="east")
+        btn.setFixedWidth(24)
+        btn.setFlat(True)
+        btn.setIcon(QIcon(images.INFO_ICON))
+        btn.clicked.connect(self.toggle_info_widget)
+        tool_bar.addWidget(btn)
+
+        ''' Toggle Table View '''
+        btn = RotatedButton("Peaks Table", self, orientation="east")
+        btn.setFixedWidth(24)
+        btn.setFlat(True)
+        btn.setIcon(QIcon(images.TABLE_ICON))
+        btn.clicked.connect(self.toggle_table_widget)
+        tool_bar.addWidget(btn)
+
+        ''' Right Toolbar '''
+        tool_bar = self.ui.right_bar
+        ''' Toggle Graph Options '''
+        btn = RotatedButton("Graph Options", self)
+        btn.setFixedWidth(24)
+        btn.setFlat(True)
+        btn.setIcon(QIcon(images.ROUND_GRAPH_ICON_BLUE))
+        btn.clicked.connect(self.toggle_graph_options_widget)
+        tool_bar.addWidget(btn)
+
     def __setup_graph_toolbar(self):
         """
 
@@ -866,6 +917,21 @@ class ExperimentView(QMainWindow):
 
     def reset_options(self):
         self.graph_toolbox.reset()
+
+    def toggle_graph_options_widget(self):
+        if self.graph_toolbox.isHidden():
+            self.graph_toolbox.show()
+        else:
+            self.graph_toolbox.hide()
+
+    def toggle_info_widget(self):
+        self.info_toolbox.setHidden(not self.info_toolbox.isHidden())
+
+    def toggle_table_widget(self):
+        if self.table_toolbox.isHidden():
+            self.table_toolbox.show()
+        else:
+            self.table_toolbox.hide()
 
 class State:
     """

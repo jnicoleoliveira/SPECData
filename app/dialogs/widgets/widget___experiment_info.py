@@ -30,51 +30,52 @@ class ExperimentInfoWidget(QWidget):
         """
         mid = experiment.mid
         name = experiment.name
-        total_peaks = peaks_table.get_peak_count(conn, mid)
-        peaks_assigned = experiment.get_assigned_peaks_count()
-        peaks_unassigned = total_peaks - peaks_assigned
-        molecules_found = len(experiment.molecule_matches)
         composition = info_table.get_composition(conn, mid)
-        info = info_table.get_notes(conn, mid)
+        notes = info_table.get_notes(conn, mid)
+        units = info_table.get_units(conn, mid)
+        type = info_table.get_type(conn, mid)
+
+        total_peaks = peaks_table.get_peak_count(conn, mid)
+        invalid_peaks = 1
+        valid_peaks = 1
+        pending_peaks = experiment.get_assigned_peaks_count()
+        unnassigned = total_peaks - valid_peaks
+
+        pending_mol = len(experiment.molecule_matches)
+        valid_mol = 1
+        invalid_mol = 1
 
 
         # Set labels to data
         self.ui.experiment_name_lbl.setText(name)
         self.ui.composition_val.setText(composition)
+        self.ui.notes_val.setText(notes)
+        self.ui.units_val.setText(units)
+        self.ui.type_val.setText(type)
+
         self.ui.total_peaks_val.setText(str(total_peaks))
-        self.ui.peaks_assigned_val.setText(str(peaks_assigned))
-        self.ui.peaks_unassigned_val.setText(str(peaks_unassigned))
-        self.ui.molecules_found_val.setText(str(molecules_found))
-        self.ui.info_val_lbl.setText(info)
+
+        self.ui.invalid_mol_num.display(invalid_mol)
+        self.ui.invalid_peaks_num.display(invalid_peaks)
+        self.ui.valid_mol_num.display(valid_mol)
+        self.ui.valid_peaks_num.display(valid_peaks)
+        self.ui.pending_mol_num.display(pending_mol)
+        self.ui.pending_peaks_num.display(pending_peaks)
+        self.ui.unnassigned_peaks_num.display(unnassigned)
 
         # Formatting
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        #
+        # lcds  = [self.ui.pending_mol_num, self.ui.pending_peaks_num,
+        #          self.ui.invalid_peaks_num, self.ui.invalid_mol_num,
+        #          self.ui.valid_mol_num, self.ui.valid_peaks_num,
+        #          self.ui.unnassigned_peaks_num]
+        #
+        # for n in lcds:
+        #     n.setNumDigits(10)
 
-        layout = self.ui.gridLayout
-
-        # Elipsis Widget
-        #set_angle = 0
-        #angle = 90
-        #ellipse = QGraphicsEllipseItem()
-        #brush = QBrush()
-        #color = QColor()
-        #color.setNamedColor("green")
-        #brush.setColor(color)
-        #ellipse.setStartAngle(set_angle)
-        #ellipse.setSpanAngle(angle)
-        #ellipse.setBrush(brush)
-
-        #color.setNamedColor("red")
-        #brush.setColor(color)
-        #ellipse.setStartAngle(angle)
-        #ellipse.setSpanAngle(0)
-        #ellipse.setBrush(brush)
-        #layout.addWidget(ellipse, 3, 3)
-        #plot_widget = MatplotlibWidget()
-        #info_graph = InfoGraph(plot_widget)
-        #layout.addWidget(plot_widget, 3, 3)
-        #info_graph.plot(peaks_assigned, peaks_unassigned)
-
+    def update(self, experiment):
+        self.__setup__(experiment)
 
 class InfoGraph():
 

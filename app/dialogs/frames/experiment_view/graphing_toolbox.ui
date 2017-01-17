@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>155</width>
+    <height>407</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,17 @@ gridline-color: rgb(195, 195, 195);
 color: rgb(255, 255, 255);
 </string>
   </property>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>10</y>
+     <width>84</width>
+     <height>371</height>
+    </rect>
+   </property>
+   <widget class="QWidget" name="dockWidgetContents"/>
+  </widget>
  </widget>
  <resources/>
  <connections/>

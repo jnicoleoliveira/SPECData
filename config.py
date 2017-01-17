@@ -5,16 +5,13 @@
 #                    Database Directory (path)
 #                    Log Directory (path)
 
-# Imports
 import sqlite3
 import os
 
 # Program directory
 PROGRAM_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
-print PROGRAM_DIR
 # Database directory
 DATABASE_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
-
 # Log Directory
 LOG_DIR = ""
 
@@ -35,10 +32,3 @@ experiment_spectrums_path = os.path.join(db_dir, "experiments")
 prog_dir = PROGRAM_DIR
 conn = sqlite3.connect(db_filepath)
 resources = os.path.join(PROGRAM_DIR, "resources")
-
-# IMAGES
-REDO_IMG = os.path.join(resources, 'redo.png')
-UNDO_IMG = os.path.join(resources, 'undo.png')
-
-REDO_DISABLED_IMG = os.path.join(resources, 'redo-disabled.png')
-UNDO_DISABLED_IMG = os.path.join(resources, 'undo-disabled.png')

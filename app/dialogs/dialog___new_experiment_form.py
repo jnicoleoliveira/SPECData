@@ -10,7 +10,7 @@ import const
 from app import error as error
 from app.dialogs.frames.new_experiment.frame___new_experiment_form import Ui_Dialog    # Import frame
 from app.events import display_error_message
-from dialog___composition_selector import CompositionSelector
+from app.dialogs.dialog___composition_selector import CompositionSelector
 from app.events import LoadingProgressScreen
 
 class NewExperimentForm(QDialog):

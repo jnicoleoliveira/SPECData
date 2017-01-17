@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from app.dialogs.frames.main.frame___main_menu import Ui_mainmenu    # This window
-from dialog___new_experiment_form import NewExperimentForm    # New Experiment Window
+from app.dialogs.dialog___new_experiment_form import NewExperimentForm    # New Experiment Window
 
 
 class MainMenu(QDialog):

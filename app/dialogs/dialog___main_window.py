@@ -4,7 +4,7 @@
 from PyQt4.QtGui import *
 
 from app.dialogs.frames.main.frame___main_window import Ui_MainWindow # import frame
-from dialog___main_menu import MainMenu
+from app.dialogs.dialog___main_menu import MainMenu
 
 
 class MainWindow(QMainWindow):

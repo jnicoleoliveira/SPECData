@@ -63,6 +63,7 @@ class ExportCleanedLines(QDialog):
         deselect_all_btn = self.ui.deselect_all_btn
         ok_btn = self.ui.ok_btn
         cancel_btn = self.ui.cancel_btn
+        invert_btn = self.ui.invert_btn
 
         ''' Connect buttons to associated functions '''
         select_file_btn.clicked.connect(self.save_file)
@@ -70,6 +71,7 @@ class ExportCleanedLines(QDialog):
         deselect_all_btn.clicked.connect(self.deselect_all)
         ok_btn.clicked.connect(self.ok)
         cancel_btn.clicked.connect(self.cancel)
+        invert_btn.clicked.connect(self.invert)
 
     def cancel(self):
         """
@@ -86,11 +88,31 @@ class ExportCleanedLines(QDialog):
         save_as_file(self.ui.select_file_txt)
         self.save_path = self.ui.select_file_txt.text()
 
-    def deselect_all(self):
-        print "DESELECT ALL"
-
     def select_all(self):
-        print "stub"
+        """
+        'Clicks' all checkboxes that are not checked
+        :return:
+        """
+        for c in self.checkboxes:
+            if c.checkbox.isChecked() is False:
+                c.checkbox.click()
+
+    def deselect_all(self):
+        """
+        'Clicks' all checkboxes that are checked
+        :return:
+        """
+        for c in self.checkboxes:
+            if c.checkbox.isChecked() is True:
+                c.checkbox.click()
+
+    def invert(self):
+        """
+        'Clicks' all checkboxes to invert the selections
+        :return:
+        """
+        for c in self.checkboxes:
+            c.checkbox.click()
 
     def get_to_be_cleaned_mids(self):
         mids = []

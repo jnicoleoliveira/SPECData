@@ -150,6 +150,42 @@ class Experiment:
         if self.is_saved:
             self.__load_saved_data()
 
+    def add_a_molecule(self, mid):
+        name = molecules.get_name(conn, mid)
+        mol = Experiment.MoleculeMatch(name, mid, self.N)
+
+        cursor = conn.cursor()
+
+        for p in self.experiment_peaks:
+
+            if p.is_pending():
+                frequency = peaks.get_frequency(conn, p.pid)
+                script = "SELECT name, mid, pid, MIN(ABS(frequency - {freq})) FROM" \
+                         " (SELECT molecules.name, molecules.mid, peaks.pid, peaks.frequency" \
+                         " FROM peaks JOIN molecules " \
+                         " ON peaks.mid=molecules.mid" \
+                         " WHERE molecules.mid={mid} AND ABS(peaks.frequency - {freq}) <= {thresh})" \
+                         "".format(mid=mid, freq=frequency, thresh=self.match_threshold)
+                try:
+                    cursor.execute(script)
+                except Exception as e:
+                    cursor.close()
+                    raise
+                rows = cursor.fetchone()
+                if rows is not None and rows[0] is not None:
+                    print "found match!"
+                    print rows
+                    row = rows[0]
+                    name = row[0]
+                    mid = row[1]
+                    pid = row[2]
+                    distance = row[3]
+
+                    match = Match(name, mid, pid, 1, p.pid, 1)
+                    mol.add_match(match)
+        self.molecule_matches[mid] = mol
+        return mol
+
     ###############################################################################
     # Status Functions
     ###############################################################################

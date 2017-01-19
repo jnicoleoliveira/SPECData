@@ -114,6 +114,11 @@ class ExperimentView(QMainWindow):
         window.exec_()
         #self.close()
 
+    def add_a_molecule(self):
+        from dialog___add_a_molecule import AddAMolecule
+        window = AddAMolecule(self.selection_widget, self.experiment)
+        window.exec_()
+
     ###############################################################################
     # Selection Widget Functions
     ###############################################################################
@@ -123,20 +128,23 @@ class ExperimentView(QMainWindow):
         Select all button function.
         Checks all selections in selection widget
         """
-
-        self.selection_widget.deselect_all()
+        current_widget = self.current_selection_widget()
+        current_widget.deselect_all()
 
     def invalidate_selections(self, save=True):
 
+        # -- Get currently selected widget -- #
+        current_widget = self.current_selection_widget()
+
         # -- Get Selected Mids -- #
-        selected_mids = self.selection_widget.get_selected_mids()
+        selected_mids = current_widget.get_selected_mids()
 
         # -- Validate Selections in Experiment -- #
         for mid in selected_mids:
             self.experiment.invalidate_a_match(mid)
 
         # Remove selected rows, and get those selections #
-        matches, colors = self.selection_widget.remove_selections()
+        matches, colors = current_widget.remove_selections()
 
         for i in range(0, len(matches)):
             self.invalidated_selection_widget.add_row(matches[i], colors[i])
@@ -148,9 +156,6 @@ class ExperimentView(QMainWindow):
             self.__save_state()
 
         self.update_info()
-
-    def update_info(self):
-        self.info_widget.update(self.experiment)
 
     def get_selections(self):
         return self.selection_widget.get_selections()
@@ -182,20 +187,24 @@ class ExperimentView(QMainWindow):
         Select all button function.
         Checks all selections in selection widget
         """
-        self.selection_widget.select_all()
+        current_widget = self.current_selection_widget()
+        current_widget.select_all()
 
     def validate_selections(self, save=True):
         print "VALIDATE SELECTIONS"
 
+        # -- Get currently selected widget -- #
+        current_widget = self.current_selection_widget()
+
         # -- Get Selected Mids -- #
-        selected_mids = self.selection_widget.get_selected_mids()
+        selected_mids = current_widget.get_selected_mids()
 
         # -- Validate Selections in Experiment -- #
         for mid in selected_mids:
             self.experiment.validate_a_match(mid)
 
         # Remove selected rows, and get those selections #
-        matches, colors = self.selection_widget.remove_selections()
+        matches, colors = current_widget.remove_selections()
 
         for i in range(0, len(matches)):
             self.validated_selection_widget.add_row(matches[i], colors[i])
@@ -208,7 +217,8 @@ class ExperimentView(QMainWindow):
         self.update_info()
 
     def current_selection_widget(self):
-        self.selection_tab_widget
+        return self.selection_tab_widget.currentWidget().widget()
+
     ###############################################################################
     # Table Widget Functions
     ###############################################################################
@@ -441,7 +451,7 @@ class ExperimentView(QMainWindow):
         self.experiment.validated_matches = deepcopy(experiment.validated_matches)
         self.experiment.molecule_matches = deepcopy(experiment.molecule_matches)
         self.experiment.experiment_peaks = deepcopy(experiment.experiment_peaks)
-
+        self.populate_table_widget()
         print "*****************"
         print self.experiment.validated_matches
         for m in self.experiment.get_sorted_molecule_matches():
@@ -823,6 +833,9 @@ class ExperimentView(QMainWindow):
         export_cleaned_lines = self.ui.actionExport_cleaned_lines
         export_cleaned_lines.triggered.connect(self.export_cleaned_lines)
 
+        ''' Add A Molecule '''
+        add_a_molecule = self.ui.actionAdd_a_molecule
+        add_a_molecule.triggered.connect(self.add_a_molecule)
         #self.__setup_graph_toolbar()
 
         """
@@ -945,6 +958,10 @@ class ExperimentView(QMainWindow):
             self.table_toolbox.show()
         else:
             self.table_toolbox.hide()
+
+    def update_info(self):
+        self.info_widget.update(self.experiment)
+
 
 class State:
     """

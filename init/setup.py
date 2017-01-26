@@ -1,10 +1,15 @@
+import os
+
+init_script = os.path.join('bin', 'init.py')
+requirements_txt = os.path.join('bin', 'requirements.txt')
+
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
 # Import Requirements
-with open('requirements.txt') as f:
+with open(requirements_txt) as f:
     requirements = f.read().splitlines()
 
 setup(name='SPECdata',
@@ -13,5 +18,6 @@ setup(name='SPECdata',
       author='Jasmine Oliveira',
       author_email='jasmine.oliveira@cfa.harvard.edu',
       url='https://github.com/jnicoleoliveira/SPECData',
-      install_requires=requirements
+      install_requires=requirements,
+      scripts=[init_script]
       )

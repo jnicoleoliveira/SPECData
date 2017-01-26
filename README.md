@@ -29,9 +29,8 @@ Install missing matplotlib qt4 backend
 ######Fix(2)
 Get the Matplotlib config file path
     >> python
-    >> >>> import matplotlib
-    >> >>> matplotlib.matplotlib_fname()
-    u'/usr/lib64/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc'
+    >> import matplotlib
+    >> matplotlib.matplotlib_fname()
 
 Change the backend of the config file to qt4agg
     >> vi /usr/lib64/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc

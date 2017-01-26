@@ -1,6 +1,6 @@
 # SPECData
 -------------------------------------------------------------------------------
-# Summary
+## Summary
 -------------------------------------------------------------------------------
 SPECdata is an interactive analysis tool that given an experiment spectrum, will
 rapidly assign known species (i.e. precursors, contaminants). The software
@@ -10,7 +10,7 @@ this software stores both catalog, and experiment data, and provides an easy
 to use GUI for database management.
 
 -------------------------------------------------------------------------------
-# Installation Instructions
+## Installation Instructions
 -------------------------------------------------------------------------------
 >> cd init
 >> python setup.py build
@@ -18,12 +18,12 @@ to use GUI for database management.
 >> python init.py
 
 -------------------------------------------------------------------------------
-# Running SPECData Application
+## Running SPECData Application
 -------------------------------------------------------------------------------
 >> python app.py
 
 -------------------------------------------------------------------------------
-# Common Setup Errors
+## Common Setup Errors
 -------------------------------------------------------------------------------
 Error:
     export PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
@@ -32,7 +32,7 @@ Error:
     ImportError: No module named backend_qt4agg
 Fix (1):
     [ Install missing matplotlib qt4 backend ]
-        >> sudo apt-get install python-matplotlib-qt4
+        ```>> sudo apt-get install python-matplotlib-qt4```
 Fix(2):
     [ Get the Matplotlib config file path ]
         >> python
@@ -45,6 +45,5 @@ Fix(2):
         change the line to :
             backend : qt4agg
 
-    [Source:]
-    http://stackoverflow.com/a/20583922
+    [Source:] (http://stackoverflow.com/a/20583922)
 

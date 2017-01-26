@@ -8,6 +8,10 @@ accept or decline assignments, and export or save their data. Using SQLite,
 this software stores both catalog, and experiment data, and provides an easy
 to use GUI for database management.
 
+# Requirements
+* Python 2.7
+* PyQT4
+* sqlite3
 
 ## Installation
     >> cd init

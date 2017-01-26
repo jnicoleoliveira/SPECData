@@ -18,15 +18,15 @@ to use GUI for database management.
 ## Running SPECData Application
     >> python app.py
 
-
 ## Common Setup Errors
+######Fix (1)
     export PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
 ----------------------------------------------------------
     ImportError: No module named backend_qt4agg
-######Fix (1):
+######Fix (1)
 Install missing matplotlib qt4 backend
     >> sudo apt-get install python-matplotlib-qt4
-######Fix(2):
+######Fix(2)
 Get the Matplotlib config file path
     >> python
     >> >>> import matplotlib

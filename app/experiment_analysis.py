@@ -1,9 +1,7 @@
 # Author: Jasmine Oliveira
 # Date: 08/24/2016
 
-import matplotlib
 
-matplotlib.use("Agg")
 import tables.peaks_table as get_peaks
 from config import conn
 

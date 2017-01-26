@@ -10,13 +10,13 @@ to use GUI for database management.
 
 
 ## Installation
-```>> cd init
->> python setup.py build
->> python setup.py install
->> python init.py```
+    >> cd init
+    >> python setup.py build
+    >> python setup.py install
+    >> python init.py
 
 ## Running SPECData Application
->> python app.py
+    >> python app.py
 
 
 ## Common Setup Errors

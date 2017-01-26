@@ -260,7 +260,7 @@ class ExperimentView(QMainWindow):
         self.table_widget.setSortingEnabled(True)
 
         # Set Header Label
-        self.table_widget.setHorizontalHeaderLabels(["Exp PID", "Frequency", "Intensity", \
+        self.table_widget.setHorizontalHeaderLabels(["Exp PID", "Frequency", "Intensity",
                                                      "Match", "Status"])
 
         for i in range(0, row_count):

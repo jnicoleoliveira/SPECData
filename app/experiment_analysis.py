@@ -69,11 +69,11 @@ class MainGraph:
         figure = self.plot_widget.getFigure()
         figure.set_facecolor("#626262")
 
-        self.subplot_1 = figure.add_subplot(pos, \
-                                     axisbg='white', \
-                                     xlabel="Frequency", \
-                                     ylabel="Intensity", \
-                                     title = 'Experiment: ' + self.experiment.name +' Peaks')
+        self.subplot_1 = figure.add_subplot(pos,
+                                            axisbg='white',
+                                            xlabel="Frequency",
+                                            ylabel="Intensity",
+                                            title='Experiment: ' + self.experiment.name + ' Peaks')
 
         self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor=color, picker=3)
 
@@ -87,11 +87,11 @@ class MainGraph:
         color_index = 0
 
         figure = self.plot_widget.getFigure()
-        subplot = figure.add_subplot(pos, \
-                                     axisbg='white', \
-                                     xlabel="Frequency", \
-                                     ylabel="Intensity",\
-                                     sharex=self.subplot_1, \
+        subplot = figure.add_subplot(pos,
+                                     axisbg='white',
+                                     xlabel="Frequency",
+                                     ylabel="Intensity",
+                                     sharex=self.subplot_1,
                                      title='Assignments')
         for key, value in self.experiment.molecule_matches.iteritems():
             frequencies = []
@@ -115,20 +115,20 @@ class MainGraph:
         # Create Subplot
         if self.sharey is True:
             # Subplot with sharey of subplot_!
-            subplot_2 = figure.add_subplot(pos, \
-                                        axisbg='white', \
-                                        xlabel="Frequency", \
-                                        ylabel="Intensity", \
-                                        sharex=self.subplot_1,\
-                                        sharey=self.subplot_1, \
-                                        title='Selected Assignments')
+            subplot_2 = figure.add_subplot(pos,
+                                           axisbg='white',
+                                           xlabel="Frequency",
+                                           ylabel="Intensity",
+                                           sharex=self.subplot_1,
+                                           sharey=self.subplot_1,
+                                           title='Selected Assignments')
         else:
             # No sharey
-            subplot_2 = figure.add_subplot(pos, \
-                                           axisbg='white', \
-                                           xlabel="Frequency", \
-                                           ylabel="Intensity", \
-                                           sharex=self.subplot_1, \
+            subplot_2 = figure.add_subplot(pos,
+                                           axisbg='white',
+                                           xlabel="Frequency",
+                                           ylabel="Intensity",
+                                           sharex=self.subplot_1,
                                            title='Selected Assignment')
         self.subplot_2 = subplot_2
 
@@ -277,8 +277,8 @@ class MainGraph:
 
                     self.x_bar = curve
                     self.on_bar = True
-                    self.hover_color_bar = self.subplot_1.bar(curve, self.ylims[i],\
-                                                              edgecolor='red',\
+                    self.hover_color_bar = self.subplot_1.bar(curve, self.ylims[i],
+                                                              edgecolor='red',
                                                               facecolor ='black',
                                                               width=0.5,
                                                               picker=True)
@@ -325,11 +325,9 @@ class AssignmentGraph:
         figure = self.plot_widget.getFigure()
         figure.set_facecolor(AssignmentGraph.FACE_COLOR)
 
-        self.subplot_1 = figure.add_subplot(pos, \
-                                            axisbg='white', \
-                                            # xlabel="Frequency", \
-                                            # ylabel="Intensity", \
-                                     title = 'Experiment: ' + self.experiment.name +' Peaks')
+        self.subplot_1 = figure.add_subplot(pos,
+                                            axisbg='white',
+                                            title='Experiment: ' + self.experiment.name + ' Peaks')
 
         self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor=AssignmentGraph.EXPERIMENT_EDGE_COLOR)
 
@@ -348,18 +346,17 @@ class AssignmentGraph:
         ''' Create Subplot '''
         if self.sharey is True:
             # Subplot with sharey of subplot_!
-            self.subplot_2 = figure.add_subplot(pos, \
-                                        axisbg='white', \
-                                        xlabel="Frequency", \
-                                        sharex=self.subplot_1,\
-                                        sharey=self.subplot_1, \
-                                        title='Selected Assignments')
+            self.subplot_2 = figure.add_subplot(pos,
+                                                axisbg='white',
+                                                xlabel="Frequency",
+                                                sharex=self.subplot_1,
+                                                title='Selected Assignments')
         else:
             # No sharey
-            self.subplot_2 = figure.add_subplot(pos, \
-                                                axisbg='white', \
-                                                xlabel="Frequency", \
-                                                ylabel="Intensity", \
+            self.subplot_2 = figure.add_subplot(pos,
+                                                axisbg='white',
+                                                xlabel="Frequency",
+                                                ylabel="Intensity",
                                                 sharex=self.subplot_1,
                                                 title='Selected Assignments')
 
@@ -379,12 +376,12 @@ class AssignmentGraph:
         figure = self.plot_widget.getFigure()
         figure.set_facecolor("#626262")
 
-        subplot = figure.add_subplot(pos, \
-                                     axisbg='white', \
-                                     xlabel="Frequency", \
+        subplot = figure.add_subplot(pos,
+                                     axisbg='white',
+                                     xlabel="Frequency",
                                      # ylabel="Intensity", \
-                                     sharex=self.subplot_1, \
-                                     sharey=sharey, \
+                                     sharex=self.subplot_1,
+                                     sharey=sharey,
                                      title='Full Spectrum',
                                      xlim=(self.min_freq, self.max_freq))
 

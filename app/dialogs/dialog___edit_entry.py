@@ -83,6 +83,8 @@ class EditEntry(QDialog):
 
             molecules_table.update(conn, self.mid, 'last_updated', None)
 
+        self.close()
+
     ###############################################################################
     # Private Methods
     ###############################################################################
@@ -107,7 +109,7 @@ class EditEntry(QDialog):
             items.append(QTableWidgetItem(str(vibrational)))
             items.append(QTableWidgetItem(notes))
 
-            labels = ['Name', 'Units', 'Temperature', 'Isotope', 'Vibrational', 'Notes']
+            labels = ['name', 'units', 'temperature', 'isotope', 'vibrational', 'notes']
 
         elif category == 'experiment':
             type = experimentinfo_table.get_type(conn, mid)

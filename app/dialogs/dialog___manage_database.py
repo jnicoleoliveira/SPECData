@@ -130,11 +130,13 @@ class ManageDatabase(QDialog):
         window.exec_()
 
         if molecules_table.mid_exists(conn, self.current_mid):
-            self.selected_mids.remove(self.current_mid)
+
             self.populate_info_table_widget(self.current_mid)
             self.populate_peak_table_widget(self.current_mid)
+        else:
+            self.selected_mids.remove(self.current_mid)
 
-        self.populate_molecule_table_widget(self.selected_mids)
+        self.populate_molecule_table_widget(molecules_table.get_all_mid_list(conn))
 
     def open_composition_selector(self):
         window = CompositionSelector(self.ui.composition_txt)

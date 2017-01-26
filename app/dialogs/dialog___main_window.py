@@ -1,11 +1,12 @@
 # Author: Jasmine Oliveira
 # Date: 7/19/2016
 
+import sys
+
 from PyQt4.QtGui import *
 
-from app.dialogs.frames.main.frame___main_window import Ui_MainWindow # import frame
 from app.dialogs.dialog___main_menu import MainMenu
-
+from app.dialogs.frames.main.frame___main_window import Ui_MainWindow  # import frame
 
 class MainWindow(QMainWindow):
 
@@ -17,4 +18,6 @@ class MainWindow(QMainWindow):
 
     def start_main_menu(self):
         self.close()
-        MainMenu().exec_()
+        status = MainMenu().exec_()
+
+        sys.exit(status)

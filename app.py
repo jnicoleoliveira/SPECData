@@ -5,13 +5,16 @@
 # Driver
 
 import sys
+
 from PyQt4.QtGui import *
+
 from app.dialogs.dialog___main_window import MainWindow     # Import main window
 
 
 def main():
     app = QApplication(sys.argv)
     app.setApplicationName('specdata')
+    app.setQuitOnLastWindowClosed(True)
     #app.setStyle('windows')
     window = MainWindow()
     window.show()

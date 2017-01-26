@@ -1,4 +1,3 @@
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from dialog___experiment_view import ExperimentView

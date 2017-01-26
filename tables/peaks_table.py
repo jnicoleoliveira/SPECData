@@ -388,6 +388,7 @@ def pid_exists(conn, pid):
 #       * __import_catfile(conn, filepath, mid):
 #       * __import_spfile(conn, filepath, mid):
 #       * __import_linesfile(conn, filepath, mid):
+#       * __import_listfile(conn, filepath, mid):
 #       * __checkfile(filepath)
 ###############################################################################
 

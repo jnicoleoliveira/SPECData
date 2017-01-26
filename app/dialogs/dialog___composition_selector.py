@@ -7,7 +7,7 @@ from app.dialogs.frames.composition_selector.frame___composition_selector import
 from app.dialogs.frames.composition_selector.frame___element_viewbox_widget import Ui_Form as ViewBox_Ui
 from app.dialogs.frames.composition_selector.frame___selected_element_box import Ui_Form as SelectedBox_Ui
 from app.dialogs.widgets.widget___periodic_table_scene import PeriodicTableSceneWidget
-from ..events import display_question_message, display_error_message
+from ..events import display_error_message
 
 
 class CompositionSelector(QDialog):
@@ -120,7 +120,7 @@ class CompositionSelector(QDialog):
         """
         Action when a user decides to accept their element selections
             -- Displays error message and returns if no elements selected
-            -- Prompts user to confirm selections
+            -- (--deprecated)Prompts user to confirm selections
         """
         # Throw error message if none are selected
         if len(self.selected_elements) is 0:
@@ -132,12 +132,12 @@ class CompositionSelector(QDialog):
 
         # Prompt for selection confirmation
         composition_string = self.get_selected_string()
-        display_string = "You've selected the following elements:\n\n"\
-                         + composition_string + "\n\n Do you accept?"
-        reply = display_question_message(display_string, "Confirm")
-
-        if reply is False:
-            return
+        # display_string = "You've selected the following elements:\n\n"\
+        #                  + composition_string + "\n\n Do you accept?"
+        # reply = display_question_message(display_string, "Confirm")
+        #
+        # if reply is False:
+        #     return
 
         self.composition_lbl.setText(composition_string)
         self.close_self()

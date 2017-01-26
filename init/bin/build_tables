@@ -34,7 +34,7 @@ CREATE TABLE KnownInfo(
   mid INTEGER,
 
   units VARCHAR(10),
-  temperature INTEGER,
+  temperature FLOAT,
   composition VARCHAR(20),
   isotope BOOLEAN,
   vibrational BOOLEAN,

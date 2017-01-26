@@ -71,6 +71,7 @@ class ImportFileVerification(QDialog):
         ''' Temperature Spinbox '''
         self.ui.temperature_spinbx.setMaximum(100000)
         self.ui.temperature_spinbx.setMinimum(-100000)
+        self.ui.temperature_spinbx.setDecimals(0)
 
         ''' Temperature Units ComboBox'''
         self.ui.temperature_units_chkbx.addItems(self.temperature_units_list)

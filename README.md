@@ -9,17 +9,17 @@ this software stores both catalog, and experiment data, and provides an easy
 to use GUI for database management.
 
 
-## Installation Instructions
->> cd init
+## Installation
+```>> cd init
 >> python setup.py build
 >> python setup.py install
->> python init.py
+>> python init.py```
 
 ## Running SPECData Application
 >> python app.py
 
-## Common Setup Errors
 
+## Common Setup Errors
 Error:
     export PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
 

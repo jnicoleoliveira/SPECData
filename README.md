@@ -19,21 +19,21 @@ to use GUI for database management.
     >> python app.py
 
 ## Common Setup Errors
-######Fix (1)
+######Add ProjectDirectory to PYTHONPATH
     export PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
 ----------------------------------------------------------
     ImportError: No module named backend_qt4agg
 #####Install missing matplotlib qt4 backend
-    ```>> sudo apt-get install python-matplotlib-qt4```
-#####Adjust Matplotlib Configuration
-Get the Matplotlib config file path
+    >> sudo apt-get install python-matplotlib-qt4
+##### Adjust Matplotlib Configuration
+###### Get the Matplotlib config file path
     >> python
     >> import matplotlib
     >> matplotlib.matplotlib_fname()
     u'/usr/lib64/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc'
 Change the backend of the config file to qt4agg
     >> vi /usr/lib64/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc
-change the line to :
+Change the line to :
     backend : qt4agg
 [Source: StackOverflow] (http://stackoverflow.com/a/20583922)
 

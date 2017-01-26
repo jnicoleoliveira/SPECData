@@ -28,7 +28,7 @@ if not os.path.exists(experiment_spectrums_path):
 cursor = conn.cursor()
 
 # Execute SQL Script 'build_tables'
-script = open('./bin/build_tables', 'r').read()
+script = open('build_tables', 'r').read()
 sqlite3.complete_statement(script)
 
 try:

@@ -1,7 +1,7 @@
 import os
 
-init_script = os.path.join('init', 'init.py')
-requirements_txt = os.path.join('init', 'bin', 'requirements.txt')
+init_script = os.path.join('bin', 'init.py')
+requirements_txt = os.path.join('bin', 'requirements.txt')
 
 try:
     from setuptools import setup

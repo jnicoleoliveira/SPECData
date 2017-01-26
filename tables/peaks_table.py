@@ -466,7 +466,6 @@ def __import_dptfile(conn, filepath, mid):
 
     print "[ Added entry peaks ] "
 
-
 def __import_txtfile(conn, filepath, mid):
     """
     Inheritently Private Function, determines peaks of .sp File and imports to database

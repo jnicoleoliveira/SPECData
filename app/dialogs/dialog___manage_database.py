@@ -68,7 +68,13 @@ class ManageDatabase(QDialog):
             molecules_table.remove_molecule(conn, self.current_mid)
 
         self.selected_mids.remove(self.current_mid)
+        self.clear_tables()
         self.populate_molecule_table_widget(self.selected_mids)
+
+    def clear_tables(self):
+        self.molecules_table_widget.clear()
+        self.info_table_widget.clear()
+        self.peaks_list_widget.clear()
 
     def get_selected_categories(self):
 
@@ -122,8 +128,6 @@ class ManageDatabase(QDialog):
     def open_edit_entry(self):
         window = EditEntry(self.current_mid)
         window.exec_()
-
-        print "here!"
 
         if molecules_table.mid_exists(conn, self.current_mid):
             self.selected_mids.remove(self.current_mid)

@@ -31,9 +31,9 @@ to use GUI for database management.
     >> import matplotlib
     >> matplotlib.matplotlib_fname()
     u'/usr/lib64/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc'
-Change the backend of the config file to qt4agg
+######Change the backend of the config file to qt4agg
     >> vi /usr/lib64/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc
-Change the line to :
+######Change the line to :
     backend : qt4agg
 [Source: StackOverflow] (http://stackoverflow.com/a/20583922)
 

@@ -347,27 +347,41 @@ def update_name(conn, mid, name):
 
 
 def update(conn, mid, row, value):
-    print "CHANGE:" + str(mid) + " " + str(row) + "  " + str(value)
-    if row == 'name':
-        update_name(conn, mid, value)
-    elif row == 'category':
-        update_category(conn, mid, value)
-    else:
 
-        if get_category(conn, mid) == 'experiment':
-            if row == 'last_updated':
-                from experimentinfo_table import update_last_updated
-                update_last_updated(conn, mid)
-            else:
-                from experimentinfo_table import update as u
-                u(conn, mid, row, value)
-        else:
-            if row == 'last_updated':
-                from knowninfo_table import update_last_updated
-                update_last_updated(conn,mid)
-            else:
-                from knowninfo_table import update as u
-                u(conn, mid, row, value)
+    print "CHANGE:" + str(mid) + " " + str(row) + "  " + str(value)
+
+    if row == 'name':
+        update_name(conn, mid, value)  # update molecules.name
+        return
+
+    if row == 'category':
+        update_category(conn, mid, value)  # update molecules.category
+        return
+
+    if get_category(conn, mid) == 'experiment':
+        update_experiment(conn, mid, row, value)
+        return
+
+    update_known(conn, mid, row, value)
+
+
+def update_experiment(conn, mid, row, value):
+    if row == 'last_updated':
+        print "UPDATING LAST UPDATED!!! -------------------------------"
+        from experimentinfo_table import update_last_updated
+        update_last_updated(conn, mid)
+    else:
+        from experimentinfo_table import update as u
+        u(conn, mid, row, value)
+
+
+def update_known(conn, mid, row, value):
+    if row == 'last_updated':
+        from knowninfo_table import update_last_updated
+        update_last_updated(conn, mid)
+    else:
+        from knowninfo_table import update as u
+        u(conn, mid, row, value)
 
 
 ###############################################################################

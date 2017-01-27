@@ -221,7 +221,7 @@ def update_last_updated(conn, mid):
         print "[ ERROR: KnownInfo entry does not exist. Cancelling action! ]"
         return False
 
-    conn.execute("UPDATE KnownInfo SET last_updated=(CURRENT_TIMESTAMP);")
+    conn.execute("UPDATE ExperimentInfo SET last_updated=datetime('now', 'localtime') WHERE mid=?;", (mid,))
     conn.commit()
     return True
 

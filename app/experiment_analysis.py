@@ -403,8 +403,7 @@ class AssignmentGraph:
                     self.full_spectrum_frequencies.append(float(point[0]))
                     self.full_spectrum_intensities.append(float(point[1]))
 
-        self.subplot_1.plot(self.full_spectrum_frequencies, self.full_spectrum_intensities, color=color,
-                            xrange=(self.min_freq, self.max_freq))
+        self.subplot_1.plot(self.full_spectrum_frequencies, self.full_spectrum_intensities, color=color)
 
     def clear(self):
         self.subplot_1.clear()

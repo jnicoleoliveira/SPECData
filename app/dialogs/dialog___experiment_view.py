@@ -651,8 +651,10 @@ class ExperimentView(QMainWindow):
         selection_tab_widget.addTab(pending_scroll_selection_container, "Pending")
         selection_tab_widget.addTab(validated_scroll_selection_container, "Validated")
         selection_tab_widget.addTab(invalidated_scroll_selection_container, "Invalidated")
+
         selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.selection_tab_widget = selection_tab_widget
+        self.selection_tab_widget.tabBar().setStyleSheet("background-color:rgb(53, 53, 53);")  # tab color fix
 
         # Save
         self.pending_scroll_selection_container = pending_scroll_selection_container

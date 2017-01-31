@@ -514,3 +514,4 @@ class ManageDatabase(QDialog):
         table_widget.setItem(0, 0, eid_item)
         table_widget.setItem(0, 1, notes_item)
         table_widget.setItem(0, 2, updated_item)
+

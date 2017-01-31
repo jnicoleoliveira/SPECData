@@ -5,9 +5,9 @@ import os
 
 from PyQt4.QtGui import *
 
+from app.dialogs.dialog___assignment_window import AssignmentWindow
 from app.dialogs.frames.experiment_view.frame___molecule_selection_widget import Ui_ScrollArea
 from config import resources
-from app.dialogs.dialog___assignment_window import AssignmentWindow
 
 
 class MoleculeSelectionWidget(QWidget):

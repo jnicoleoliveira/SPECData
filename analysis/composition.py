@@ -24,6 +24,10 @@ class Composition:
             new_element = Element.string_to_element(a)
             self.elements.append(new_element)
 
+    def get_symbols(self):
+        symbols = []
+        for e in self.elements: symbols.append(e.symbol)
+
 
 class Element:
 
@@ -61,6 +65,35 @@ class Element:
                 return False
         except:
             return False
+
+
+class CompositionQuery:
+    @staticmethod
+    def build_has(conn, composition):
+        symbols = []
+        for symbol in composition.get_symbols():
+            symbols.append(symbol + "(")
+
+        string = CompositionQuery.get_in_string(symbols)
+
+    @staticmethod
+    def get_in_string(array):
+        """
+        Returns a string of the array in the format (a1, a2, a3 .. an)
+        :param array: array of elements
+        :return:
+        """
+
+        if array is None or len(array) is 0:
+            return None
+
+        string = "("
+        for i in range(0, len(array) - 1):
+            string += "'" + str(array[i]) + "', "
+
+        string += "'" + str(array[len(array) - 1]) + "')"
+
+        return string
 
 
 def main():

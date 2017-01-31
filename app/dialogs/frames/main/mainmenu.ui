@@ -35,7 +35,8 @@
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(53, 53, 53);</string>
      </property>
      <property name="text">
       <string>Manage Database</string>
@@ -54,7 +55,8 @@
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(53, 53, 53);</string>
      </property>
      <property name="text">
       <string>Load Experiment</string>
@@ -73,7 +75,8 @@
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(53, 53, 53);</string>
      </property>
      <property name="text">
       <string>Import Files to database</string>
@@ -145,7 +148,8 @@
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(53, 53, 53);</string>
      </property>
      <property name="text">
       <string>New Experiment</string>

@@ -344,16 +344,18 @@ class ManageDatabase(QDialog):
             mids = list(set(mids) & set(m2))    # Intersection
 
         ''' Composition '''
-        text = Composition(str(self.ui.composition_txt.text()))
-        if self.ui.composition_has_rdio.isChecked():
-            m2 = CompositionQuery.have(conn, text)
-            mids = list(set(mids) & set(m2))  # Intersection
-        elif self.ui.composition_exactly_rdo.isChecked():
-            m2 = CompositionQuery.is_exactly(conn, text)
-            mids = list(set(mids) & set(m2))  # Intersection
-        elif self.ui.composition_nothave_rdio.isChecked():
-            m2 = CompositionQuery.not_have(conn, text)
-            mids = list(set(mids) & set(m2))  # Intersection
+        composition = Composition(str(self.ui.composition_txt.text()))
+        if composition.string is not None:
+            ## Valid Composition
+            if self.ui.composition_has_rdio.isChecked():
+                m2 = CompositionQuery.have(conn, composition)
+                mids = list(set(mids) & set(m2))  # Intersection
+            elif self.ui.composition_exactly_rdo.isChecked():
+                m2 = CompositionQuery.is_exactly(conn, composition)
+                mids = list(set(mids) & set(m2))  # Intersection
+            elif self.ui.composition_nothave_rdio.isChecked():
+                m2 = CompositionQuery.not_have(conn, composition)
+                mids = list(set(mids) & set(m2))  # Intersection
 
 
         self.selected_mids = mids

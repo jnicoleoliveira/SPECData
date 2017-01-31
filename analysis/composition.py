@@ -24,7 +24,11 @@ class Composition:
             array = [self.string]
         print array
         for a in array:
-            new_element = Element.string_to_element(a)
+            try:
+                new_element = Element.string_to_element(a)
+            except IndexError:
+                self.string = None
+                return
             self.elements.append(new_element)
 
     def get_symbols(self):
@@ -69,6 +73,7 @@ class Element:
                 return False
         except:
             return False
+
 
 class CompositionQuery:
     @staticmethod

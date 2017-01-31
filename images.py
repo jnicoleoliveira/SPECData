@@ -1,6 +1,7 @@
 # Jasmine Oliveira
 # 1/9/2016
 import os
+
 from config import resources
 
 SAVE = os.path.join(resources, 'save-button.png')
@@ -24,3 +25,7 @@ INFO_ICON = os.path.join(resources, 'info.png')
 TABLE_ICON = os.path.join(resources, 'table-grid.png')
 
 ROUND_GRAPH_ICON_BLUE = os.path.join(resources, 'graph-icon.png')
+
+EDIT_ICON = os.path.join(resources, 'edit.png')
+
+TRASH_ICON = os.path.join(resources, "delete.png")

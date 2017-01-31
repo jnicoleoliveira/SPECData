@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1001</width>
-    <height>611</height>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,8 +34,8 @@ color: rgb(255, 255, 255);</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>308</width>
-        <height>264</height>
+        <width>272</width>
+        <height>284</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_11">
@@ -73,8 +73,8 @@ color: rgb(255, 255, 255);</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>309</width>
-        <height>539</height>
+        <width>272</width>
+        <height>579</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -106,8 +106,8 @@ color: rgb(255, 255, 255);</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>308</width>
-        <height>265</height>
+        <width>272</width>
+        <height>285</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
@@ -142,7 +142,10 @@ color: rgb(255, 255, 255);</string>
             </size>
            </property>
            <property name="text">
-            <string>Edit</string>
+            <string/>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -182,6 +185,49 @@ color: rgb(255, 255, 255);</string>
       <property name="spacing">
        <number>0</number>
       </property>
+      <item row="2" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QPushButton" name="reset_btn">
+          <property name="text">
+           <string>Reset</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="filter_btn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(1, 133, 116);</string>
+          </property>
+          <property name="text">
+           <string>Filter Results</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
       <item row="0" column="0">
        <layout class="QFormLayout" name="formLayout">
         <property name="fieldGrowthPolicy">
@@ -210,7 +256,7 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="0" column="1">
-         <layout class="QGridLayout" name="gridLayout_10">
+         <layout class="QGridLayout" name="category_grid_layout">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -284,7 +330,7 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="1" column="1">
-         <layout class="QGridLayout" name="gridLayout_9">
+         <layout class="QGridLayout" name="frequency_grid_layout">
           <item row="0" column="0">
            <widget class="QCheckBox" name="mhz_chk">
             <property name="styleSheet">
@@ -337,7 +383,7 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="2" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="temperature_hbox_layout">
           <item>
            <widget class="QGroupBox" name="groupBox">
             <property name="title">
@@ -404,9 +450,21 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="3" column="1">
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QVBoxLayout" name="composition_vbox_layout">
           <item>
            <layout class="QGridLayout" name="gridLayout_7">
+            <item row="1" column="2">
+             <widget class="QRadioButton" name="composition_nothave_rdio">
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Does not have</string>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="0">
              <widget class="QRadioButton" name="composition_exactly_rdo">
               <property name="font">
@@ -419,37 +477,7 @@ color: rgb(255, 255, 255);</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QRadioButton" name="composition_all_rdio">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>8</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>All</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
+            <item row="1" column="1">
              <widget class="QRadioButton" name="composition_has_rdio">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -467,17 +495,18 @@ color: rgb(255, 255, 255);</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QRadioButton" name="composition_nothave_rdio">
-              <property name="font">
-               <font>
-                <pointsize>8</pointsize>
-               </font>
+            <item row="1" column="3">
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
-              <property name="text">
-               <string>Does not have</string>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
               </property>
-             </widget>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -579,7 +608,7 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="5" column="1">
-         <layout class="QGridLayout" name="gridLayout_6">
+         <layout class="QGridLayout" name="other_grid_layout">
           <item row="0" column="0">
            <widget class="QCheckBox" name="isotope_chk">
             <property name="text">
@@ -601,49 +630,6 @@ color: rgb(255, 255, 255);</string>
            </widget>
           </item>
          </layout>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
-        <item>
-         <widget class="QPushButton" name="reset_btn">
-          <property name="text">
-           <string>Reset</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>10</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="filter_btn">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(1, 133, 116);</string>
-          </property>
-          <property name="text">
-           <string>Filter Results</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>

@@ -84,6 +84,7 @@ class ExportCleanedLines(QDialog):
         Save file, opens file selector, and determines the location and
         name of the intended file.
         """
+        self.open_choose_export_file_type_window()
         #select_file(self.ui.select_file_txt)
         save_as_file(self.ui.select_file_txt)
         self.save_path = self.ui.select_file_txt.text()
@@ -146,11 +147,6 @@ class ExportCleanedLines(QDialog):
                                        "You have not selected an export location. Please\
                                        select an export location to save to.")
             return
-        #elif not path_exists(self.save_path):
-        #    # Path does not exist
-        #    msg = get_file_error_message(self.save_path)
-        #    self.throw_no_export_error("Invalid save location, please choose another.", msg)
-        #    return
 
         # -- Get mids -- #
         mids = self.get_to_be_cleaned_mids()
@@ -172,6 +168,10 @@ class ExportCleanedLines(QDialog):
         display_informative_message("Export Complete!")
         self.close()
 
+    def open_choose_export_file_type_window(self):
+        from dialog___choose_export_cleaned_lines_file_type import ChooseExportFileType
+        window = ChooseExportFileType()
+        window.exec_()
 
 class MoleculeBox:
     def __init__(self, checkbox, mid):

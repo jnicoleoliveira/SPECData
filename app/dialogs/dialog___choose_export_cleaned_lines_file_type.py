@@ -204,12 +204,13 @@ class ChooseExportFileType(QDialog):
             self.__setup__(auto)
 
         def __setup__(self, auto):
-            text = "Shots" if auto is True else "Max Shots"
+            text = "Max Shots" if auto is True else "Shots"
 
             label = QLabel(text)
-            shots_txt = QLineEdit()
             self.layout.addWidget(label, 0, 0)
-            self.layout.addWidget(shots_txt, 0, 1)
+            self.layout.addWidget(self.line_edit, 0, 1)
 
         def get_shots(self):
+            if self.line_edit.text() == "":
+                return None
             return self.line_edit.text()

@@ -154,33 +154,3 @@ class ExperimentWriteUp:
 
         return path
 
-
-
-        #
-        # class FileType(Enum):
-        #     TXT = 1
-        #     LINES = 2
-        #     FTB = 3
-        #
-        #     def extention(self):
-        #         return "." + str.lower(self.name)
-        #
-        #     def title(self):
-        #         lower = str.lower(self.name)
-        #         return lower + "file (." + lower + ")"
-        #
-        # class FileFormat(Enum):
-        #     FTB_FIXED_SHOTS = 1
-        #     FTB_ESTIMATED_SHOTS = 2
-        #     FREQUENCY_ONLY = 3
-        #     SPACE_DELIMITER = 4
-        #     TAB_DELIMITER = 5
-        #     COMMA_DELIMITER = 6
-        #
-        #     def title(self):
-        #         return str.replace(self.name, "_", " ").title()
-        #
-        # class ExportType():
-        #     def __init__(self, ext, formats):
-        #         self.extension = ext
-        #         self.formats = formats

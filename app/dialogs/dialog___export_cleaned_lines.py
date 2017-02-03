@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from analysis.experiment_write_up import ExperimentWriteUp
-from analysis.filetypes import EXPORT_FILE_TYPES
+from analysis.filetypes import *
 from app.dialogs.frames.experiment_view.frame___export_cleaned_lines import Ui_Dialog
 from ..events import display_error_message, save_as_file, display_informative_message
 
@@ -29,9 +29,9 @@ class ExportCleanedLines(QDialog):
         self.checkboxes = []
 
         # Export Type #
-        self.format = None
-        self.type = None
-        self.delimiter = None
+        self.type = FileType.TEXT_FILE
+        self.format = FileFormat.DELIMITER
+        self.delimiter = " "
         self.shots = None
 
         self.setup_selection_widget()
@@ -71,6 +71,7 @@ class ExportCleanedLines(QDialog):
         ok_btn = self.ui.ok_btn
         cancel_btn = self.ui.cancel_btn
         invert_btn = self.ui.invert_btn
+        options_btn = self.ui.options_btn
 
         ''' Connect buttons to associated functions '''
         select_file_btn.clicked.connect(self.save_file)
@@ -79,6 +80,7 @@ class ExportCleanedLines(QDialog):
         ok_btn.clicked.connect(self.ok)
         cancel_btn.clicked.connect(self.cancel)
         invert_btn.clicked.connect(self.invert)
+        options_btn.clicked.connect(self.open_choose_export_file_type_window)
 
     def cancel(self):
         """
@@ -91,7 +93,6 @@ class ExportCleanedLines(QDialog):
         Save file, opens file selector, and determines the location and
         name of the intended file.
         """
-        self.open_choose_export_file_type_window()
         #select_file(self.ui.select_file_txt)
         save_as_file(self.ui.select_file_txt, EXPORT_FILE_TYPES[self.type].extension)
         self.save_path = self.ui.select_file_txt.text()
@@ -178,6 +179,28 @@ class ExportCleanedLines(QDialog):
         window = ChooseExportFileType()
         if window.exec_():
             self.type, self.format, self.delimiter, self.shots = window.get_values()
+
+        self.ui.type_lbl.setText(self.type.title())
+        self.ui.format_lbl.setText(self.format.title())
+
+        if self.shots is not None:
+            self.ui.data_title_lbl.setText("Shots")
+            self.ui.data_lbl.setText(str(self.shots))
+        elif self.delimiter is not None:
+            self.ui.data_title_lbl.setText("Delimiter")
+            if self.delimiter == " ":
+                self.ui.data_lbl.setText("Space")
+            elif self.delimiter == "\t":
+                self.ui.data_lbl.setText("Tab")
+            elif self.delimiter == ",":
+                self.ui.data_lbl.setText("Comma")
+            else:
+                self.ui.data_lbl.setText(self.delimiter)
+        else:
+            # No additional data
+            self.ui.data_title_lbl.setText("")
+            self.ui.data_lbl.setText("")
+
 
 class MoleculeBox:
     def __init__(self, checkbox, mid):

@@ -1,5 +1,7 @@
 from math import ceil
 
+from filetypes import *
+
 
 class ExperimentWriteUp:
     TAB = "\t"
@@ -9,7 +11,7 @@ class ExperimentWriteUp:
     def __init__(self, experiment):
         self.experiment = experiment
 
-    def export(self, validated_mids, path, type, format, delimeter=None, shots=None):
+    def export(self, validated_mids, path, type, format, delimiter=None, shots=None):
         """
 
         :param validated_mids:
@@ -24,14 +26,14 @@ class ExperimentWriteUp:
         frequencies, intensities = \
             self.experiment.get_cleaned_experiment_intensities_list(validated_mids)
 
-        if type == self.FileType.TXT:
-            string = self.__get_txt_string_format(frequencies, intensities, format)
-        elif type == self.FileType.LINES:
-            string = self.__get_txt_string_format(frequencies, intensities, format)
-        elif type == self.FileType.FTB:
+        if type == FileType.TEXT_FILE:
+            string = self.__get_txt_string_format(frequencies, intensities, format, delimiter)
+        elif type == FileType.LINES_FILE:
+            string = self.__get_txt_string_format(frequencies, intensities, format, delimiter)
+        elif type == FileType.QTFTM_FILE:
             string = self.__get_ftb_string_format(frequencies, intensities, format, shots)
         else:
-            raise ValueError("Invalid LineFileType!")
+            raise ValueError("Invalid LineFileType!" + str(type))
 
         ''' Export to File '''
         self.__export_string_to_file(string, path)
@@ -40,9 +42,9 @@ class ExperimentWriteUp:
 
     def __get_txt_string_format(self, frequencies, intensities, format, delimiter=None):
 
-        if format == self.FileFormat.COMMA_DELIMITER:
+        if format == FileFormat.DELIMITER:
             string = self.__get_frequencies_intensities_string(frequencies, intensities, delimiter)
-        elif format == self.FileFormat.FREQUENCY_ONLY:
+        elif format == FileFormat.FREQUENCY_ONLY:
             string = self.__get_frequencies_string(frequencies)
         else:
             raise ValueError("Type-Format Mismatch!")
@@ -50,9 +52,9 @@ class ExperimentWriteUp:
         return string
 
     def __get_ftb_string_format(self, frequencies, intensities, format, shots):
-        if format is self.FileFormat.FTB_FIXED_SHOTS:
+        if format is FileFormat.FTB_FIXED_SHOTS:
             string = self.__get_ftb_fixed_shots_string(frequencies, shots)
-        elif format is self.FileFormat.FTB_ESTIMATED_SHOTS:
+        elif format is FileFormat.FTB_ESTIMATED_SHOTS:
             string = self.__get_ftb_estimated_shots_string(frequencies, intensities, shots)
         else:
             raise ValueError("Type-Format Mismatch!")

@@ -5,6 +5,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from analysis.experiment_write_up import ExperimentWriteUp
+from analysis.filetypes import EXPORT_FILE_TYPES
 from app.dialogs.frames.experiment_view.frame___export_cleaned_lines import Ui_Dialog
 from ..events import display_error_message, save_as_file, display_informative_message
 
@@ -26,6 +27,12 @@ class ExportCleanedLines(QDialog):
         self.clean_mids_list = []
         self.save_path = None
         self.checkboxes = []
+
+        # Export Type #
+        self.format = None
+        self.type = None
+        self.delimiter = None
+        self.shots = None
 
         self.setup_selection_widget()
         self.connect_buttons()
@@ -86,7 +93,7 @@ class ExportCleanedLines(QDialog):
         """
         self.open_choose_export_file_type_window()
         #select_file(self.ui.select_file_txt)
-        save_as_file(self.ui.select_file_txt)
+        save_as_file(self.ui.select_file_txt, EXPORT_FILE_TYPES[self.type].extension)
         self.save_path = self.ui.select_file_txt.text()
 
     def select_all(self):
@@ -136,7 +143,8 @@ class ExportCleanedLines(QDialog):
         writeup = ExperimentWriteUp(self.experiment)
 
         # -- Export Cleaned Lines -- #
-        writeup.export_cleaned_lines(validated_mids, self.save_path)
+        # writeup.export_cleaned_lines(validated_mids, self.save_path)
+        writeup.export(validated_mids, self.save_path, self.type, self.format, self.delimiter, self.shots)
 
     def ok(self):
 
@@ -158,9 +166,6 @@ class ExportCleanedLines(QDialog):
                                        must select at least (1).")
             return
 
-        # Create File Type
-        self.save_path += ".lines"
-
         # No Errors, OK to do export!
         self.do_export(mids)
 
@@ -171,7 +176,8 @@ class ExportCleanedLines(QDialog):
     def open_choose_export_file_type_window(self):
         from dialog___choose_export_cleaned_lines_file_type import ChooseExportFileType
         window = ChooseExportFileType()
-        window.exec_()
+        if window.exec_():
+            self.type, self.format, self.delimiter, self.shots = window.get_values()
 
 class MoleculeBox:
     def __init__(self, checkbox, mid):

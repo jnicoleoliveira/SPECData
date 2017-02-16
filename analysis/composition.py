@@ -18,12 +18,24 @@ class Composition:
 
     def __get_elements_from_string(self):
 
-        array = self.string.split()
-
+        try:
+            array = self.string.split()
+        except TypeError:
+            array = [self.string]
+        print array
         for a in array:
-            new_element = Element.string_to_element(a)
+            try:
+                new_element = Element.string_to_element(a)
+            except IndexError:
+                self.string = None
+                return
             self.elements.append(new_element)
 
+    def get_symbols(self):
+        symbols = []
+        for e in self.elements:
+            symbols.append(e.symbol)
+        return symbols
 
 class Element:
 
@@ -62,6 +74,92 @@ class Element:
         except:
             return False
 
+
+class CompositionQuery:
+    @staticmethod
+    def have(conn, composition):
+        symbols = []
+        for symbol in composition.get_symbols():
+            symbols.append(symbol + "(")
+
+        string = CompositionQuery.get_in_string(symbols, "LIKE", "OR")
+        script = "SELECT mid, composition FROM " \
+                 "(SELECT mid, composition FROM KnownInfo UNION SELECT mid, composition FROM ExperimentInfo) " \
+                 "WHERE " + string
+        print script
+        cursor = conn.execute(script)
+        rows = cursor.fetchall()
+
+        if rows is None:
+            return []
+
+        mids = []
+        for r in rows:
+            mids.append(r[0])
+
+        return mids
+
+    @staticmethod
+    def not_have(conn, composition):
+        symbols = []
+        for symbol in composition.get_symbols():
+            symbols.append(symbol + "(")
+
+        string = CompositionQuery.get_in_string(symbols, "NOT LIKE", "AND")
+        script = "SELECT mid, composition FROM " \
+                 "(SELECT mid, composition FROM KnownInfo UNION SELECT mid, composition FROM ExperimentInfo) " \
+                 "WHERE " + string
+        print script
+        cursor = conn.execute(script)
+        rows = cursor.fetchall()
+
+        if rows is None:
+            return []
+
+        mids = []
+        for r in rows:
+            mids.append(r[0])
+
+        return mids
+
+    @staticmethod
+    def is_exactly(conn, composition):
+        cursor = conn.execute("SELECT mid FROM " \
+                              "(SELECT mid, composition FROM KnownInfo UNION SELECT mid, composition FROM ExperimentInfo)" \
+                              " WHERE composition == " + composition.string)
+
+        rows = cursor.fetchall()
+
+        if rows is None:
+            return []
+
+        mids = []
+        for r in rows:
+            mids.append(r[0])
+
+        return mids
+
+    @staticmethod
+    def get_in_string(array, term, conditional):
+        """
+        Returns a string of the array in the format (a1, a2, a3 .. an)
+        :param array: array of elements
+        :return:
+        """
+        string = ""
+        if array is None or len(array) is 0:
+            return None
+
+        for i in range(0, len(array) - 1):
+            case1 = "'% " + str(array[i]) + "%'"  # SPACE BEFORE
+            case2 = "'" + str(array[i]) + "%'"  # FIRST ELEMENT IN STRING
+            string += " composition " + term + " " + case1 + " OR composition " + term + case2 + " " + conditional + " "
+
+        case1 = "'% " + str(array[len(array) - 1]) + "%'"
+        case2 = "'" + str(array[len(array) - 1]) + "%'"
+        string += " composition " + term + " " + case1 + " " + conditional + " composition " + term + " " + case2
+
+        return string
 
 def main():
     c = Composition("Ha(2) O(2)")

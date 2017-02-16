@@ -40,7 +40,8 @@ class Ui_mainmenu(object):
         font.setWeight(75)
         self.manage_database_btn.setFont(font)
         self.manage_database_btn.setAutoFillBackground(False)
-        self.manage_database_btn.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
+        self.manage_database_btn.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
+                                                         "color: rgb(53, 53, 53);"))
         self.manage_database_btn.setObjectName(_fromUtf8("manage_database_btn"))
         self.gridLayout.addWidget(self.manage_database_btn, 8, 0, 1, 1)
         self.load_experiment_btn = QtGui.QPushButton(mainmenu)
@@ -49,7 +50,8 @@ class Ui_mainmenu(object):
         font.setWeight(75)
         self.load_experiment_btn.setFont(font)
         self.load_experiment_btn.setAutoFillBackground(False)
-        self.load_experiment_btn.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
+        self.load_experiment_btn.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
+                                                         "color: rgb(53, 53, 53);"))
         self.load_experiment_btn.setObjectName(_fromUtf8("load_experiment_btn"))
         self.gridLayout.addWidget(self.load_experiment_btn, 6, 0, 1, 1)
         self.import_btn = QtGui.QPushButton(mainmenu)
@@ -58,7 +60,8 @@ class Ui_mainmenu(object):
         font.setWeight(75)
         self.import_btn.setFont(font)
         self.import_btn.setAutoFillBackground(False)
-        self.import_btn.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
+        self.import_btn.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
+                                                "color: rgb(53, 53, 53);"))
         self.import_btn.setObjectName(_fromUtf8("import_btn"))
         self.gridLayout.addWidget(self.import_btn, 7, 0, 1, 1)
         self.label = QtGui.QLabel(mainmenu)
@@ -87,7 +90,8 @@ class Ui_mainmenu(object):
         font.setWeight(75)
         self.new_experiment_btn.setFont(font)
         self.new_experiment_btn.setAutoFillBackground(False)
-        self.new_experiment_btn.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
+        self.new_experiment_btn.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
+                                                        "color: rgb(53, 53, 53);"))
         self.new_experiment_btn.setObjectName(_fromUtf8("new_experiment_btn"))
         self.gridLayout.addWidget(self.new_experiment_btn, 5, 0, 1, 1)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)

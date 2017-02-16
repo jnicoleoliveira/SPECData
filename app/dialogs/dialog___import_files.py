@@ -73,12 +73,23 @@ class ImportFiles(QDialog):
          """
         from dialog___import_file_verification import ImportFileVerification
 
+        not_accepted = []
         i = 0
         total = len(self.file_paths)
         for f in self.file_paths:
             window = ImportFileVerification(f, i, total)
             window.exec_()
+            if not window.accepted:
+                not_accepted.append(f)
             i += 1
+
+        # Clear list widget
+        self.ui.listWidget.clear()
+
+        # Populate with leftover
+        for path in not_accepted:
+            path_item = QListWidgetItem(str(path))
+            self.ui.listWidget.addItem(QListWidgetItem(path_item))
 
     def open_file_dialog(self):
         """

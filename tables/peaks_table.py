@@ -388,6 +388,7 @@ def pid_exists(conn, pid):
 #       * __import_catfile(conn, filepath, mid):
 #       * __import_spfile(conn, filepath, mid):
 #       * __import_linesfile(conn, filepath, mid):
+#       * __import_listfile(conn, filepath, mid):
 #       * __checkfile(filepath)
 ###############################################################################
 
@@ -395,7 +396,7 @@ def import_file(conn, filepath, mid):
     """
     Imports file to peak table in spectrum database to it's associative molecule
     Molecule must exist for import
-    Supports '.cat' , '.sp', '.lines' files.
+    Supports '.cat' , '.sp', '.lines', '.list', .txt', files.
     :param filepath: Path to import file
     :param mid: Molecule ID
     :return:
@@ -426,6 +427,8 @@ def import_file(conn, filepath, mid):
         __import_dptfile(conn, filepath, mid)
     elif extention == 'txt':
         __import_txtfile(conn, filepath, mid)
+    elif extention == 'list':
+        __import_listfile(conn, filepath, mid)
     else:
         print "Invalid import file. EXTENTION must be: '.cat' , '.sp', '.lines'"
         return False
@@ -465,7 +468,6 @@ def __import_dptfile(conn, filepath, mid):
     conn.commit()
 
     print "[ Added entry peaks ] "
-
 
 def __import_txtfile(conn, filepath, mid):
     """
@@ -581,6 +583,29 @@ def __import_linesfile(conn, filepath, mid):
 
     print "[ Added entry peaks ] "
 
+
+def __import_listfile(conn, filepath, mid):
+    """
+    Inheritently Private Function, imports .list file to spectrum database
+    .list file:
+        contains a list of only frequencies. All associated
+        intensities are automatically set equal to 1.
+    :param conn: Database connection
+    :param filepath: Path to import file
+    :param mid: Molecule ID
+    :return:
+    """
+    # Store peak data in file, to 'peaks' table
+    with open(filepath) as f:
+        for line in f:
+            freq = float(line)  # get frequency
+            conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?, 1.0)',
+                         (mid, freq))  # insert into peak table
+
+    # Commit Changes
+    conn.commit()
+
+    print "[ Added entry peaks ] "
 
 def __checkfile(filepath):
     """

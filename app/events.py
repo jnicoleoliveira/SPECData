@@ -1,5 +1,5 @@
-import sys
 import time
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -39,7 +39,7 @@ def select_file(plain_txt_box):
         plain_txt_box.setText(file_path)
 
 
-def save_as_file(line_edit_txt_box):
+def save_as_file(line_edit_txt_box, ext):
     """
 
     :param line_edit_txt_box:
@@ -49,10 +49,11 @@ def save_as_file(line_edit_txt_box):
     w = QWidget()
     w.resize(320, 240)
     w.setWindowTitle("Save As")
-    filters = "Text files (*.txt);;Spectrum Files (*.sp);;Cat File (*.cat);;Lines file (*.lines)"
-    selected_filter = "Lines file (*.lines)"
+    # filters = "Text files (*.txt);;Spectrum Files (*.sp);;C;;Lines file (*.lines)"
+    filters = ext
+    selected_filter = ext
     file_path = QFileDialog.getSaveFileName(w, 'Save As', os.path.curdir, filters, selected_filter)
-    line_edit_txt_box.setText(file_path)
+    line_edit_txt_box.setText(file_path + ext)
 
 
 def display_error_message(text, informative_text,  detailed_text):

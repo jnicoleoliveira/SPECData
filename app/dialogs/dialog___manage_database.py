@@ -1,17 +1,16 @@
 # Author: Jasmine Oliveira
 # Date: 11/12/2016
 
-import os
-
 from PyQt4.QtGui import *
 
+from analysis.composition import Composition, CompositionQuery
 from app.dialogs.frames.manage_database.frame___manage_database import Ui_Dialog   # import frame
-from config import conn, resources
+from config import conn
 from dialog___composition_selector import CompositionSelector
 from dialog___edit_entry import EditEntry
+from images import *
 from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
 from ..events import display_question_message
-
 
 class ManageDatabase(QDialog):
 
@@ -24,7 +23,7 @@ class ManageDatabase(QDialog):
 
         ''' UI Options'''
         self.setWindowTitle("Manage Database")
-        self.resize(1500, 750)
+        self.resize(1200, 750)
         self.show()
 
         ''' Data '''
@@ -68,7 +67,13 @@ class ManageDatabase(QDialog):
             molecules_table.remove_molecule(conn, self.current_mid)
 
         self.selected_mids.remove(self.current_mid)
+        self.clear_tables()
         self.populate_molecule_table_widget(self.selected_mids)
+
+    def clear_tables(self):
+        self.molecules_table_widget.clear()
+        self.info_table_widget.clear()
+        self.peaks_list_widget.clear()
 
     def get_selected_categories(self):
 
@@ -123,14 +128,14 @@ class ManageDatabase(QDialog):
         window = EditEntry(self.current_mid)
         window.exec_()
 
-        print "here!"
-
         if molecules_table.mid_exists(conn, self.current_mid):
-            self.selected_mids.remove(self.current_mid)
+
             self.populate_info_table_widget(self.current_mid)
             self.populate_peak_table_widget(self.current_mid)
+        else:
+            self.selected_mids.remove(self.current_mid)
 
-        self.populate_molecule_table_widget(self.selected_mids)
+        self.populate_molecule_table_widget(molecules_table.get_all_mid_list(conn))
 
     def open_composition_selector(self):
         window = CompositionSelector(self.ui.composition_txt)
@@ -338,6 +343,21 @@ class ManageDatabase(QDialog):
             m2 = set(molecules_table.get_mids_where_is_vibrational(conn, True))
             mids = list(set(mids) & set(m2))    # Intersection
 
+        ''' Composition '''
+        composition = Composition(str(self.ui.composition_txt.text()))
+        if composition.string is not None:
+            ## Valid Composition
+            if self.ui.composition_has_rdio.isChecked():
+                m2 = CompositionQuery.have(conn, composition)
+                mids = list(set(mids) & set(m2))  # Intersection
+            elif self.ui.composition_exactly_rdo.isChecked():
+                m2 = CompositionQuery.is_exactly(conn, composition)
+                mids = list(set(mids) & set(m2))  # Intersection
+            elif self.ui.composition_nothave_rdio.isChecked():
+                m2 = CompositionQuery.not_have(conn, composition)
+                mids = list(set(mids) & set(m2))  # Intersection
+
+
         self.selected_mids = mids
         self.populate_molecule_table_widget(mids)
 
@@ -373,8 +393,11 @@ class ManageDatabase(QDialog):
         self.ui.composition_btn.clicked.connect(self.open_composition_selector)
 
         ''' Display Options '''
-        icon = QIcon(os.path.join(resources, "delete.png"))
+        icon = QIcon(TRASH_ICON)
         self.ui.delete_btn.setIcon(icon)
+
+        icon = QIcon(EDIT_ICON)
+        self.ui.edit_btn.setIcon(icon)
 
     ###############################################################################
     # Static Methods
@@ -508,3 +531,5 @@ class ManageDatabase(QDialog):
         table_widget.setItem(0, 0, eid_item)
         table_widget.setItem(0, 1, notes_item)
         table_widget.setItem(0, 2, updated_item)
+
+

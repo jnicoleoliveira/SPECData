@@ -29,6 +29,8 @@ class ImportFileVerification(QDialog):
         self.setWindowTitle("Import File")
         self.resize(1025, 750)
 
+        self.accepted = False
+
         # Data
         self.file_path = str(file_path)
         self.i = i
@@ -69,6 +71,7 @@ class ImportFileVerification(QDialog):
         ''' Temperature Spinbox '''
         self.ui.temperature_spinbx.setMaximum(100000)
         self.ui.temperature_spinbx.setMinimum(-100000)
+        self.ui.temperature_spinbx.setDecimals(0)
 
         ''' Temperature Units ComboBox'''
         self.ui.temperature_units_chkbx.addItems(self.temperature_units_list)
@@ -244,6 +247,7 @@ class ImportFileVerification(QDialog):
         self.collect_form_data()
         if self.determine_errors() is False:
             self.import_entry()
+            self.accepted = True
             self.close()
 
     def open_composition_selector(self):

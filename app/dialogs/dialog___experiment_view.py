@@ -1,7 +1,7 @@
 # Author: Jasmine Oliveira
 # Date: 08/24/2016
 
-import os
+import sys
 import time
 from copy import deepcopy
 
@@ -9,19 +9,18 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 
+import images
+from analysis import experiment
 from app.dialogs.frames.experiment_view.frame___experiment_view import Ui_MainWindow
 from app.dialogs.widgets.widget___experiment_info import ExperimentInfoWidget
+from app.dialogs.widgets.widget___graph_toolbox_dock import GraphToolBoxDock
 from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidget
 from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
-from app.dialogs.widgets.widget___graph_toolbox_dock import GraphToolBoxDock
 from app.dialogs.widgets.widget___rotated_button import RotatedButton
-
-from analysis import experiment
-from config import *
-import images
-from app.time_machine import TimeMachine
 from app.events import LoadingProgressScreen
 from app.experiment_analysis import MainGraph
+from app.time_machine import TimeMachine
+from config import *
 
 
 class ExperimentView(QMainWindow):
@@ -261,7 +260,7 @@ class ExperimentView(QMainWindow):
         self.table_widget.setSortingEnabled(True)
 
         # Set Header Label
-        self.table_widget.setHorizontalHeaderLabels(["Exp PID", "Frequency", "Intensity", \
+        self.table_widget.setHorizontalHeaderLabels(["Exp PID", "Frequency", "Intensity",
                                                      "Match", "Status"])
 
         for i in range(0, row_count):
@@ -568,7 +567,6 @@ class ExperimentView(QMainWindow):
         widget = QWidget()
         widget.setLayout(outer_layout)
         self.setCentralWidget(widget)
-
         '''
         Set-up Widgets
         '''
@@ -653,8 +651,10 @@ class ExperimentView(QMainWindow):
         selection_tab_widget.addTab(pending_scroll_selection_container, "Pending")
         selection_tab_widget.addTab(validated_scroll_selection_container, "Validated")
         selection_tab_widget.addTab(invalidated_scroll_selection_container, "Invalidated")
+
         selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.selection_tab_widget = selection_tab_widget
+        self.selection_tab_widget.tabBar().setStyleSheet("background-color:rgb(53, 53, 53);")  # tab color fix
 
         # Save
         self.pending_scroll_selection_container = pending_scroll_selection_container
@@ -962,6 +962,8 @@ class ExperimentView(QMainWindow):
     def update_info(self):
         self.info_widget.update(self.experiment)
 
+    def closeEvent(self, QCloseEvent):
+        sys.exit()
 
 class State:
     """

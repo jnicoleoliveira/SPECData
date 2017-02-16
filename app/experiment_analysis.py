@@ -1,9 +1,13 @@
 # Author: Jasmine Oliveira
 # Date: 08/24/2016
 
-from config import conn
+
 import tables.peaks_table as get_peaks
+from config import conn
+
+
 #from temp.get import get_peaks
+
 #from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTK
 
 class MainGraph:
@@ -67,11 +71,11 @@ class MainGraph:
         figure = self.plot_widget.getFigure()
         figure.set_facecolor("#626262")
 
-        self.subplot_1 = figure.add_subplot(pos, \
-                                     axisbg='white', \
-                                     xlabel="Frequency", \
-                                     ylabel="Intensity", \
-                                     title = 'Experiment: ' + self.experiment.name +' Peaks')
+        self.subplot_1 = figure.add_subplot(pos,
+                                            axisbg='white',
+                                            xlabel="Frequency",
+                                            ylabel="Intensity",
+                                            title='Experiment: ' + self.experiment.name + ' Peaks')
 
         self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor=color, picker=3)
 
@@ -85,11 +89,11 @@ class MainGraph:
         color_index = 0
 
         figure = self.plot_widget.getFigure()
-        subplot = figure.add_subplot(pos, \
-                                     axisbg='white', \
-                                     xlabel="Frequency", \
-                                     ylabel="Intensity",\
-                                     sharex=self.subplot_1, \
+        subplot = figure.add_subplot(pos,
+                                     axisbg='white',
+                                     xlabel="Frequency",
+                                     ylabel="Intensity",
+                                     sharex=self.subplot_1,
                                      title='Assignments')
         for key, value in self.experiment.molecule_matches.iteritems():
             frequencies = []
@@ -113,20 +117,20 @@ class MainGraph:
         # Create Subplot
         if self.sharey is True:
             # Subplot with sharey of subplot_!
-            subplot_2 = figure.add_subplot(pos, \
-                                        axisbg='white', \
-                                        xlabel="Frequency", \
-                                        ylabel="Intensity", \
-                                        sharex=self.subplot_1,\
-                                        sharey=self.subplot_1, \
-                                        title='Selected Assignments')
+            subplot_2 = figure.add_subplot(pos,
+                                           axisbg='white',
+                                           xlabel="Frequency",
+                                           ylabel="Intensity",
+                                           sharex=self.subplot_1,
+                                           sharey=self.subplot_1,
+                                           title='Selected Assignments')
         else:
             # No sharey
-            subplot_2 = figure.add_subplot(pos, \
-                                           axisbg='white', \
-                                           xlabel="Frequency", \
-                                           ylabel="Intensity", \
-                                           sharex=self.subplot_1, \
+            subplot_2 = figure.add_subplot(pos,
+                                           axisbg='white',
+                                           xlabel="Frequency",
+                                           ylabel="Intensity",
+                                           sharex=self.subplot_1,
                                            title='Selected Assignment')
         self.subplot_2 = subplot_2
 
@@ -275,8 +279,8 @@ class MainGraph:
 
                     self.x_bar = curve
                     self.on_bar = True
-                    self.hover_color_bar = self.subplot_1.bar(curve, self.ylims[i],\
-                                                              edgecolor='red',\
+                    self.hover_color_bar = self.subplot_1.bar(curve, self.ylims[i],
+                                                              edgecolor='red',
                                                               facecolor ='black',
                                                               width=0.5,
                                                               picker=True)
@@ -297,6 +301,8 @@ class AssignmentGraph:
 
         self.full_spectrum_intensities = None
         self.full_spectrum_frequencies = None
+        self.min_freq = None
+        self.max_freq = None
 
         # -- Options --#
         self.full_spectrum = False
@@ -310,22 +316,22 @@ class AssignmentGraph:
     def set_y_list(self, y):
         self.y = y
 
+    def draw(self):
+        self.plot_widget.draw()
+
     def add_subplot_experiment(self, pos):
         frequencies, intensities = self.experiment.get_experiment_frequencies_intensities_list()
+        self.max_freq = max(frequencies)
+        self.min_freq = min(frequencies)
 
         figure = self.plot_widget.getFigure()
         figure.set_facecolor(AssignmentGraph.FACE_COLOR)
 
-        self.subplot_1 = figure.add_subplot(pos, \
-                                     axisbg='white', \
-                                     xlabel="Frequency", \
-                                     ylabel="Intensity", \
-                                     title = 'Experiment: ' + self.experiment.name +' Peaks')
+        self.subplot_1 = figure.add_subplot(pos,
+                                            axisbg='white',
+                                            title='Experiment: ' + self.experiment.name + ' Peaks')
 
         self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor=AssignmentGraph.EXPERIMENT_EDGE_COLOR)
-
-    def draw(self):
-        self.plot_widget.draw()
 
     def add_subplot_assignment_peaks(self, pos, match, color):
         """
@@ -342,21 +348,19 @@ class AssignmentGraph:
         ''' Create Subplot '''
         if self.sharey is True:
             # Subplot with sharey of subplot_!
-            self.subplot_2 = figure.add_subplot(pos, \
-                                        axisbg='white', \
-                                        xlabel="Frequency", \
-                                        ylabel="Intensity", \
-                                        sharex=self.subplot_1,\
-                                        sharey=self.subplot_1, \
-                                        title='Selected Assignments')
+            self.subplot_2 = figure.add_subplot(pos,
+                                                axisbg='white',
+                                                xlabel="Frequency",
+                                                sharex=self.subplot_1,
+                                                title='Selected Assignments')
         else:
             # No sharey
-            self.subplot_2 = figure.add_subplot(pos, \
-                                           axisbg='white', \
-                                           xlabel="Frequency", \
-                                           ylabel="Intensity", \
-                                           sharex=self.subplot_1,
-                                           title='Selected Assignments')
+            self.subplot_2 = figure.add_subplot(pos,
+                                                axisbg='white',
+                                                xlabel="Frequency",
+                                                ylabel="Intensity",
+                                                sharex=self.subplot_1,
+                                                title='Selected Assignments')
 
         ''' Get Frequency, Intensity Data '''
         frequencies = []
@@ -369,18 +373,19 @@ class AssignmentGraph:
         self.subplot_2.bar(frequencies, intensities, width=0.02, edgecolor=color)
 
     def add_subplot_full_spectrum(self, pos, mid, color, sharey=None):
-        frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, mid)
-
+        frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, mid, self.max_freq, self.min_freq)
+        print max(frequencies)
         figure = self.plot_widget.getFigure()
         figure.set_facecolor("#626262")
 
-        subplot = figure.add_subplot(pos, \
-                                     axisbg='white', \
-                                     xlabel="Frequency", \
-                                     ylabel="Intensity", \
-                                     sharex=self.subplot_1, \
-                                     sharey=sharey,  \
-                                     title='Full Spectrum')
+        subplot = figure.add_subplot(pos,
+                                     axisbg='white',
+                                     xlabel="Frequency",
+                                     # ylabel="Intensity", \
+                                     sharex=self.subplot_1,
+                                     sharey=sharey,
+                                     title='Full Spectrum',
+                                     xlim=(self.min_freq, self.max_freq))
 
         subplot.bar(frequencies, intensities, width=0.02, edgecolor=color)
 
@@ -421,11 +426,11 @@ class AssignmentGraph:
         self.add_subplot_assignment_peaks(312, match, color)
         self.add_subplot_full_spectrum(313, match.mid, color)
 
-        #self.plot_widget.getFigure().subplots_adjust(top=0.95,
-        #                                             bottom = 0.07,
-        #                                             left = 0.05,
-        #                                             right = 0.97,
-        #                                             hspace=0.35,)
+        self.plot_widget.getFigure().subplots_adjust(top=0.95,
+                                                     bottom=0.07,
+                                                     left=0.05,
+                                                     right=0.97,
+                                                     hspace=0.35,)
 
     def set_options(self, full_spectrum=False, sharey=False, y_to_experiment_intensities=False, color_experiment=False):
         self.full_spectrum = full_spectrum

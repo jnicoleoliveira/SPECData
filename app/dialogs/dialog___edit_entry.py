@@ -63,25 +63,27 @@ class EditEntry(QDialog):
 
     def save_entry(self):
         values = self.get_table_data()
-        action = display_question_message("Are you want to accept these changes?",
-                                          "Save changes")
+        # action = display_question_message("Are you want to accept these changes?",
+        #                                   "Save changes")
         from ..error import is_valid_file
-        if action is True:
-            for i in range(0, len(values)):
-                if self.original_data[i] != values[i]:
-                    print self.labels[i]
-                    molecules_table.update(conn, self.mid, self.labels[i], values[i])
+        # if action is True:
+        for i in range(0, len(values)):
+            if self.original_data[i] != values[i]:
+                print self.labels[i]
+                molecules_table.update(conn, self.mid, self.labels[i].lower(), values[i])
 
-            if self.ui.composition_txt.isEnabled():
-                molecules_table.update(conn, self.mid, 'composition', self.ui.composition_txt.text())
+        if self.ui.composition_txt.isEnabled():
+            molecules_table.update(conn, self.mid, 'composition', self.ui.composition_txt.text())
 
-            file_path = self.ui.file_txt.text()
-            if file_path and file_path is not "":
-                if is_valid_file(file_path):
-                    peaks_table.remove_all(conn, self.mid)
-                    peaks_table.import_file(conn, str(file_path), self.mid)
+        file_path = self.ui.file_txt.text()
+        if file_path and file_path is not "":
+            if is_valid_file(file_path):
+                peaks_table.remove_all(conn, self.mid)
+                peaks_table.import_file(conn, str(file_path), self.mid)
 
-            molecules_table.update(conn, self.mid, 'last_updated', None)
+        molecules_table.update(conn, self.mid, 'last_updated', None)
+
+        self.close()
 
     ###############################################################################
     # Private Methods
@@ -107,7 +109,7 @@ class EditEntry(QDialog):
             items.append(QTableWidgetItem(str(vibrational)))
             items.append(QTableWidgetItem(notes))
 
-            labels = ['Name', 'Units', 'Temperature', 'Isotope', 'Vibrational', 'Notes']
+            labels = ['name', 'units', 'temperature', 'isotope', 'vibrational', 'notes']
 
         elif category == 'experiment':
             type = experimentinfo_table.get_type(conn, mid)

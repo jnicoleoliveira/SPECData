@@ -8,10 +8,10 @@ from PyQt4.QtGui import *
 
 import const
 from app import error as error
-from app.dialogs.frames.new_experiment.frame___new_experiment_form import Ui_Dialog    # Import frame
-from app.events import display_error_message
 from app.dialogs.dialog___composition_selector import CompositionSelector
+from app.dialogs.frames.new_experiment.frame___new_experiment_form import Ui_Dialog  # Import frame
 from app.events import LoadingProgressScreen
+from app.events import display_error_message
 
 class NewExperimentForm(QDialog):
 
@@ -111,7 +111,7 @@ class NewExperimentForm(QDialog):
         # Set File type
         # Whether a peak file or a full spectrum file
         if self.ui.peak_type_rbtn.isChecked():
-            self.file_type = "peak"
+            self.file_type = "peaks"
         else:
             self.file_type = "full"
 
@@ -171,7 +171,6 @@ class NewExperimentForm(QDialog):
         import tables.peaks_table as peaks_table
         import tables.experimentinfo_table as info_table
         from config import conn, db_dir
-        import time
 
         ''' Start Loading Screen '''
         loading_screen = LoadingProgressScreen()
@@ -188,7 +187,12 @@ class NewExperimentForm(QDialog):
             loading_screen.set_caption('Collecting data, and finding peaks...')
         loading_screen.next_value(40)
 
-        peaks_table.import_file(conn, str(self.file_path), mid)
+        if self.file_type is "peaks":
+            is_peaks = True
+        else:
+            is_peaks = False
+
+        peaks_table.import_file(conn, str(self.file_path), mid, is_peaks)
         info_table.new_entry(conn, str(mid), str(self.type), str(self.units),
                              str(self.composition), str(self.notes))
 

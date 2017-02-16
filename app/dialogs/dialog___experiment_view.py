@@ -17,6 +17,7 @@ from app.dialogs.widgets.widget___graph_toolbox_dock import GraphToolBoxDock
 from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidget
 from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
 from app.dialogs.widgets.widget___rotated_button import RotatedButton
+from app.dialogs.widgets.widget___splatalogue_dock import SplatalogueDockWidget
 from app.events import LoadingProgressScreen
 from app.experiment_analysis import MainGraph
 from app.time_machine import TimeMachine
@@ -50,6 +51,8 @@ class ExperimentView(QMainWindow):
         self.graph_options_widget = None
         # -- Experiment Info Widget -- #
         self.info_widget = None
+        # -- Splatalogue Dock Widget -- #
+        self.splatalogue_dock_widget = None
         # -- Molecule Selection Widgets -- #
         self.selection_widget = None                # Pending
         self.validated_selection_widget = None      # Accepted
@@ -588,6 +591,8 @@ class ExperimentView(QMainWindow):
         # --  Table -- #
         self.table_widget = QTableWidget()       # Table Widget (molecule assignment and peaks)
         self.populate_table_widget()
+        # -- Splatalogue Widget -- #
+        self.splatalogue_dock_widget = SplatalogueDockWidget(self.experiment)
 
         '''
         Create Inner Layouts / Containers
@@ -693,7 +698,9 @@ class ExperimentView(QMainWindow):
         self.window().addDockWidget(Qt.LeftDockWidgetArea, self.info_toolbox)
         self.window().addDockWidget(Qt.LeftDockWidgetArea, self.table_toolbox)
         self.window().addDockWidget(Qt.RightDockWidgetArea, self.graph_toolbox)
+        self.window().addDockWidget(Qt.RightDockWidgetArea, self.splatalogue_dock_widget)
         self.graph_toolbox.hide()
+        self.splatalogue_dock_widget.hide()
 
         self.table_widget.setMaximumWidth(450)
 
@@ -872,6 +879,14 @@ class ExperimentView(QMainWindow):
         btn.clicked.connect(self.toggle_graph_options_widget)
         tool_bar.addWidget(btn)
 
+        ''' Toggle Splatalogue Options '''
+        btn = RotatedButton("Splatalogue", self)
+        btn.setFixedWidth(24)
+        btn.setFlat(True)
+        btn.setIcon(QIcon(images.DATABASE_ICON_RED))
+        btn.clicked.connect(self.toggle_splatalogue_options_widget)
+        tool_bar.addWidget(btn)
+
     def __setup_graph_toolbar(self):
         """
 
@@ -924,6 +939,12 @@ class ExperimentView(QMainWindow):
     ###############################################################################
     # Stub Methods
     ###############################################################################
+
+    def toggle_splatalogue_options_widget(self):
+        if self.splatalogue_dock_widget.isHidden():
+            self.splatalogue_dock_widget.show()
+        else:
+            self.splatalogue_dock_widget.hide()
 
     def settings(self):
         print "SETTINGS"

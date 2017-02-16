@@ -373,7 +373,6 @@ def pid_exists(conn, pid):
     # Info entry exists
     return True
 
-
 ###############################################################################
 # Insert Peaks Table Entry
 # -----------------------------------------------------------------------------
@@ -392,7 +391,7 @@ def pid_exists(conn, pid):
 #       * __checkfile(filepath)
 ###############################################################################
 
-def import_file(conn, filepath, mid):
+def import_file(conn, filepath, mid, peaks=False):
     """
     Imports file to peak table in spectrum database to it's associative molecule
     Molecule must exist for import
@@ -426,7 +425,7 @@ def import_file(conn, filepath, mid):
     elif extention == 'dpt':
         __import_dptfile(conn, filepath, mid)
     elif extention == 'txt':
-        __import_txtfile(conn, filepath, mid)
+        __import_txtfile(conn, filepath, mid, peaks)
     elif extention == 'list':
         __import_listfile(conn, filepath, mid)
     else:
@@ -469,7 +468,8 @@ def __import_dptfile(conn, filepath, mid):
 
     print "[ Added entry peaks ] "
 
-def __import_txtfile(conn, filepath, mid):
+
+def __import_txtfile(conn, filepath, mid, peaks=False):
     """
     Inheritently Private Function, determines peaks of .sp File and imports to database
     :param conn: Database connection
@@ -478,6 +478,10 @@ def __import_txtfile(conn, filepath, mid):
     :return:
     """
     from analysis import peak_finder
+    import re
+
+    delimiters = [" ", "\t", ",", ", "]
+    regex = '|'.join((map(re.escape, delimiters)))
 
     # Get data from file
     frequencies = []
@@ -485,16 +489,21 @@ def __import_txtfile(conn, filepath, mid):
     with open(filepath) as f:
         for line in f:
             if line is not None or line is not "":
-                point = str.split((line.strip()))
+                point = re.split(regex, line.strip())
+                # point = re.split(', |\t|  |, ', line.strip())
+                # point = str.split((line.strip()), )
+
                 frequencies.append(float(point[0]))   # get frequency
                 intensities.append(float(point[1]))   # get actual intensity (logx ^ x)
 
-    # Determine Peaks
-    frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
+    if peaks is False:
+        # Determine Peaks
+        frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
 
     # Store peaks into file
     for i in range(0, len(frequencies)):
-        conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, frequencies[i], intensities[i]))   # insert into peak table
+        conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',
+                     (mid, frequencies[i], intensities[i]))  # insert into peak table
 
     # Commit Changes
     conn.commit()

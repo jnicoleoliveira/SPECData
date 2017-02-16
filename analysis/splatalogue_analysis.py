@@ -7,13 +7,13 @@ from tables import peaks_table
 line_ids = Splatalogue.get_species_ids()
 
 # --- Find species that have CO --- #
-CO_containing_species = Splatalogue.get_species_ids('CHS')
-print CO_containing_species
+# CO_containing_species = Splatalogue.get_species_ids('CHS')
+# print CO_containing_species
 
 # -- Find Species within lines -- #
-CO1to0 = Splatalogue.query_lines(115.271 * u.GHz, 115.273 * u.GHz, top20='top20')
-CO1to0.pprint()
-row = CO1to0[0]
+# CO1to0 = Splatalogue.query_lines(115.271 * u.GHz, 115.273 * u.GHz, top20='top20')
+# CO1to0.pprint()
+#row = CO1to0[0]
 # print row[1]
 
 mid = 122
@@ -45,15 +45,20 @@ for i in range(0, len(frequencies)):
     high_freq = frequencies[i] + threshold
 
     lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz)
-    print "FREQUENCY==========" + str(frequencies[i])
+
+    # if len(lines) > 0: print "\n\nFREQUENCY==========" + str(frequencies[i])
+
+    added = []
     for row in lines:
-        print row
+        #print row
         name = row[0]
-        freq = row[2]
+        freq = row[2] * 1000
         if str(freq) == "--":  # or abs(frequencies[0]-freq)>threshold:
-            freq = float(row[4]) * 1000.0
+            freq = float(str(row[4])) * 1000.0
 
         line_list = row[7]
+
+        if name in added: continue
 
         line = Line(freq, line_list)
 
@@ -62,6 +67,7 @@ for i in range(0, len(frequencies)):
             chemicals[row[0]] = chemical
 
         chemicals[name].add_line(line, frequencies[i])
+        added.append(name)
 
 for key, value in chemicals.iteritems():
     print "Name: " + value.name + "\nN=" + str(len(value.lines))
@@ -69,3 +75,13 @@ for key, value in chemicals.iteritems():
         print "L: " + str(value.lines[i].frequency) + " M:" + str(value.matched_lines[i])
 
     print "----------------------------"
+
+low_freq = peaks_table.get_min_frequency(conn, mid)
+high_freq = peaks_table.get_max_frequency(conn, mid)
+c = "Cyanomethyl"
+
+lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz, chemical_name=c)
+lines.pprint()
+
+for row in lines:
+    print str(row[0]) + "  " + str(row[2])

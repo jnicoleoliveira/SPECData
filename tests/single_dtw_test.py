@@ -7,8 +7,9 @@ import numpy as np
 from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
 
-from config import conn
 import tables.peaks_table as get_peaks
+from config import conn
+
 #from temp.get import get_peaks
 
 experiment_mid = 145

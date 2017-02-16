@@ -7,8 +7,9 @@ import tables.entry.entry_peaks as p_entry
 import temp.get.get_molecules as mol_get
 import temp.remove.remove_molecules as mol_rem
 import temp.remove.remove_peaks as p_rem
-from config import *
 from queries import view_query
+
+from config import *
 
 # Connect to sqlite database
 conn = sqlite3.connect(db_filepath)

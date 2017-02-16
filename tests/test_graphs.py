@@ -1,8 +1,10 @@
-import tables.molecules_table as get_molecules
 import temp.get.get_assignments as get_assignments
-from config import *
 from scripts import assign_peaks
-from scripts import graph_peaks
+
+import tables.molecules_table as get_molecules
+from config import *
+from tests import graph_peaks
+
 # Connect to sqlite database
 conn = sqlite3.connect(db_filepath)
 cursor = conn.cursor()
@@ -30,8 +32,8 @@ for a in assignments:
 while(True):
     print "Enter assigned MID: "
     assigned_mid = raw_input()
-    graph_peaks.graph_experiment_and_assignment(conn,exp_mid,assigned_mid,True,True,True)
-    graph_peaks.graph_experiment_and_assignment(conn,exp_mid,assigned_mid,False)
+    graph_peaks.graph_experiment_and_assignment(conn, exp_mid, assigned_mid, True, True, True)
+    graph_peaks.graph_experiment_and_assignment(conn, exp_mid, assigned_mid, False)
 
 #graph_peaks.graph_experiment_and_assignment(conn, exp_mid, assigned_mid, False, False)
 #graph_peaks.graph_experiment_and_assignment(conn, exp_mid, assigned_mid, True, False)

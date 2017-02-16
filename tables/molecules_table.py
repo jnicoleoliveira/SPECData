@@ -347,7 +347,6 @@ def update_name(conn, mid, name):
 
 
 def update(conn, mid, row, value):
-
     print "CHANGE:" + str(mid) + " " + str(row) + "  " + str(value)
 
     if row == 'name':

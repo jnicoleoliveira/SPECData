@@ -11,9 +11,9 @@
 import matplotlib.pyplot as plt
 from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
+from temp.get import get_peaks, get_molecules
 
 from config import conn
-from temp.get import get_peaks, get_molecules
 
 
 class TimeWarpRemove():

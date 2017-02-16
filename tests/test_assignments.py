@@ -2,10 +2,10 @@
 # Date: 7/5/2016
 # Test Peak Assignment
 
-from config import *
-from scripts.assign_peaks import *
 from temp.remove import remove_assignments
 
+from config import *
+from tests.assign_peaks import *
 
 #print "Enter pid: "
 #pid = raw_input()

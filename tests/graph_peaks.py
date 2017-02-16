@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 from tables.get import get_molecules
 from tables.get import get_peaks
+from temp.get import get_assignments
 
 import config
-from temp.get import get_assignments
 
 
 def graph_experiment_and_assignment(conn, exp_mid, assigned_mid, subplot=True, show_exp_peaks=True, show_assigned_lines=True):

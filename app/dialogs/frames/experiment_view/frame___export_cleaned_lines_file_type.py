@@ -16,20 +16,23 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
         Dialog.resize(257, 355)
         Dialog.setStyleSheet(_fromUtf8("background-color: rgb(48, 48, 48);\n"
-"gridline-color: rgb(195, 195, 195);\n"
-"color: rgb(255, 255, 255);\n"
-""))
+                                       "gridline-color: rgb(195, 195, 195);\n"
+                                       "color: rgb(255, 255, 255);\n"
+                                       ""))
         self.gridLayout = QtGui.QGridLayout(Dialog)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.frame = QtGui.QFrame(Dialog)
@@ -136,4 +139,3 @@ class Ui_Dialog(object):
         self.label_6.setText(_translate("Dialog", "Additional Options:", None))
         self.label_5.setText(_translate("Dialog", "Choose a format:", None))
         self.label_2.setText(_translate("Dialog", "Choose a file type:", None))
-

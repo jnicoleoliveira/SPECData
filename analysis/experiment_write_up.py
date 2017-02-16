@@ -153,4 +153,3 @@ class ExperimentWriteUp:
         text_file.close()
 
         return path
-

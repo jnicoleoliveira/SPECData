@@ -1,24 +1,60 @@
+# Author: Jasmine Oliveira
+# Date: 02/16/2017
+
 from astropy import units as u
 from astroquery.splatalogue import Splatalogue
 
 from config import conn
-from tables import peaks_table
+from tables import peaks_table, experimentinfo_table
 
-line_ids = Splatalogue.get_species_ids()
 
-# --- Find species that have CO --- #
-# CO_containing_species = Splatalogue.get_species_ids('CHS')
-# print CO_containing_species
+class SplatalogueAnalysis():
+    def __init__(self, experiment):
+        self.experiment = experiment
+        self.chemicals = {}
+        self.units = self.__determine_frequency_units()
 
-# -- Find Species within lines -- #
-# CO1to0 = Splatalogue.query_lines(115.271 * u.GHz, 115.273 * u.GHz, top20='top20')
-# CO1to0.pprint()
-#row = CO1to0[0]
-# print row[1]
+    def find_matches(self):
+        mid = self.experiment.mid
+        threshold = self.experiment.match_threshold
+        frequencies, intensities = peaks_table.get_frequency_intensity_list(conn, mid)
 
-mid = 122
-threshold = 0.02
-frequencies, intensities = peaks_table.get_frequency_intensity_list(conn, mid)
+        for i in range(0, len(frequencies)):
+            low_freq = frequencies[i] - threshold
+            high_freq = frequencies[i] + threshold
+
+            lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz)
+
+            added = []
+            for row in lines:
+                # print row
+                name = row[0]
+                freq = row[2] * 1000  ### NEED BETTER CONVERSION HERE
+                if str(freq) == "--":
+                    freq = float(str(row[4])) * 1000.0
+
+                line_list = row[7]
+
+                if name in added: continue
+
+                line = Line(freq, line_list)
+
+                if not self.chemicals.has_key(name):
+                    chemical = Chemical(name)
+                    self.chemicals[row[0]] = chemical
+
+                self.chemicals[name].add_line(line, frequencies[i])
+                added.append(name)
+
+    def __determine_frequency_units(self):
+        string = experimentinfo_table.get_units(conn, self.experiment.mid)
+
+        if string is "MHz":
+            return u.MHz
+        elif string is "GHz":
+            return u.GHz
+        else:
+            print "SHOULD THROW ERROR HERE. UNSUPPORTED UNIT TYPE!"
 
 
 class Chemical:
@@ -37,51 +73,3 @@ class Line:
         self.frequency = frequency
         self.linelist = linelist
         self.units = units
-
-
-chemicals = {}
-for i in range(0, len(frequencies)):
-    low_freq = frequencies[i] - threshold
-    high_freq = frequencies[i] + threshold
-
-    lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz)
-
-    # if len(lines) > 0: print "\n\nFREQUENCY==========" + str(frequencies[i])
-
-    added = []
-    for row in lines:
-        #print row
-        name = row[0]
-        freq = row[2] * 1000
-        if str(freq) == "--":  # or abs(frequencies[0]-freq)>threshold:
-            freq = float(str(row[4])) * 1000.0
-
-        line_list = row[7]
-
-        if name in added: continue
-
-        line = Line(freq, line_list)
-
-        if not chemicals.has_key(name):
-            chemical = Chemical(name)
-            chemicals[row[0]] = chemical
-
-        chemicals[name].add_line(line, frequencies[i])
-        added.append(name)
-
-for key, value in chemicals.iteritems():
-    print "Name: " + value.name + "\nN=" + str(len(value.lines))
-    for i in range(0, len(value.lines)):
-        print "L: " + str(value.lines[i].frequency) + " M:" + str(value.matched_lines[i])
-
-    print "----------------------------"
-
-low_freq = peaks_table.get_min_frequency(conn, mid)
-high_freq = peaks_table.get_max_frequency(conn, mid)
-c = "Cyanomethyl"
-
-lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz, chemical_name=c)
-lines.pprint()
-
-for row in lines:
-    print str(row[0]) + "  " + str(row[2])

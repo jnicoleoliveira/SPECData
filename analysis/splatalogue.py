@@ -17,3 +17,6 @@ class Line:
         self.frequency = frequency
         self.linelist = linelist
         self.units = units
+
+
+class SplatalogueAnalysis()

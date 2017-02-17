@@ -16,7 +16,7 @@ line_ids = Splatalogue.get_species_ids()
 # row = CO1to0[0]
 # print row[1]
 
-mid = 142
+mid = 122
 threshold = 0.02
 frequencies, intensities = peaks_table.get_frequency_intensity_list(conn, mid)
 
@@ -26,11 +26,12 @@ class Chemical:
         self.name = name
         self.lines = []
         self.matched_lines = []
+        self.N = 0
 
     def add_line(self, line, match):
         self.lines.append(line)
         self.matched_lines.append(match)
-
+        self.N += 1
 
 class Line:
     def __init__(self, frequency, linelist, units="MHz"):
@@ -69,12 +70,54 @@ for i in range(0, len(frequencies)):
         chemicals[name].add_line(line, frequencies[i])
         added.append(name)
 
+total = 0
+n = 0
 for key, value in chemicals.iteritems():
     print "Name: " + value.name + "\nN=" + str(len(value.lines))
     for i in range(0, len(value.lines)):
         print "L: " + str(value.lines[i].frequency) + " M:" + str(value.matched_lines[i])
-
     print "----------------------------"
+    n += 1
+    total += (len(value.lines))
+
+average = total / n
+
+above_average = []
+below_average = []
+median_average = []
+print "AVERAGE # == " + str(average) + "************"
+print "MATCHES == " + str(len(chemicals)) + "************"
+
+for key, value in chemicals.iteritems():
+    N = value.N
+    if N > average:
+        above_average.append(value)
+    else:
+        below_average.append(value)
+n = 0
+total = 0
+for v in above_average:
+    n += 1
+    total += v.N
+    # print str(v.N) + "   " + str(v.name)
+average = total / n
+most_likely = []
+likely = []
+for v in above_average:
+    if v.N > average:
+        most_likely.append(v)
+    else:
+        likely.append(v)
+
+print "********* MOST LIKELY ***********"
+for v in most_likely:
+    print str(v.N) + "   " + str(v.name)
+print "********* LIKELY ***********"
+for v in likely:
+    print str(v.N) + "   " + str(v.name)
+print "********* LEAST LIKELY ***********"
+for v in below_average:
+    print str(v.N) + "   " + str(v.name)
 
 # low_freq = peaks_table.get_min_frequency(conn, mid)
 # high_freq = peaks_table.get_max_frequency(conn, mid)

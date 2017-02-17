@@ -16,7 +16,7 @@ class SplatalogueAnalysis():
 
     def find_matches(self):
         mid = self.experiment.mid
-        threshold = self.experiment.match_threshold
+        threshold = 0.02
         frequencies, intensities = peaks_table.get_frequency_intensity_list(conn, mid)
 
         for i in range(0, len(frequencies)):
@@ -29,7 +29,7 @@ class SplatalogueAnalysis():
             for row in lines:
                 # print row
                 name = row[0]
-                freq = row[2] * 1000  ### NEED BETTER CONVERSION HERE
+                freq = row[2] * 1000  # NEED BETTER CONVERSION HERE
                 if str(freq) == "--":
                     freq = float(str(row[4])) * 1000.0
 
@@ -46,6 +46,15 @@ class SplatalogueAnalysis():
                 self.chemicals[name].add_line(line, frequencies[i])
                 added.append(name)
 
+    def get_N_sorted_chemicals(self):
+
+        import operator
+        # Get Tuples
+        sorted = self.chemicals.values()
+        sorted.sort(key=operator.attrgetter('N'), reverse=True)
+
+        return sorted
+
     def __determine_frequency_units(self):
         string = experimentinfo_table.get_units(conn, self.experiment.mid)
 
@@ -54,18 +63,53 @@ class SplatalogueAnalysis():
         elif string is "GHz":
             return u.GHz
         else:
-            print "SHOULD THROW ERROR HERE. UNSUPPORTED UNIT TYPE!"
+            return u.MHz
 
+    def get_likelihood_chemical_lists(self):
+        chemicals = self.get_N_sorted_chemicals()
+        most_likely = []
+        likely = []
+        least_likely = []
+
+        n = 0
+        total = 0
+        for c in chemicals:
+            n += 1
+            total += c.N
+
+        average = total / n
+        total = 0
+        n = 0
+        a = []
+        for c in chemicals:
+            if c.N > average:
+                a.append(c)
+                n += 1
+                total += c.N
+            else:
+                least_likely.append(c)
+
+        if n is not 0:
+            average = total / n
+            for c in a:
+                if c.N > average:
+                    most_likely.append(c)
+                else:
+                    likely.append(c)
+
+        return most_likely, likely, least_likely
 
 class Chemical:
     def __init__(self, name):
         self.name = name
         self.lines = []
         self.matched_lines = []
+        self.N = 0
 
     def add_line(self, line, match):
         self.lines.append(line)
         self.matched_lines.append(match)
+        self.N += 1
 
 
 class Line:

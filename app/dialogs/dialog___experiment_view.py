@@ -110,8 +110,8 @@ class ExperimentView(QMainWindow):
     def go_to_main_menu(self):
         from dialog___main_menu import MainMenu
         window = MainMenu()
-        self.close()
-        #self.hide()
+        # self.close()
+        self.hide()
         window.show()
         window.exec_()
         #self.close()

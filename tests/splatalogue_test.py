@@ -34,11 +34,11 @@ class Chemical:
         self.N += 1
 
 class Line:
-    def __init__(self, frequency, linelist, units="MHz"):
+    def __init__(self, frequency, linelist, intensity=None, units="MHz"):
         self.frequency = frequency
         self.linelist = linelist
         self.units = units
-
+        self.intensity = intensity
 
 chemicals = {}
 for i in range(0, len(frequencies)):

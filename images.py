@@ -37,3 +37,7 @@ SPLATALOGUE_LOGO_ICON = os.path.join(resources, "splatalogue-logo.png")
 DATABASE_ICON_RED = os.path.join(resources, "database-red.png")
 
 MAGIC_WAND_ICON = os.path.join(resources, "magic-wand.png")
+
+VALIDATE_ICON = os.path.join(resources, "validate.png")
+
+INVALIDATE_ICON = os.path.join(resources, "invalidate.png")

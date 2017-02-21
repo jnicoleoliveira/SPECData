@@ -23,24 +23,31 @@ class SplatalogueAnalysis():
             low_freq = frequencies[i] - threshold
             high_freq = frequencies[i] + threshold
 
+            columns = ['Species', 'Chemical Name', 'Freq-MHz',
+                       'CDMS/JPL Intensity', 'Linelist']
             lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz)
 
             added = []
             for row in lines:
-                # print row
+
+                # print row,
                 name = row[0]
-                freq = row[2] * 1000  # NEED BETTER CONVERSION HERE
+                full_name = row[1]
+                freq = row[2] * 1000  # NEED BETTER CONVERSION
+                intensity = row[10]
+
                 if str(freq) == "--":
                     freq = float(str(row[4])) * 1000.0
 
-                line_list = row[7]
+                line_list = row[3]
 
-                if name in added: continue
+                if name in added:
+                    continue
 
-                line = Line(freq, line_list)
+                line = Line(freq, line_list, intensity)
 
                 if not self.chemicals.has_key(name):
-                    chemical = Chemical(name)
+                    chemical = Chemical(name, full_name)
                     self.chemicals[row[0]] = chemical
 
                 self.chemicals[name].add_line(line, frequencies[i])
@@ -100,8 +107,9 @@ class SplatalogueAnalysis():
         return most_likely, likely, least_likely
 
 class Chemical:
-    def __init__(self, name):
+    def __init__(self, name, full_name):
         self.name = name
+        self.full_name = full_name
         self.lines = []
         self.matched_lines = []
         self.N = 0
@@ -113,7 +121,8 @@ class Chemical:
 
 
 class Line:
-    def __init__(self, frequency, linelist, units="MHz"):
+    def __init__(self, frequency, linelist, intensity=None, units="MHz"):
         self.frequency = frequency
         self.linelist = linelist
         self.units = units
+        self.intensity = intensity

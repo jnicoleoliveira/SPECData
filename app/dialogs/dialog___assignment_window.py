@@ -130,7 +130,6 @@ class AssignmentWindow(QDialog):
         self.table_widget.setHorizontalHeaderLabels(["Experiment PID", "Frequency", "Intensity", \
                                                      "Match PID", "Frequency", "Intensity"])
 
-        print "ROW COUNT:" + str(row_count)
         # Populate Table Widget with data
         #   Exp_pid, Exp_frequency, Exp_intensity
         #   Match_Pid, Match_frequency, Match_intensity

@@ -19,4 +19,3 @@ class Line:
         self.units = units
 
 
-class SplatalogueAnalysis()

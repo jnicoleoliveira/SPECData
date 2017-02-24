@@ -22,8 +22,7 @@ class SplatalogueDockWidget(QDockWidget):
         self.toolbox = QToolBox()
 
         self.splat_analysis = SplatalogueAnalysis(experiment)
-        self.__setup__()
-
+        # self.__setup__()
 
     def __setup__(self):
         """

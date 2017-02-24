@@ -9,6 +9,9 @@ import images
 
 
 class SplatalogueAssignmentWindow(QDialog):
+    FACE_COLOR = "#626262"
+    EXPERIMENT_EDGE_COLOR = 'black'
+
     def __init__(self, experiment, chemical):
         super(SplatalogueAssignmentWindow, self).__init__()
 
@@ -25,11 +28,16 @@ class SplatalogueAssignmentWindow(QDialog):
         self.table_widget = QTableWidget()
         self.matplot_widget = MatplotlibWidget()
 
+        '''Colors'''
+        self.color___experiment_edge = SplatalogueAssignmentWindow.EXPERIMENT_EDGE_COLOR
+        self.color___face_color = SplatalogueAssignmentWindow.FACE_COLOR
+
         self.__setup__()
 
     def __setup__(self):
         self.setStyleSheet(
             "background-color: rgb(48, 48, 48);\ngridline-color: rgb(195, 195, 195);\ncolor: rgb(255, 255, 255);\n")
+        self.matplot_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.__setup_layout()
         self.__populate_graph()
         self.__populate_table()
@@ -69,7 +77,55 @@ class SplatalogueAssignmentWindow(QDialog):
         self.setLayout(outer_layout)
 
     def __populate_graph(self):
-        print "populate graph "
+        """
+
+        :return:
+        """
+
+        figure = self.matplot_widget.getFigure()
+        figure.set_facecolor(self.color___face_color)
+
+        ''' Experiment Subplot '''
+        frequencies, intensities = self.experiment.get_experiment_frequencies_intensities_list()
+        max_freq = max(frequencies)
+        min_freq = min(frequencies)
+
+        self.subplot_1 = figure.add_subplot(311,
+                                            axisbg='white',
+                                            title='Experiment: ' + self.experiment.name + ' Peaks')
+
+        self.subplot_1.bar(frequencies, intensities, width=0.02, edgecolor=self.color___experiment_edge)
+
+        ''' Matches Subplot '''
+        self.subplot_2 = figure.add_subplot(312,
+                                            axisbg='white',
+                                            sharex=self.subplot_1)
+
+        for l in self.chemical.lines:
+            # if l.intensity <= 0:
+            self.subplot_2.bar(l.frequency, 1, width=0.02, edgecolor='blue')
+            # else:
+            #     self.subplot_2.bar(l.frequency, l.intensity, width=0.02, edgecolor='blue')
+
+        ''' Chemical Subplot '''
+        self.subplot_3 = figure.add_subplot(313,
+                                            axisbg='white',
+                                            sharex=self.subplot_1)
+
+        lines = self.chemical.get_all_lines(min_freq, max_freq)
+        for l in lines:
+            if l.intensity is None:  # or l.intensity <= 1:
+                self.subplot_3.bar(l.frequency, 1, width=0.02, edgecolor='black')
+            else:
+                self.subplot_3.bar(l.frequency, l.intensity, width=0.02, edgecolor='blue')
+
+        ''' Adjustments '''
+        # self.matplot_widget.getFigure().subplots_adjust(top=0.95,
+        #                                              bottom = 0.07,
+        #                                              left = 0.05,
+        #                                              right = 0.97,
+        #                                              hspace=0.35,)
+        self.matplot_widget.draw()
 
     def __populate_table(self):
         """
@@ -87,7 +143,7 @@ class SplatalogueAssignmentWindow(QDialog):
         self.table_widget.setSortingEnabled(True)
 
         # Set Header Label
-        self.table_widget.setHorizontalHeaderLabels(["Experiment Frequency", "Frequency", "Intensity", \
+        self.table_widget.setHorizontalHeaderLabels(["EXP-Frequency", "Frequency", "Intensity", \
                                                      "Units", "Linelist", ])
 
         for i in range(0, row_count):
@@ -112,7 +168,9 @@ class SplatalogueAssignmentWindow(QDialog):
             self.table_widget.setItem(i, 4, line_list_item)
 
         # --- Set Size Policy --- #
-        self.table_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.table_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.MinimumExpanding)
+        self.table_widget.setMaximumWidth(600)
+        self.table_widget.setFixedWidth(500)
         self.table_widget.resizeColumnsToContents()
         self.table_widget.resizeRowsToContents()
 

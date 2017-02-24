@@ -2,7 +2,6 @@
 # Date: 08/24/2016
 
 import sys
-import time
 from copy import deepcopy
 
 from PyQt4.QtCore import *
@@ -120,6 +119,10 @@ class ExperimentView(QMainWindow):
         from dialog___add_a_molecule import AddAMolecule
         window = AddAMolecule(self.selection_widget, self.experiment)
         window.exec_()
+
+    def save_analysis(self):
+        self.experiment.save_affirmed_matches()
+        print "[ANALYSIS SAVED]"
 
     ###############################################################################
     # Selection Widget Functions
@@ -316,7 +319,7 @@ class ExperimentView(QMainWindow):
         #self.table_widget.setMaximumWidth(width)
 
     ###############################################################################
-    # Graphing Functions
+    # Graphing Widget Functions
     ###############################################################################
 
     def determine_graphing_options(self):
@@ -370,6 +373,9 @@ class ExperimentView(QMainWindow):
         # Draw
         self.experiment_graph.draw()
         self.cid_pick = self.matplot_widget.getFigure().canvas.mpl_connect('pick_event', self.__on_graph_line_pick)
+
+    def reset_options(self):
+        self.graph_toolbox.reset()
 
     def toggle_validations_on_graph(self):
         """
@@ -474,13 +480,6 @@ class ExperimentView(QMainWindow):
         self.time_machine.add_state(state)
 
     ###############################################################################
-    # Functionality
-    ###############################################################################
-    def save_analysis(self):
-        self.experiment.save_affirmed_matches()
-        print "[ANALYSIS SAVED]"
-
-    ###############################################################################
     # Setup Functions
     ###############################################################################
     def __setup__(self, experiment_name, mid):
@@ -498,35 +497,34 @@ class ExperimentView(QMainWindow):
         self.loading_screen = LoadingProgressScreen()
         self.loading_screen.start()     # Start Loading Screen
 
-        ## Do Things ##
+        # -- Do Things -- #
 
         ''' Create Experiment '''
         self.loading_screen.set_caption('Creating experiment...')
         self.experiment = experiment.Experiment(experiment_name, mid)  # Create experiment obj
-        time.sleep(1)
         self.loading_screen.next_value(20)
 
         '''Analyze Experiment'''
         self.loading_screen.set_caption('Analyzing...')
         self.do_analysis()                      # Run Analysis
         self.loading_screen.next_value(40)
-        time.sleep(1)
 
         '''Setup Layout'''
         self.loading_screen.set_caption('Setting up...')
         self.__setup_layout()                     # Setup Layout
         self.loading_screen.next_value(60)
 
+        ''' Setup Splatalogue Dock Widget '''
+        self.splatalogue_dock_widget.__setup__()  # Note: Setup here, to stop pop-up windows in load
+
         '''Add Assignments to Selection Widget'''
         self.populate_selection_widget()        # Add assignments
         self.organize_matches()
-        time.sleep(1)
         self.loading_screen.next_value(80)
 
         '''Graph Main Graph'''
         self.__setup_graph()                            # Graph
         self.loading_screen.next_value(90)
-        time.sleep(2)
 
         ''' Setup User History Time Machine '''
         base_state = State(self.experiment,
@@ -534,6 +532,8 @@ class ExperimentView(QMainWindow):
                            self.validated_selection_widget,
                            self.invalidated_selection_widget)
         self.time_machine = TimeMachine(base_state, 20)
+
+        # -- Stop Doing Things -- #
 
         '''End Loading Screen'''
         self.loading_screen.end()
@@ -618,7 +618,6 @@ class ExperimentView(QMainWindow):
 
         # Dock the tool box
         dock_tools = QDockWidget(self.window())
-        #self.window().addDockWidget(Qt.RightDockWidgetArea, dock_tools)
         dock_tools.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         dock_tools.setWidget(tool_box)
         dock_tools.setFeatures(QDockWidget.DockWidgetClosable |
@@ -937,7 +936,7 @@ class ExperimentView(QMainWindow):
         action_bar.addAction(more)
 
     ###############################################################################
-    # Stub Methods
+    # Event Methods
     ###############################################################################
 
     def toggle_splatalogue_options_widget(self):
@@ -945,25 +944,6 @@ class ExperimentView(QMainWindow):
             self.splatalogue_dock_widget.show()
         else:
             self.splatalogue_dock_widget.hide()
-
-    def settings(self):
-        print "SETTINGS"
-
-    def analysis_settings(self):
-        print "ANALYSIS SETTINGS"
-
-    def redo_analysis(self):
-        self.highlight_table_row(30761)
-        print "RE-ANALYZE"
-
-    def remove_from_analysis(self):
-        print "Clicked 'remove button'"
-
-    def plot_spectrum(self):
-        print "PLOT SPECTRUM!"
-
-    def reset_options(self):
-        self.graph_toolbox.reset()
 
     def toggle_graph_options_widget(self):
         if self.graph_toolbox.isHidden():
@@ -980,11 +960,31 @@ class ExperimentView(QMainWindow):
         else:
             self.table_toolbox.hide()
 
+    def closeEvent(self, QCloseEvent):
+        sys.exit()
+
     def update_info(self):
         self.info_widget.update(self.experiment)
 
-    def closeEvent(self, QCloseEvent):
-        sys.exit()
+    ###############################################################################
+    # Stub Methods
+    ###############################################################################
+
+    def settings(self):
+        print "SETTINGS"
+
+    def analysis_settings(self):
+        print "ANALYSIS SETTINGS"
+
+    def redo_analysis(self):
+        self.highlight_table_row(30761)
+        print "RE-ANALYZE"
+
+    def remove_from_analysis(self):
+        print "Clicked 'remove button'"
+
+    def plot_spectrum(self):
+        print "PLOT SPECTRUM!"
 
 class State:
     """

@@ -46,8 +46,7 @@ class ExperimentInfoWidget(QWidget):
 
         unnassigned = total_peaks - valid_peaks
 
-
-        # Set labels to data
+        # Set labels to data #
         self.ui.experiment_name_lbl.setText(name)
         self.ui.composition_val.setText(composition)
         self.ui.notes_val.setText(notes)

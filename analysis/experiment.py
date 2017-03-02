@@ -1,7 +1,7 @@
-import tables.peaks_table as peaks
-import tables.assignments_table as assignments
 import tables.affirmedassignment_table as affirmed_assignments
+import tables.assignments_table as assignments
 import tables.molecules_table as molecules
+import tables.peaks_table as peaks
 from config import conn
 
 
@@ -9,7 +9,6 @@ class Experiment:
 
     exp_average_intensity = None
     max_frequency = None
-
     def __init__(self, name, mid, match_threshold=0.2):
         """
         Experiment Object, represents an experiment, its peaks, molecule matches and its associated probabilities.
@@ -19,6 +18,8 @@ class Experiment:
         self.name = name
         self.mid = mid
         self.match_threshold = match_threshold
+        self.ratio_threshold = 0.05
+
         self.N = 0                   # Total Number of peak lines
         self.experiment_peaks = []   # List of peaks    (obj: Peak)
         self.validated_peaks = []    # Subset of experiment peaks (if saved)
@@ -84,7 +85,7 @@ class Experiment:
             self.validated_peaks.append(peak)
 
             if self.validated_matches.has_key(mid) is False:
-                self.validated_matches[mid] = self.MoleculeMatch(name, mid, self.N)
+                self.validated_matches[mid] = self.MoleculeMatch(name, mid, self.N, self.ratio_threshold)
                 self.validated_matches[mid].set_status_as_validated()
                 self.validated_matches[mid].p = 1
 
@@ -124,7 +125,7 @@ class Experiment:
                 # Determine if this is match is of a new molecule
                 if molecule_matches.has_key(mid) is False:
                     # New Molecule, add new entry to matches
-                    molecule_matches[mid] = self.MoleculeMatch(m.name, mid, self.N)
+                    molecule_matches[mid] = self.MoleculeMatch(m.name, mid, self.N, self.ratio_threshold)
 
                 molecule_matches[mid].add_match(m)  # Add match to molecule
 
@@ -537,7 +538,7 @@ class Experiment:
 
     class MoleculeMatch:
 
-        def __init__(self, name, mid, N):
+        def __init__(self, name, mid, N, ratio_threshold):
             """
 
             :param name: Name of Matched Molecule
@@ -548,6 +549,7 @@ class Experiment:
             self.name = name
             self.mid = mid
 
+            self.ratio_threshold = ratio_threshold
             self.ratio = 0
             self.m = 0          # Total number of matches
             self.matches = []   # List of Match matches
@@ -608,12 +610,12 @@ class Experiment:
             return self.p
 
         def determine_valid_ratio(self):
-
+            print self.ratio_threshold
             # Determine matches to all peaks ratio
             total_peaks = peaks.get_peak_count(conn, self.mid, Experiment.max_frequency)
             ratio = float(self.m) / total_peaks
             #print ratio
-            if float(ratio) < 0.05:
+            if float(ratio) < self.ratio_threshold:
                 #print ratio
                 return False
 
@@ -628,6 +630,8 @@ class Experiment:
             self.p = 1
             # Probability == SUM( prob of match * strength of the experimental line)
             N_triangle = (self.N*(self.N+1))/2      # Triangular sum of N
+            if N_triangle == 0:
+                return 0
             m_sum = (self.M*(self.M+1))/2
             peak_p = 0
 

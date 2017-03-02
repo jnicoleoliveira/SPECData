@@ -16,14 +16,11 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
 
 class Ui_DockWidget(object):
     def setupUi(self, DockWidget):
@@ -43,18 +40,22 @@ class Ui_DockWidget(object):
         self.dockWidgetContents.setObjectName(_fromUtf8("dockWidgetContents"))
         self.gridLayout_3 = QtGui.QGridLayout(self.dockWidgetContents)
         self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
-        spacerItem = QtGui.QSpacerItem(10, 100, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_3.addItem(spacerItem, 3, 1, 1, 1)
-        spacerItem1 = QtGui.QSpacerItem(5, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_3.addItem(spacerItem1, 2, 2, 1, 1)
+        spacerItem = QtGui.QSpacerItem(5, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem, 2, 2, 1, 1)
         self.scrollArea = QtGui.QScrollArea(self.dockWidgetContents)
+        self.scrollArea.setStyleSheet(_fromUtf8("background-color: rgb(48, 48, 48);\n"
+                                                "gridline-color: rgb(195, 195, 195);\n"
+                                                "color: rgb(255, 255, 255);\n"
+                                                ""))
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 159, 290))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 159, 396))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.gridLayout_3.addWidget(self.scrollArea, 2, 1, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(5, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem1, 2, 0, 1, 1)
         self.frame = QtGui.QFrame(self.dockWidgetContents)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -87,6 +88,18 @@ class Ui_DockWidget(object):
         self.wizard_btn.setFlat(True)
         self.wizard_btn.setObjectName(_fromUtf8("wizard_btn"))
         self.horizontalLayout.addWidget(self.wizard_btn)
+        self.settings_btn = QtGui.QPushButton(self.gridLayoutWidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.settings_btn.sizePolicy().hasHeightForWidth())
+        self.settings_btn.setSizePolicy(sizePolicy)
+        self.settings_btn.setMinimumSize(QtCore.QSize(0, 0))
+        self.settings_btn.setMaximumSize(QtCore.QSize(24, 24))
+        self.settings_btn.setText(_fromUtf8(""))
+        self.settings_btn.setFlat(True)
+        self.settings_btn.setObjectName(_fromUtf8("settings_btn"))
+        self.horizontalLayout.addWidget(self.settings_btn)
         spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
         self.gridLayout_2.addLayout(self.horizontalLayout, 1, 0, 1, 1)
@@ -95,8 +108,6 @@ class Ui_DockWidget(object):
         self.logo_lbl.setText(_fromUtf8(""))
         self.logo_lbl.setObjectName(_fromUtf8("logo_lbl"))
         self.gridLayout_3.addWidget(self.logo_lbl, 0, 1, 1, 1)
-        spacerItem3 = QtGui.QSpacerItem(5, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_3.addItem(spacerItem3, 2, 0, 1, 1)
         DockWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(DockWidget)

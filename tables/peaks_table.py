@@ -556,8 +556,11 @@ def __import_spfile(conn, filepath, mid):
     with open(filepath) as f:
         for line in f:
             point = str.split((line.strip()))
-            frequencies.append(float(point[0]))   # get frequency
-            intensities.append(float(point[1]))   # get actual intensity (logx ^ x)
+            try:
+                frequencies.append(float(point[0]))  # get frequency
+                intensities.append(float(point[1]))  # get actual intensity (logx ^ x)
+            except ValueError:
+                continue
 
     # Determine Peaks
     frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)

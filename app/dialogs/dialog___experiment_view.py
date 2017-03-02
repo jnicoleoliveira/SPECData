@@ -162,6 +162,9 @@ class ExperimentView(QMainWindow):
 
         self.update_info()
 
+        # Refresh Dependent Widgets
+        self.splatalogue_dock_widget.refresh_analysis()
+
     def get_selections(self):
         return self.selection_widget.get_selections()
 
@@ -220,6 +223,9 @@ class ExperimentView(QMainWindow):
         if save:
             self.__save_state()
         self.update_info()
+
+        # Refresh Dependent Widgets
+        self.splatalogue_dock_widget.refresh_analysis()
 
     def current_selection_widget(self):
         return self.selection_tab_widget.currentWidget().widget()
@@ -466,6 +472,8 @@ class ExperimentView(QMainWindow):
             print str(m.mid) + "    " + m.status
         print "*****************"
 
+        self.info_widget.update(self.experiment)
+        self.splatalogue_dock_widget.refresh_analysis()
         #self.experiment.validated_matches = experiment_data.validated_matches
 
     def __save_state(self):
@@ -977,7 +985,11 @@ class ExperimentView(QMainWindow):
         print "ANALYSIS SETTINGS"
 
     def redo_analysis(self):
-        self.highlight_table_row(30761)
+        self.experiment.match_threshold = 0.5
+        self.experiment.ratio_threshold = 0.5
+        self.experiment.get_assigned_molecules()
+        self.organize_matches()
+        # self.info_widget.update()
         print "RE-ANALYZE"
 
     def remove_from_analysis(self):

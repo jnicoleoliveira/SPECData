@@ -174,9 +174,12 @@ class MainGraph:
                         self.full_spectrum_frequencies.append(float(point[0]))
                         self.full_spectrum_intensities.append(float(point[1]))
                     except ValueError:
-                        point = line.split(",")
-                        self.full_spectrum_frequencies.append(float(point[0]))  # get frequency
-                        self.full_spectrum_intensities.append(float(point[1]))  # get actual intensity (logx ^ x)
+                        try:
+                            point = line.split(",")
+                            self.full_spectrum_frequencies.append(float(point[0]))  # get frequency
+                            self.full_spectrum_intensities.append(float(point[1]))  # get actual intensity (logx ^ x)
+                        except:
+                            continue
 
         self.subplot_1.plot(self.full_spectrum_frequencies, self.full_spectrum_intensities, color=color)
 

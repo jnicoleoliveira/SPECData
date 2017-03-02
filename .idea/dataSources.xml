@@ -13,5 +13,11 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/data/spectrum.db</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="Sqlite (Xerial) - spectrum.db [2]" uuid="08c789ea-ad80-44dd-a5fc-6f581eb59fad">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/data/spectrum.db</jdbc-url>
+    </data-source>
   </component>
 </project>

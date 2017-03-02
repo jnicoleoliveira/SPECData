@@ -1,12 +1,15 @@
 # Author: Jasmine Oliveira
 # Date: 02/16/2017
 
+from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 import images
 from  analysis.splatalogue_analysis import SplatalogueAnalysis
 from app.dialogs.dialog___splatalogue_assignment_view import SplatalogueAssignmentWindow
 from app.dialogs.frames.experiment_view.frame___splatalogue_dock import Ui_DockWidget
+from app.dialogs.frames.experiment_view.frame___splatalogue_options import Ui_Dialog as SettingsDialog
+
 
 class SplatalogueDockWidget(QDockWidget):
     def __init__(self, experiment):
@@ -32,16 +35,19 @@ class SplatalogueDockWidget(QDockWidget):
         ''' Widgets '''
         add_btn = self.ui.add_btn
         wizard_btn = self.ui.wizard_btn
+        settings_btn = self.ui.settings_btn
 
         ''' Set Images '''
         add_btn.setIcon(QIcon(images.ADD_ICON))
         wizard_btn.setIcon(QIcon(images.MAGIC_WAND_ICON))
+        settings_btn.setIcon(QIcon(images.SETTINGS_GEAR_ICON))
         self.ui.logo_lbl.setPixmap(QPixmap(images.SPLATALOGUE_LOGO_ICON))
 
         ''' Functions '''
         self.most_likely_list_widget.doubleClicked.connect(self.open_assignment_view)
         self.likely_list_widget.doubleClicked.connect(self.open_assignment_view)
         self.least_likely_list_widget.doubleClicked.connect(self.open_assignment_view)
+        settings_btn.clicked.connect(self.open_settings)
 
         ''' Layout '''
         self.ui.frame.setLayout(self.ui.gridLayout_2)
@@ -117,3 +123,22 @@ class SplatalogueDockWidget(QDockWidget):
 
         window = SplatalogueAssignmentWindow(self.splat_analysis.experiment, chemical)
         window.exec_()
+
+    def open_settings(self):
+        window = SplatalogueSettingsDialog()
+        window.exec_()
+
+    def refresh_analysis(self):
+        self.likely_list_widget.clear()
+        self.most_likely_list_widget.clear()
+        self.least_likely_list_widget.clear()
+        self.populate_lists_with_matches()
+
+
+class SplatalogueSettingsDialog(QDialog):
+    def __init__(self):
+        super(SplatalogueSettingsDialog, self).__init__()
+        self.ui = SettingsDialog()
+        self.ui.setupUi(self)
+        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowTitle("Import File")

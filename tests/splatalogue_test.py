@@ -16,7 +16,7 @@ line_ids = Splatalogue.get_species_ids()
 # row = CO1to0[0]
 # print row[1]
 
-mid = 122
+mid = 142
 threshold = 0.02
 frequencies, intensities = peaks_table.get_frequency_intensity_list(conn, mid)
 
@@ -46,7 +46,7 @@ for i in range(0, len(frequencies)):
     high_freq = frequencies[i] + threshold
 
     lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz)
-    lines.pprint(max_width=300)
+    # lines.pprint(max_width=300)
     # if len(lines) > 0: print "\n\nFREQUENCY==========" + str(frequencies[i])
 
     added = []

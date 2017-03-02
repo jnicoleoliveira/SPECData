@@ -7,7 +7,7 @@ from astropy import units as u
 from astroquery.splatalogue import Splatalogue
 
 from config import conn
-from tables import peaks_table, experimentinfo_table
+from tables import experimentinfo_table
 
 
 class LineList:
@@ -30,7 +30,9 @@ class SplatalogueAnalysis:
 
     def find_matches(self, threshold=0.05):
         mid = self.experiment.mid
-        frequencies, intensities = peaks_table.get_frequency_intensity_list(conn, mid)
+        if len(self.chemicals) > 0:
+            self.chemicals.clear()
+        frequencies, intensities = self.experiment.get_unvalidated_experiment_intensities_list()  # peaks_table.get_frequency_intensity_list(conn, mid)
 
         for i in range(0, len(frequencies)):
 

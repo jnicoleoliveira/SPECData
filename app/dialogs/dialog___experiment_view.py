@@ -199,8 +199,6 @@ class ExperimentView(QMainWindow):
         current_widget.select_all()
 
     def validate_selections(self, save=True):
-        print "VALIDATE SELECTIONS"
-
         # -- Get currently selected widget -- #
         current_widget = self.current_selection_widget()
 
@@ -357,7 +355,7 @@ class ExperimentView(QMainWindow):
         """
 
         xlim, ylim = self.experiment_graph.get_zoom_coordinates()
-        print str(xlim) + " " + str(ylim)
+        # print str(xlim) + " " + str(ylim)
 
         # Clear Graph
         self.experiment_graph.clear()
@@ -397,7 +395,7 @@ class ExperimentView(QMainWindow):
             self.action_show_validations.setIcon \
                 (QIcon(QPixmap(os.path.join(resources, 'show-validations.png'))))
 
-        print "Show Validations: " + str(self.show_validations_on_graph)
+            # print "Show Validations: " + str(self.show_validations_on_graph)
 
     def __on_graph_line_pick(self, event):
         """
@@ -411,7 +409,7 @@ class ExperimentView(QMainWindow):
         self.highlight_table_row(x)
 
         #print (rect.xy)
-        print "picked x" + str(x)
+        # print "picked x" + str(x)
 
     ###############################################################################
     # Time Machine Functions
@@ -466,11 +464,11 @@ class ExperimentView(QMainWindow):
         self.experiment.molecule_matches = deepcopy(experiment.molecule_matches)
         self.experiment.experiment_peaks = deepcopy(experiment.experiment_peaks)
         self.populate_table_widget()
-        print "*****************"
-        print self.experiment.validated_matches
-        for m in self.experiment.get_sorted_molecule_matches():
-            print str(m.mid) + "    " + m.status
-        print "*****************"
+        # print "*****************"
+        # print self.experiment.validated_matches
+        # for m in self.experiment.get_sorted_molecule_matches():
+        #     print str(m.mid) + "    " + m.status
+        # print "*****************"
 
         self.info_widget.update(self.experiment)
         self.splatalogue_dock_widget.refresh_analysis()

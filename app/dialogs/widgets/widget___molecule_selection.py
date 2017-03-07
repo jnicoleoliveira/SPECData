@@ -67,7 +67,6 @@ class MoleculeSelectionWidget(QWidget):
         checkbox.click()
 
         # Probability LCD Number
-        #probability_lcd.setDigitCount(match.p)
         probability_lcd.setNumDigits(4)
         probability_lcd.display((match.p * 1000))
         probability_lcd.setSegmentStyle(QLCDNumber.Flat)
@@ -80,7 +79,6 @@ class MoleculeSelectionWidget(QWidget):
         more_btn.setText('...')
         more_btn.clicked.connect(lambda: self.more_info(match, color))
 
-
         # Add Widgets to Layout
         widget = QHBoxLayout()
         widget.addWidget(probability_lcd)
@@ -88,20 +86,10 @@ class MoleculeSelectionWidget(QWidget):
         widget.addWidget(checkbox)
         widget.addWidget(more_btn)
         self.ui.gridLayout.addLayout(widget, self.size, 0)
-        #self.ui.gridLayout.addWidget(probability_lcd, self.size, 0)
-        #self.ui.gridLayout.addWidget(color_lbl, self.size, 1)
-        #self.ui.gridLayout.addWidget(checkbox, self.size, 2)
-        #self.ui.gridLayout.addWidget(more_btn, self.size, 3)
-        #self.ui.gridLayout.addWidget(more_btn, self.size, 4)
 
         # Add Data to elements array
         selection_row = SelectionRow(match, color, checkbox, more_btn, widget)
         self.elements[match.mid] = selection_row
-        #self.elements[(self.size, 0)] = match
-        #self.elements[(self.size, 1)] = color
-        #self.elements[(self.size, 2)] = checkbox
-        #self.elements[(self.size, 3)] = more_btn
-        #self.elements[(self.size, 4)] = widget
 
         self.size += 1          # increase size of elements array
         #self.selected.append(1) # increase # of selected elements
@@ -118,13 +106,13 @@ class MoleculeSelectionWidget(QWidget):
             item = layout.itemAt(i)
 
             if isinstance(item, QWidgetItem):
-                print "widget" + str(item)
+                # print "widget" + str(item)
                 item.widget().close()
                 # or
                 # item.widget().setParent(None)
             elif isinstance(item, QSpacerItem):
-                print "spacer " + str(item)
                 # no need to do extra stuff
+                pass
             else:
                 #print "layout " + str(item)
                 self.clearLayout(item.layout())
@@ -152,8 +140,7 @@ class MoleculeSelectionWidget(QWidget):
                 self.clear_layout(self.elements[key].widget)
                 del self.elements[key]
 
-
-        print str(self.elements)
+        # print str(self.elements)
 
         return matches, colors
 

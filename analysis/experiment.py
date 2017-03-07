@@ -56,7 +56,7 @@ class Experiment:
             aid = assignments.assignment_exists(conn, pid)
 
             if aid:
-                print "ADDING: " + str(aid)
+                # print "ADDING: " + str(aid)
                 self.__add_existing_assignment(aid, peak)
             else:
                 # No assignment. Add to experiment peaks to be analyzed
@@ -93,11 +93,8 @@ class Experiment:
 
     def __load_saved_data(self):
         print "[LOADED SAVED DATA]"
-        print self.molecule_matches.keys()
         self.experiment_peaks.extend(self.validated_peaks)
         self.molecule_matches.update(self.validated_matches)
-        print "ADD: " + str(len(self.validated_matches))
-        print self.molecule_matches.keys()
 
     ###############################################################################
     # Analysis Functions
@@ -134,6 +131,7 @@ class Experiment:
         for key, value in molecule_matches.iteritems():
             value.M = len(molecule_matches)
             value.get_probability()
+            # print value.name + "(" + str(value.m) + ")"
         print "\tCandidate Matches: " + str(len(molecule_matches))
 
         mm = molecule_matches.copy()
@@ -610,13 +608,11 @@ class Experiment:
             return self.p
 
         def determine_valid_ratio(self):
-            print self.ratio_threshold
             # Determine matches to all peaks ratio
             total_peaks = peaks.get_peak_count(conn, self.mid, Experiment.max_frequency)
             ratio = float(self.m) / total_peaks
-            #print ratio
+
             if float(ratio) < self.ratio_threshold:
-                #print ratio
                 return False
 
             self.ratio = ratio

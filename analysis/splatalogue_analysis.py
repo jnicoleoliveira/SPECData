@@ -28,7 +28,7 @@ class SplatalogueAnalysis:
         self.chemicals = {}
         self.units = self.__determine_frequency_units()
 
-    def find_matches(self, threshold=0.05):
+    def find_matches(self, threshold=0.2):
         mid = self.experiment.mid
         if len(self.chemicals) > 0:
             self.chemicals.clear()
@@ -82,6 +82,9 @@ class SplatalogueAnalysis:
         for c in chemicals:
             n += 1
             total += c.N
+
+        if n == 0:
+            return [], [], []
 
         average = total / n
         total = 0

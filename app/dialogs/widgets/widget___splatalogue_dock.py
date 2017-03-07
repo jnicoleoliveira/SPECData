@@ -136,9 +136,16 @@ class SplatalogueDockWidget(QDockWidget):
 
 
 class SplatalogueSettingsDialog(QDialog):
-    def __init__(self):
+    def __init__(self, threshold):
         super(SplatalogueSettingsDialog, self).__init__()
         self.ui = SettingsDialog()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Import File")
+        self.threshold = threshold
+        self.ui.apply_btn.clicked.connect(self.apply_settings)
+
+    def apply_settings(self):
+        threshold = self.ui.threshold_lntxt.text()
+        if threshold.isDigit():
+            self.threshold = threshold

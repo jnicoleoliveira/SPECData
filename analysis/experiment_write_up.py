@@ -64,7 +64,7 @@ class ExperimentWriteUp:
     def export_cleaned_lines(self, validated_mids, path):
         """
 
-        :param validated_match_mids:
+        :param validated_mids:
         :return:
         """
 

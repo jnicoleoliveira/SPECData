@@ -374,6 +374,13 @@ class Experiment:
 
         return matches
 
+    def get_unassigned_peaks(self):
+        unassigned = []
+        for p in self.experiment_peaks:
+            if p.status == "validated" is False:
+                unassigned.append(p)
+        return unassigned
+
     def print_matches(self):
         """
         Print Molecule Matches of experiment.

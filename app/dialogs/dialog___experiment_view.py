@@ -259,8 +259,9 @@ class ExperimentView(QMainWindow):
         import tables.peaks_table as peaks_table
         from config import conn
         matches = self.experiment.get_all_matches_list()
-
-        row_count = len(matches) # Number of values
+        unassigned = self.experiment.get_unassigned_peaks()
+        print len(unassigned)
+        row_count = len(matches) + len(unassigned)  # Number of values
         column_count = 5         # Columns
 
         # Format Table
@@ -275,12 +276,19 @@ class ExperimentView(QMainWindow):
 
         for i in range(0, row_count):
 
-            # Get Row Data
-            exp_pid = matches[i].exp_pid
-            exp_frequency, exp_intensity = peaks_table.get_frequency_intensity(conn, exp_pid)
-            name = matches[i].name
-            mid = matches[i].mid
-            status = "pending"
+            if row_count > len(matches):
+                exp_pid = unassigned[row_count - i].pid
+                exp_frequency = unassigned[row_count - i].frequency
+                exp_intensity = unassigned[row_count - i].intensity
+                name = "-"
+                mid = "-"
+            else:
+                # Get Row Data
+                exp_pid = matches[i].exp_pid
+                exp_frequency, exp_intensity = peaks_table.get_frequency_intensity(conn, exp_pid)
+                name = matches[i].name
+                mid = matches[i].mid
+                status = "pending"
 
             # Determine if status is valid
             if self.experiment.is_validated_molecule(mid):

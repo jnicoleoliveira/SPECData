@@ -247,7 +247,7 @@ class Experiment:
         return peaks.get_frequency_intensity_list(conn, self.mid)
 
     def get_unvalidated_experiment_intensities_list(self):
-        """x
+        """
         Gets the frequencies and intensities of ONLY invalidated
         experimental peaks.
         :return:
@@ -262,6 +262,20 @@ class Experiment:
                 intensities.append(i)
 
         return frequencies, intensities
+
+    def get_unvalidated_pids_list(self):
+        """
+        Gets the pids of ONLY unvalidated
+        experimental peaks.
+        :return:
+        """
+        pids = []
+
+        for p in self.experiment_peaks:
+            if not p.is_validated():
+                pids.append(p.pid)
+
+        return pids
 
     def get_validated_experiment_intensities_list(self):
         """x

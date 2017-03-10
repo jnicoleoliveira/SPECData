@@ -6,6 +6,8 @@ from PyQt4.QtGui import *
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget  # Matplotlib Widget
 
 import images
+from config import conn
+from tables.peaks_table import get_frequency
 
 
 class SplatalogueAssignmentWindow(QDialog):
@@ -148,7 +150,8 @@ class SplatalogueAssignmentWindow(QDialog):
 
         for i in range(0, row_count):
             # Get Row Data
-            exp_freq = self.chemical.matched_lines[i]
+            # exp_freq = self.chemical.matched_lines[i]
+            exp_freq = get_frequency(conn, self.chemical.matched_lines[i])
             frequency = self.chemical.lines[i].frequency
             intensity = self.chemical.lines[i].intensity
             line_list = self.chemical.lines[i].linelist

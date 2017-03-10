@@ -13,9 +13,9 @@ class Chemical:
 
 
 class Line:
-    def __init__(self, frequency, linelist, units="MHz"):
+    def __init__(self, frequency, line_list, units="MHz"):
         self.frequency = frequency
-        self.linelist = linelist
+        self.line_list = line_list
         self.units = units
 
 

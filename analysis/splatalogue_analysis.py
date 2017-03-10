@@ -22,16 +22,28 @@ class LineList:
     RFI = "RFI"
 
 
+class Columns(object):
+    SPECIES = 'Species'
+    CHEMICAL_NAME = 'Chemical Name'
+    FREQ_GHZ = 'Freq-GHz'
+    MEAS_FREQ_GHZ = 'Meas Freq-GHz',
+    CDMS_JPL_INTENSITY = 'CDMS/JPL Intensity'
+    LOVAS_AST_INTENSITY = 'Lovas/AST Intensity'
+    LINE_LIST = 'Linelist'
+
+
 class SplatalogueAnalysis:
     def __init__(self, experiment):
         self.experiment = experiment
         self.chemicals = {}
         self.units = self.__determine_frequency_units()
 
-    def find_matches(self, threshold=0.2):
+    def find_matches(self, threshold=0.1):
         mid = self.experiment.mid
         if len(self.chemicals) > 0:
             self.chemicals.clear()
+
+        pids = self.experiment.get_unvalidated_pids_list()
         frequencies, intensities = self.experiment.get_unvalidated_experiment_intensities_list()  # peaks_table.get_frequency_intensity_list(conn, mid)
 
         for i in range(0, len(frequencies)):
@@ -58,7 +70,8 @@ class SplatalogueAnalysis:
                     self.chemicals[row[0]] = chemical
 
                 # Add Line to corresponding chemical
-                self.chemicals[name].add_line(line, frequencies[i])
+                # self.chemicals[name].add_line(line, frequencies[i])
+                self.chemicals[name].add_line(line, pids[i])
 
                 added.append(name)  # add to 'added', to keep track of matches on this frequency
 
@@ -179,7 +192,7 @@ class Chemical:
         self.name = name
         self.full_name = full_name
         self.lines = []
-        self.matched_lines = []
+        self.matched_lines = []  # pids
         self.N = 0
 
     def add_line(self, line, match):
@@ -205,18 +218,14 @@ class Chemical:
 
 
 class Line:
-    def __init__(self, frequency, linelist, intensity=None, units="MHz"):
+    """
+    Class representation of a Splatalogue Line
+    """
+
+    def __init__(self, frequency, line_list, intensity=None, units="MHz"):
         self.frequency = frequency
-        self.linelist = linelist
+        self.line_list = line_list
         self.units = units
         self.intensity = intensity
 
 
-class Columns(object):
-    SPECIES = 'Species'
-    CHEMICAL_NAME = 'Chemical Name'
-    FREQ_GHZ = 'Freq-GHz'
-    MEAS_FREQ_GHZ = 'Meas Freq-GHz',
-    CDMS_JPL_INTENSITY = 'CDMS/JPL Intensity'
-    LOVAS_AST_INTENSITY = 'Lovas/AST Intensity'
-    LINE_LIST = 'Linelist'

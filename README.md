@@ -23,3 +23,6 @@ to use GUI for database management.
     
 ## Running SPECData Application
     >> python app.py
+    
+![alt text](https://zenodo.org/badge/62144661.svg " DOI ")
+

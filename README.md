@@ -15,18 +15,16 @@ to use GUI for database management.
 * sqlite3
 
 ## Installation
+    >> export PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
     >> cd init
     >> python setup.py build
     >> python setup.py install
     >> python init.py
-
+    
 ## Running SPECData Application
     >> python app.py
 
 ## Common Setup Errors
-### Add ProjectDirectory to PYTHONPATH
-    export PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
-----------------------------------------------------------
     ImportError: No module named backend_qt4agg
 #### Install missing matplotlib qt4 backend
     >> sudo apt-get install python-matplotlib-qt4

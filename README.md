@@ -24,11 +24,11 @@ to use GUI for database management.
     >> python app.py
 
 ## Common Setup Errors
-######Add ProjectDirectory to PYTHONPATH
+#####Add ProjectDirectory to PYTHONPATH
     export PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
 ----------------------------------------------------------
     ImportError: No module named backend_qt4agg
-#####Install missing matplotlib qt4 backend
+####Install missing matplotlib qt4 backend
     >> sudo apt-get install python-matplotlib-qt4
 ##### Adjust Matplotlib Configuration
 ###### Get the Matplotlib config file path

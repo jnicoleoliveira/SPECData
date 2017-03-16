@@ -25,7 +25,7 @@ to use GUI for database management.
 
 ## Demo
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=klsqk3C9xXQ
-" target="_blank"><img src="http://img.youtube.com/vi/klsqk3C9xXQ/0.jpg" 
+" target="_blank"><img src="http://img.youtube.com/vi/v=klsqk3C9xXQ/0.jpg" 
 alt="1/11/17 Demo" width="240" height="180" border="10" /></a>
 
 ![alt text](https://zenodo.org/badge/62144661.svg " DOI ")

@@ -5,6 +5,8 @@
 from math import ceil
 
 import numpy as np
+import peakutils
+from scipy.signal import savgol_filter
 
 
 def smooth(s_list, n):
@@ -95,65 +97,160 @@ def peak_finder(s_freq_list, s_int_list, s_autoclean):
     return peak_freq_list, peak_int_list
 
 
-# def peak_finder(s_freq_list, s_int_list, threshold=0.1):
-#     """
-#      Finds Peaks in 2D data
-#         (1) Normalizes Intensities
-#         (2) PeakUtils Determines Peaks
-#     :param s_freq_list: Frequency List (x)
-#     :param s_int_list: Intensity List (y)
-#     :param threshold:
-#     :return: Frequency Peak List, Intensity Peak List
-#     """
-#     y = s_int_list
-#     #y = smooth_savgol(s_int_list)
-#
-#     # Peak Finder: Obtain indexes of peaks in intensity list
-#     indexes = peakutils.indexes(y, thres=threshold, )
-#
-#     # Obtain indexed subset of frequencies and intensities
-#     frequencies = [s_freq_list[i] for i in indexes]
-#     intensities = [s_int_list[i] for i in indexes]
-#
-#     return frequencies, intensities
-#
-#
-# def smooth_savgol(intensities):
-#     x = np.array(intensities)
-#     y = savgol_filter(x, 17, 1)  # , mode='nearest')
-#     return y
+def optimized_peak_finder(frequencies, intensities):
+    n_split = 10
+    window = 4
+    i_size = len(intensities)
+    lower_limit = 0.2
+
+    # Get Noise List
+    # noise_list = get_noise_list(frequencies, intensities, n_split, True)
+    # Smooth Lists
+    smoothed = smooth(intensities, (i_size / 1000))
+
+    # Obtain Peak Indexes
+    indexes = get_peaks(intensities, i_size)
+
+    # Obtain indexed subset of frequencies and intensities
+    frequencies = [frequencies[i] for i in indexes]
+    intensities = [intensities[i] for i in indexes]
+
+    return frequencies, intensities
+
+
+def get_noise_list(frequencies, intensities, n_split=10, autoclean=False):
+    # (1) Find Noise Level
+    n_split = 5
+    part_len = len(frequencies) // n_split
+    noise_list = []
+    avg_intensity = sum(intensities) / len(intensities)
+    print part_len
+
+    # Append the noise list for each portion
+    for i in range(n_split):
+        # define the noise as a function of the median times the median
+        # this value can be decreased to peak up more weak lines
+        if autoclean is True:
+            noise = avg_intensity + np.median(intensities[i * part_len:(i + 1) * part_len]) / 2
+        else:
+            noise = autoclean * np.median(intensities[i * part_len:(i + 1) * part_len])
+
+        for j in range(i * part_len, (i + 1) * part_len):
+            noise_list.append(noise)
+
+    # Complete the noise list so that it has the same length as the frequency list
+    for i in range(len(frequencies) % n_split):
+        noise_list.append(noise)
+
+    return noise_list
+
+
+def get_peaks(a, n, peaks=[]):
+    window = 5
+    panel = (window - 1) / 2
+
+    if n + panel > len(a) or n - panel < 0:
+        return peaks
+
+    if not _is_valid_panel(a, n / 2, panel):
+        print "Valid Right"
+        peaks.append(get_peaks(a, n / 2))
+    elif not _is_valid_panel(a, n / 2, -panel):
+        print "Valid Left"
+        peaks.append(get_peaks(a, n / 2))
+    else:
+        peaks.append(n / 2)
+        print "peak found"
+        peaks.append(get_peaks(a, n / 2))
+        peaks.append(get_peaks(a, n / 2))
+
+    return peaks
+
+
+def _is_valid_panel(a, i, panel):
+    """
+    Use -panel to indicate direction
+    :param a:
+    :param i:
+    :param panel_size:
+    :return:
+    """
+    for x in range(0, panel):
+        if a[i + x] < a[i]:
+            return False
+    return True
+
+
+def peak_finder_peakutils(s_freq_list, s_int_list, threshold=0.1):
+    """
+     Finds Peaks in 2D data
+        (1) Normalizes Intensities
+        (2) PeakUtils Determines Peaks
+    :param s_freq_list: Frequency List (x)
+    :param s_int_list: Intensity List (y)
+    :param threshold:
+    :return: Frequency Peak List, Intensity Peak List
+    """
+
+    avg = sum(s_int_list) / len(s_int_list)
+    s_freq_list, s_int_list = clear_baseline(s_freq_list, s_int_list, avg)
+
+    y = s_int_list
+    y = smooth_savgol(s_int_list)
+    # Peak Finder: Obtain indexes of peaks in intensity list
+    indexes = peakutils.indexes(y, thres=threshold)
+
+    # Obtain indexed subset of frequencies and intensities
+    frequencies = [s_freq_list[i] for i in indexes]
+    intensities = [s_int_list[i] for i in indexes]
+
+    return frequencies, intensities
+
+
+def clear_baseline(frequencies, intensities, limit):
+    f2 = []
+    i2 = []
+    for i in range(0, len(intensities)):
+        if intensities[i] > limit:
+            f2.append(frequencies[i])
+            i2.append(intensities[i])
+
+    return f2, i2
+
+
+def smooth_savgol(intensities, window=5, polynomial=2):
+    x = np.array(intensities)
+    y = savgol_filter(x, 5, 2)
+    return y
 
 
 def main():
-    from analysis import peak_finder
-    import re
     import matplotlib.pyplot as plot
-
+    from tests.peak_finding_tests import read_data
     file_path = "/home/joli/Downloads/Av_CP343-CP348_ft.sp"
 
-    delimiters = [" ", "\t", ",", ", "]
-    regex = '|'.join((map(re.escape, delimiters)))
+    frequencies, intensities = read_data(file_path)
+    noise_list = get_noise_list(frequencies, intensities, 10, 3.5)
+    noise_list_auto = get_noise_list(frequencies, intensities, 10, True)
+    max_x = max(frequencies)
+    max_y = max(intensities)
+    avg = (max_y - max(noise_list)) / 2 / 2 / 2 / 2
+    p_x, p_y = optimized_peak_finder(frequencies, intensities)
 
-    # Get data from file
-    frequencies = []
-    intensities = []
-    with open(file_path) as f:
-        for line in f:
-            if line is not None or line is not "":
-                try:
-                    point = re.split(regex, line.strip())
-                    frequencies.append(float(point[0]))  # get frequency
-                    intensities.append(float(point[1]))  # get actual intensity (logx ^ x)
-                except ValueError:
-                    continue
-
+    plot.plot(frequencies, intensities, color='black')
+    plot.plot(frequencies, noise_list, color='green')
+    plot.plot(frequencies, noise_list_auto, color='blue')
+    plot.plot(frequencies, smooth_savgol(intensities), color='pink')
+    plot.plot(frequencies, smooth(intensities, (len(intensities) / 10000)), color='yellow')
+    # plot.axhline(linewidth=4,y=avg, color='purple', xmin=0, xmax=max_x)
+    plot.bar(p_x, p_y, color='orange')
     # plot.plot(frequencies, smooth_savgol(intensities), color='black')
-
-    # frequencies, intensities = peakdetect.peakdet(intensities, .3, frequencies)
-    frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.001)
-    plot.bar(frequencies, intensities, color='red')
-
-    print len(frequencies)
+    #
+    # # frequencies, intensities = peakdetect.peakdet(intensities, .3, frequencies)
+    # frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.001)
+    # plot.bar(frequencies, intensities, color='red')
+    #
+    # print len(frequencies)
     plot.show()
 
 

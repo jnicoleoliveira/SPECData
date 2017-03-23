@@ -1,12 +1,7 @@
 # SPECdata
 
 ## Summary
-SPECdata is an interactive analysis tool that given an experiment spectrum, will
-rapidly assign known species (i.e. precursors, contaminants). The software
-includes many other features that allow a user to interact with their data,
-accept or decline assignments, and export or save their data. Using SQLite,
-this software stores both catalog, and experiment data, and provides an easy
-to use GUI for database management.
+SPECdata, is an open source, interactive tool which is designed to simplify and greatly accelerate spectral analysis and discovery. This software tool combines both automated and manual components that free the user from computation, while giving him/her considerable flexibility to assign, manipulate, interpret and export their analysis.
 
 ## Requirements
 * Python 2.7

@@ -154,7 +154,7 @@ class SplatalogueAssignmentWindow(QDialog):
             exp_freq = get_frequency(conn, self.chemical.matched_lines[i])
             frequency = self.chemical.lines[i].frequency
             intensity = self.chemical.lines[i].intensity
-            line_list = self.chemical.lines[i].linelist
+            line_list = self.chemical.lines[i].line_list
             units = self.chemical.lines[i].units
 
             # Convert Data to QTableWidgetItem

@@ -486,19 +486,24 @@ def __import_txtfile(conn, filepath, mid, peaks=False):
     # Get data from file
     frequencies = []
     intensities = []
+    line_num = 0
     with open(filepath) as f:
         for line in f:
+            line_num += 1
             if line is not None or line is not "":
-                point = re.split(regex, line.strip())
-                # point = re.split(', |\t|  |, ', line.strip())
-                # point = str.split((line.strip()), )
+                try:
+                    point = re.split(regex, line.strip())
 
-                frequencies.append(float(point[0]))   # get frequency
-                intensities.append(float(point[1]))   # get actual intensity (logx ^ x)
+                    frequencies.append(float(point[0]))  # get frequency
+                    intensities.append(float(point[1]))  # get actual intensity (logx ^ x)
+                except IndexError:
+                    print "IndexError in line: " + str(line_num)
+                except ValueError:
+                    print "ValueError in Line: " + str(line_num)
 
-    if peaks is False:
-        # Determine Peaks
-        frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
+        if peaks is False:
+            # Determine Peaks
+            frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
 
     # Store peaks into file
     for i in range(0, len(frequencies)):
@@ -533,7 +538,9 @@ def __import_catfile(conn, filepath, mid):
                 inte = abs(float(point[2])) ** float(point[2]) # get actual intensity (logx ^ x)
                 conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',(mid, freq, inte))  # insert into peak table
             except IndexError:
-                print "Error in line: " + str(linenum)
+                print "IndexError in line: " + str(linenum)
+            except ValueError:
+                print "ValueError in Line: " + str(linenum)
 
     # Commit Changes
     conn.commit()
@@ -553,14 +560,18 @@ def __import_spfile(conn, filepath, mid):
     # Get data from file
     frequencies = []
     intensities = []
+    line_num = 0
     with open(filepath) as f:
         for line in f:
+            line_num += 1
             point = str.split((line.strip()))
             try:
                 frequencies.append(float(point[0]))  # get frequency
                 intensities.append(float(point[1]))  # get actual intensity (logx ^ x)
+            except IndexError:
+                print "IndexError in line: " + str(line_num)
             except ValueError:
-                continue
+                print "ValueError in Line: " + str(line_num)
 
     # Determine Peaks
     frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
@@ -595,7 +606,6 @@ def __import_linesfile(conn, filepath, mid):
 
     print "[ Added entry peaks ] "
 
-
 def __import_ftbfile(conn, filepath, mid, peaks=False):
     """
     Inheritently Private Function, determines peaks of .sp File and imports to database
@@ -613,21 +623,21 @@ def __import_ftbfile(conn, filepath, mid, peaks=False):
     # Get data from file
     frequencies = []
     intensities = []
+    line_num = 0
     with open(filepath) as f:
         for line in f:
+            line += 1
             if line is not None or line is not "" or line[0] is '#':
                 point = re.split(regex, line.strip())
-                # print point
-                # point = re.split(', |\t|  |, ', line.strip())
-                # point = str.split((line.strip()), )
 
                 try:
                     frequencies.append(float(point[1]))  # get frequency
                     intensities.append(float(point[7]))  # get actual intensity (logx ^ x)
-                except ValueError:
-                    continue
                 except IndexError:
-                    continue
+                    print "IndexError in line: " + str(line_num)
+                except ValueError:
+                    print "ValueError in line: " + str(line_num)
+
     print "PEAKS!!" + str(len(frequencies))
     if peaks is False:
         # Determine Peaks
@@ -657,9 +667,14 @@ def __import_listfile(conn, filepath, mid):
     # Store peak data in file, to 'peaks' table
     with open(filepath) as f:
         for line in f:
-            freq = float(line)  # get frequency
-            conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?, 1.0)',
-                         (mid, freq))  # insert into peak table
+            try:
+                freq = float(line)  # get frequency
+                conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?, 1.0)',
+                             (mid, freq))  # insert into peak table
+            except IndexError:
+                continue
+            except ValueError:
+                continue
 
     # Commit Changes
     conn.commit()

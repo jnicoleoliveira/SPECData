@@ -1,12 +1,16 @@
+import datetime
 from math import ceil
 
 from filetypes import *
 
+TAB = "\t"
+SPACE = " "
+COMMA = ","
+NEW_LINE = "\n"
+
 
 class ExperimentWriteUp:
-    TAB = "\t"
-    SPACE = " "
-    COMMA = ","
+
 
     def __init__(self, experiment):
         self.experiment = experiment
@@ -39,6 +43,72 @@ class ExperimentWriteUp:
         self.__export_string_to_file(string, path)
 
         return path
+
+    def export_text_writeup(self, path, max_width=80):
+        """
+        SPECdata Analysis Write-Up
+        :param path:
+        :return: path
+        """
+        string = ""
+        experiment = self.experiment
+        TITLE = "SPECdata Analysis Write-Up"
+        SECTION_1 = "INFO"
+        SECTION_2 = "ANALYSIS OVERVIEW"
+
+        INFO_LEFT_LIST = ["Name:", "Composition:", "Type:", "Units", "Notes:"]
+        INFO_RIGHT_LIST = [experiment.name, experiment.get_composition(),
+                           experiment.get_type(), experiment.get_units(), experiment.get_notes()]
+
+        ANALYSIS_LEFT_LIST = ["Total Peaks: ", "Unnassigned Peaks: ", "Validated Peaks:", "Validated Molecules:"]
+        ANALYSIS_RIGHT_LIST = [len(experiment.experiment_peaks), experiment.get_unnassigned_count(),
+                               experiment.get_validated_count()[1], experiment.get_validated_molecules_count()]
+        MATCHES_LEFT = []
+        MATCHES_RIGHT = []
+        for key, value in experiment.validated_matches.iteritems():
+            MATCHES_LEFT.append(value.name)
+            MATCHES_RIGHT.append(value.m)
+
+        ''' Build String '''
+        # Title
+        string += self.__get_header_string_format(TITLE) + NEW_LINE
+        string += "(" + self.__get_datetime_string_format() + ")" + (NEW_LINE * 2)
+
+        # Section 1: Info
+        string += self.__get_header_string_format(SECTION_1) + NEW_LINE
+        string += self.__get_list_format(INFO_LEFT_LIST, INFO_RIGHT_LIST) + NEW_LINE
+
+        # Section 2: Analysis
+        string += self.__get_header_string_format(SECTION_2) + NEW_LINE
+        string += self.__get_list_format(ANALYSIS_LEFT_LIST, ANALYSIS_RIGHT_LIST) + NEW_LINE
+        string += self.__get_list_format(MATCHES_LEFT, MATCHES_RIGHT)
+
+        ''' Export to File '''
+        self.__export_string_to_file(string, path)
+
+        return path
+
+    def __get_list_format(self, left_list, right_list):
+        string = ""
+
+        if len(left_list) != len(right_list):
+            return ValueError
+
+        max_buff = 4 + max([len(s) for s in left_list])
+
+        for i in range(0, len(left_list)):
+            buff = max_buff - (len(left_list[i]))
+            string += str(left_list[i]) + (" " * buff) + str(right_list[i]) + NEW_LINE
+
+        return string
+
+    def __get_datetime_string_format(self):
+        now = datetime.datetime.now()
+        return str(now.month) + "/" + str(now.day) + "/" + str(now.year) + \
+               ": " + str(now.hour) + ":" + str(now.minute) + ":" + str(now.second)
+
+    def __get_header_string_format(self, title, width=80):
+        return ("-" * width) + NEW_LINE + str(title) + NEW_LINE + ("-" * width)
 
     def __get_txt_string_format(self, frequencies, intensities, format, delimiter=None):
 

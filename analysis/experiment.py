@@ -1,5 +1,6 @@
 import tables.affirmedassignment_table as affirmed_assignments
 import tables.assignments_table as assignments
+import tables.experimentinfo_table as info
 import tables.molecules_table as molecules
 import tables.peaks_table as peaks
 from config import conn
@@ -341,6 +342,12 @@ class Experiment:
 
         return mol_count, peak_count
 
+    def get_unnassigned_count(self):
+        return len(self.experiment_peaks) - self.get_validated_count()[1]
+
+    def get_validated_molecules_count(self):
+        return len(self.validated_matches)
+
     def get_invalidated_peaks_count(self):
         """
 
@@ -420,6 +427,18 @@ class Experiment:
 
             space_length = buff - len(name)                           # Get length of space
             print name + (' ' * space_length) + prob + "   " + ratio  # Print Line
+
+    def get_type(self):
+        return info.get_type(conn, self.mid)
+
+    def get_units(self):
+        return info.get_units(conn, self.mid)
+
+    def get_composition(self):
+        return info.get_composition(conn, self.mid)
+
+    def get_notes(self):
+        return info.get_notes(conn, self.mid)
 
     ###############################################################################
     #

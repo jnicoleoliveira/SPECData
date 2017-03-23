@@ -17,7 +17,7 @@ from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidg
 from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
 from app.dialogs.widgets.widget___rotated_button import RotatedButton
 from app.dialogs.widgets.widget___splatalogue_dock import SplatalogueDockWidget
-from app.events import LoadingProgressScreen
+from app.events import LoadingProgressScreen, save_as_file, display_informative_message
 from app.experiment_analysis import MainGraph
 from app.time_machine import TimeMachine
 from config import *
@@ -105,6 +105,16 @@ class ExperimentView(QMainWindow):
         from dialog___export_cleaned_lines import ExportCleanedLines
         window = ExportCleanedLines(self.experiment)
         window.exec_()
+
+    def save_analysis_as(self):
+        from analysis.experiment_write_up import ExperimentWriteUp
+        writeup = ExperimentWriteUp(self.experiment)
+        text_box = QLineEdit()
+        save_as_file(text_box, ".txt")
+        path = text_box.text()
+        writeup.export_text_writeup(path)
+        display_informative_message("Export Complete!")
+
 
     def go_to_main_menu(self):
         from dialog___main_menu import MainMenu
@@ -856,6 +866,9 @@ class ExperimentView(QMainWindow):
         ''' Add A Molecule '''
         add_a_molecule = self.ui.actionAdd_a_molecule
         add_a_molecule.triggered.connect(self.add_a_molecule)
+
+        writeup = self.ui.actionSave_analysis_write_up_as
+        writeup.triggered.connect(self.save_analysis_as)
         #self.__setup_graph_toolbar()
 
         """

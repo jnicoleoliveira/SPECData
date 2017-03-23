@@ -85,6 +85,11 @@ class SplatalogueAnalysis:
         return sorted
 
     def get_likelihood_chemical_lists(self):
+        """
+
+        :return:
+        """
+        # TODO-Dynamic_Categorization Change Most->Least Likely to dynamic categorization
         chemicals = self.get_N_sorted_chemicals()
         most_likely = []
         likely = []
@@ -135,10 +140,13 @@ class SplatalogueAnalysis:
     def query(low_freq, high_freq, chemical_name=None, line_list=[LineList.JPL, LineList.CDMS]):
         columns = ('Species', 'Chemical Name', 'Freq-GHz', 'Meas Freq-GHz', 'CDMS/JPL Intensity', 'Lovas/AST Intensity',
                    'Linelist')
+        # TODO-Dynamic Frequency Units
         if chemical_name is not None:
-            lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz, chemical_name=chemical_name)[columns]
+            lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz,
+                                            chemical_name=chemical_name)[columns]
         else:
-            lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz, line_lists=line_list)[columns]
+            lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz,
+                                            line_lists=line_list)[columns]
 
         return lines
 

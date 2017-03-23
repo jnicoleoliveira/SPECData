@@ -125,7 +125,7 @@ class SplatalogueDockWidget(QDockWidget):
         window.exec_()
 
     def open_settings(self):
-        window = SplatalogueSettingsDialog()
+        window = SplatalogueSettingsDialog(0.2)
         window.exec_()
 
     def refresh_analysis(self):

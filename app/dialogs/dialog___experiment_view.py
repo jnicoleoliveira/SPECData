@@ -89,6 +89,7 @@ class ExperimentView(QMainWindow):
         self.experiment = None          # Experiment Object
         self.experiment_graph = None    # ExperimentGraph Object
         self.loading_screen = None      # LoadingProgressScreen Object
+        self.write_up_path = None
 
         '''Start Up'''
         self.__setup__(experiment_name, mid)
@@ -106,14 +107,21 @@ class ExperimentView(QMainWindow):
         window = ExportCleanedLines(self.experiment)
         window.exec_()
 
-    def save_analysis_as(self):
+    def export_analysis_summary(self):
         from analysis.experiment_write_up import ExperimentWriteUp
         writeup = ExperimentWriteUp(self.experiment)
-        text_box = QLineEdit()
+
+        # Open Save File Event
+        text_box = QLineEdit()  # Temp widget
         save_as_file(text_box, ".txt")
+
+        # Retrieve path
         path = text_box.text()
-        writeup.export_text_writeup(path)
-        display_informative_message("Export Complete!")
+        print path
+        # Do Export
+        if path is not None and path.split(".")[0] != "":
+            writeup.export_analysis_summary(path)
+            display_informative_message("Export Complete!")
 
 
     def go_to_main_menu(self):
@@ -860,16 +868,16 @@ class ExperimentView(QMainWindow):
                      SIGNAL('activated()'), self.settings)
 
         ''' Export Write Up'''
-        export_cleaned_lines = self.ui.actionExport_cleaned_lines
+        export_cleaned_lines = self.ui.actionCleaned_Lines
         export_cleaned_lines.triggered.connect(self.export_cleaned_lines)
 
         ''' Add A Molecule '''
         add_a_molecule = self.ui.actionAdd_a_molecule
         add_a_molecule.triggered.connect(self.add_a_molecule)
 
-        writeup = self.ui.actionSave_analysis_write_up_as
-        writeup.triggered.connect(self.save_analysis_as)
-        #self.__setup_graph_toolbar()
+        ''' Export Write Up '''
+        writeup = self.ui.actionAnalysis_Summary
+        writeup.triggered.connect(self.export_analysis_summary)
 
         """
         Second Toolbar

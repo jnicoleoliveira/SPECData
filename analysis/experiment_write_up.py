@@ -11,7 +11,6 @@ NEW_LINE = "\n"
 
 class ExperimentWriteUp:
 
-
     def __init__(self, experiment):
         self.experiment = experiment
 
@@ -44,7 +43,7 @@ class ExperimentWriteUp:
 
         return path
 
-    def export_text_writeup(self, path, max_width=80):
+    def export_analysis_summary(self, path, max_width=80):
         """
         SPECdata Analysis Write-Up
         :param path:

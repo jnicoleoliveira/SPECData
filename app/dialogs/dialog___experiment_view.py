@@ -89,7 +89,6 @@ class ExperimentView(QMainWindow):
         self.experiment = None          # Experiment Object
         self.experiment_graph = None    # ExperimentGraph Object
         self.loading_screen = None      # LoadingProgressScreen Object
-        self.write_up_path = None
 
         '''Start Up'''
         self.__setup__(experiment_name, mid)

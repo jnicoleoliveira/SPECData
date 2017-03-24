@@ -14,7 +14,7 @@ class ExperimentWriteUp:
     def __init__(self, experiment):
         self.experiment = experiment
 
-    def export(self, validated_mids, path, type, format, delimiter=None, shots=None):
+    def export_cleaned_lines(self, validated_mids, path, type, format, delimiter=None, shots=None):
         """
 
         :param validated_mids:
@@ -130,24 +130,24 @@ class ExperimentWriteUp:
 
         return string
 
-    def export_cleaned_lines(self, validated_mids, path):
-        """
-
-        :param validated_mids:
-        :return:
-        """
-
-        ''' Get cleaned list of Frequencies and Intensities'''
-        frequencies, intensities = \
-            self.experiment.get_cleaned_experiment_intensities_list(validated_mids)
-
-        ''' Get String '''
-        string = self.__get_frequencies_intensities_string(frequencies, intensities)
-
-        ''' Export to File '''
-        self.__export_string_to_file(string, path)
-
-        return path
+    # def export_cleaned_lines(self, validated_mids, path):
+    #     """
+    #
+    #     :param validated_mids:
+    #     :return:
+    #     """
+    #
+    #     ''' Get cleaned list of Frequencies and Intensities'''
+    #     frequencies, intensities = \
+    #         self.experiment.get_cleaned_experiment_intensities_list(validated_mids)
+    #
+    #     ''' Get String '''
+    #     string = self.__get_frequencies_intensities_string(frequencies, intensities)
+    #
+    #     ''' Export to File '''
+    #     self.__export_string_to_file(string, path)
+    #
+    #     return path
 
     def __get_ftb_fixed_shots_string(self, frequencies, n_shots):
         """

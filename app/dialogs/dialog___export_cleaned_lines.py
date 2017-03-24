@@ -136,7 +136,7 @@ class ExportCleanedLines(QDialog):
         return mids
 
     def throw_no_export_error(self, info, detail):
-        text = "Error: Cannot do export!"
+        text = "Error: Cannot do export_cleaned_lines!"
         display_error_message(text,info, detail)
 
     def do_export(self, validated_mids):
@@ -145,16 +145,16 @@ class ExportCleanedLines(QDialog):
 
         # -- Export Cleaned Lines -- #
         # writeup.export_cleaned_lines(validated_mids, self.save_path)
-        writeup.export(validated_mids, self.save_path, self.type, self.format, self.delimiter, self.shots)
+        writeup.export_cleaned_lines(validated_mids, self.save_path, self.type, self.format, self.delimiter, self.shots)
 
     def ok(self):
 
         # -- Check for save path errors -- #
         if self.save_path is None:
             # No Path Chosen
-            self.throw_no_export_error("Please select an export location.",
-                                       "You have not selected an export location. Please\
-                                       select an export location to save to.")
+            self.throw_no_export_error("Please select an export_cleaned_lines location.",
+                                       "You have not selected an export_cleaned_lines location. Please\
+                                       select an export_cleaned_lines location to save to.")
             return
 
         # -- Get mids -- #
@@ -167,7 +167,7 @@ class ExportCleanedLines(QDialog):
                                        must select at least (1).")
             return
 
-        # No Errors, OK to do export!
+        # No Errors, OK to do export_cleaned_lines!
         self.do_export(mids)
 
         # Show Export Completed

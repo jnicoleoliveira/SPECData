@@ -107,19 +107,17 @@ class ExperimentView(QMainWindow):
         window.exec_()
 
     def export_analysis_summary(self):
-        from analysis.experiment_write_up import ExperimentWriteUp
-        writeup = ExperimentWriteUp(self.experiment)
-
+        from analysis.experiment_write_up import export_analysis_summary
         # Open Save File Event
         text_box = QLineEdit()  # Temp widget
         save_as_file(text_box, ".txt")
 
         # Retrieve path
         path = text_box.text()
-        print path
-        # Do Export
+
+        # Do Export : make sure name before ext is not empty
         if path is not None and path.split(".")[0] != "":
-            writeup.export_analysis_summary(path)
+            export_analysis_summary(self.experiment, path)
             display_informative_message("Export Complete!")
 
 

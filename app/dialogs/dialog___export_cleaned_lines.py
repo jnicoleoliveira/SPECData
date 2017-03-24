@@ -4,7 +4,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from analysis.experiment_write_up import ExperimentWriteUp
+from analysis.experiment_write_up import *
 from analysis.filetypes import *
 from app.dialogs.frames.experiment_view.frame___export_cleaned_lines import Ui_Dialog
 from ..events import display_error_message, save_as_file, display_informative_message
@@ -140,12 +140,11 @@ class ExportCleanedLines(QDialog):
         display_error_message(text,info, detail)
 
     def do_export(self, validated_mids):
-        # -- Create Write Up -- #
-        writeup = ExperimentWriteUp(self.experiment)
 
         # -- Export Cleaned Lines -- #
         # writeup.export_cleaned_lines(validated_mids, self.save_path)
-        writeup.export_cleaned_lines(validated_mids, self.save_path, self.type, self.format, self.delimiter, self.shots)
+        export_cleaned_lines(self.experiment, validated_mids, self.save_path, self.type, self.format, self.delimiter,
+                             self.shots)
 
     def ok(self):
 

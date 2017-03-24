@@ -43,3 +43,5 @@ VALIDATE_ICON = os.path.join(resources, "validate.png")
 INVALIDATE_ICON = os.path.join(resources, "invalidate.png")
 
 SETTINGS_GEAR_ICON = os.path.join(resources, "settings.png")
+
+LOADING_APPLE_GIF = os.path.join(resources, "loading_apple.gif")

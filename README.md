@@ -7,7 +7,7 @@ SPECdata, is an open source, interactive tool which is designed to simplify and 
 * sqlite3
 
 ## Installation
-    >> export_cleaned_lines PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
+    >> export PYTHONPATH=$PYTHONPATH:ProjectDirectoryPath
     >> cd init
     >> python setup.py build
     >> python setup.py install

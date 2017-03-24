@@ -1038,6 +1038,7 @@ class ExperimentView(QMainWindow):
     def plot_spectrum(self):
         print "PLOT SPECTRUM!"
 
+
 class State:
     """
     Represents a single state of the ExperimentView,
@@ -1051,3 +1052,4 @@ class State:
         self.pending_matches = pending_widget.get_matches()
         self.accepted_matches = accepted_widget.get_matches()
         self.rejected_matches = rejected_widget.get_matches()
+

@@ -87,7 +87,7 @@ def export_analysis_summary(experiment, path, max_width=80):
     return path
 
 
-def export_assignment_data(experiment, path, unassigned=False):
+def export_assignment_data(experiment, path, delimiter=COMMA, unassigned=False):
     """
 
     :param experiment:
@@ -107,7 +107,7 @@ def export_assignment_data(experiment, path, unassigned=False):
     string += experiment_name + NEW_LINE
     string += time + NEW_LINE + NEW_LINE
 
-    string += __generate_row(column_headers, COMMA) + NEW_LINE
+    string += __generate_row(column_headers, delimiter) + NEW_LINE
     string += __get_full_assignment_string(experiment.get_all_matches_list())
 
     # Export to File

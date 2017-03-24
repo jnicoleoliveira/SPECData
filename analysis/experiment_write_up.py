@@ -87,6 +87,35 @@ def export_analysis_summary(experiment, path, max_width=80):
     return path
 
 
+def export_assignment_data(experiment, path, unassigned=False):
+    """
+
+    :param experiment:
+    :param path:
+    :param unassigned:
+    :return:
+    """
+    # Get Data
+    string = ""
+    title = "@SPECdata"
+    experiment_name = experiment.name
+    time = __get_datetime_string_format()
+    column_headers = ["Exp. Frequency", "Exp. Intensity", "Assignment", "Frequency", "Intensity"]
+
+    # Format String
+    string += title + NEW_LINE
+    string += experiment_name + NEW_LINE
+    string += time + NEW_LINE + NEW_LINE
+
+    string += __generate_row(column_headers, COMMA) + NEW_LINE
+    string += __get_full_assignment_string(experiment.get_all_matches_list())
+
+    # Export to File
+    __export_string_to_file(string, path)
+
+    return path
+
+
 ###############################################################################
 # Helper Functions
 ###############################################################################
@@ -186,6 +215,22 @@ def __get_frequencies_intensities_string(frequencies, intensities, delimiter=SPA
     return txt_string
 
 
+def __get_full_assignment_string(matches, delimeter=COMMA):
+    from tables.peaks_table import get_frequency_intensity
+    from config import conn
+    string = ""
+    for match in matches:
+        # Get Row Data
+        name = match.name
+        exp_frequency, exp_intensity = get_frequency_intensity(conn, match.exp_pid)
+        match_frequency, match_intensity = get_frequency_intensity(conn, match.pid)
+
+        string += __generate_row([exp_frequency, exp_intensity, name,
+                                  match_frequency, match_intensity], COMMA) + NEW_LINE
+
+    return string
+
+
 def __get_frequencies_string(frequencies):
     """
     Generates a string with frequencies seperated by a newline character
@@ -199,6 +244,14 @@ def __get_frequencies_string(frequencies):
         txt_string += str(frequencies[i]) + "\n"
 
     return txt_string
+
+
+def __generate_row(strings, delimeter):
+    string = ""
+    for i in range(0, len(strings) - 1):
+        string += str(strings[i]) + delimeter
+    string += str(strings[len(strings) - 1])
+    return string
 
 
 def __export_string_to_file(string, path):

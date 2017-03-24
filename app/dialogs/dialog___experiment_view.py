@@ -70,7 +70,6 @@ class ExperimentView(QMainWindow):
         self.main_menu_btn = None       # Main Menu (exits, returns to main menu)
         self.delete_btn = None          # Delete Button, removes associated lines from analysis
 
-
         ''' Toolboxes '''
         self.info_toolbox = None
         self.graph_toolbox = None
@@ -120,6 +119,19 @@ class ExperimentView(QMainWindow):
             export_analysis_summary(self.experiment, path)
             display_informative_message("Export Complete!")
 
+    def export_assignment_data(self):
+        from analysis.experiment_write_up import export_assignment_data
+        # Open Save File Event
+        text_box = QLineEdit()  # Temp widget
+        save_as_file(text_box, ".csv")
+
+        # Retrieve path
+        path = text_box.text()
+
+        # Do Export : make sure name before ext is not empty
+        if path is not None and path.split(".")[0] != "":
+            export_assignment_data(self.experiment, path)
+            display_informative_message("Export Complete!")
 
     def go_to_main_menu(self):
         from dialog___main_menu import MainMenu
@@ -128,7 +140,7 @@ class ExperimentView(QMainWindow):
         self.hide()
         window.show()
         window.exec_()
-        #self.close()
+        # self.clse()
 
     def add_a_molecule(self):
         from dialog___add_a_molecule import AddAMolecule
@@ -868,13 +880,17 @@ class ExperimentView(QMainWindow):
         export_cleaned_lines = self.ui.actionCleaned_Lines
         export_cleaned_lines.triggered.connect(self.export_cleaned_lines)
 
-        ''' Add A Molecule '''
-        add_a_molecule = self.ui.actionAdd_a_molecule
-        add_a_molecule.triggered.connect(self.add_a_molecule)
-
         ''' Export Write Up '''
         writeup = self.ui.actionAnalysis_Summary
         writeup.triggered.connect(self.export_analysis_summary)
+
+        ''' Export Assignment Data '''
+        assignment_data = self.ui.actionAssignment_Data
+        assignment_data.triggered.connect(self.export_assignment_data)
+
+        ''' Add A Molecule '''
+        add_a_molecule = self.ui.actionAdd_a_molecule
+        add_a_molecule.triggered.connect(self.add_a_molecule)
 
         """
         Second Toolbar

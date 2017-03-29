@@ -54,7 +54,9 @@ class LoadExperiment(QDialog):
         except ValueError:
             display_error_message("SELECTION ERROR", "You must select one item to load.",\
                                   "You have not selected one item, please select one item.")
-
+        except IndexError:
+            display_error_message("SELECTION ERROR", "You must select one item to load.", \
+                                  "You have not selected one item, please select one item.")
     def back(self):
         from dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)
         self.close()

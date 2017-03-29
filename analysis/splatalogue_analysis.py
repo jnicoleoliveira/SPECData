@@ -4,6 +4,7 @@
 from math import isnan
 
 from astropy import units as u
+from astroquery.exceptions import TimeoutError
 from astroquery.splatalogue import Splatalogue
 
 from config import conn
@@ -138,15 +139,20 @@ class SplatalogueAnalysis:
 
     @staticmethod
     def query(low_freq, high_freq, chemical_name=None, line_list=[LineList.JPL, LineList.CDMS]):
+
         columns = ('Species', 'Chemical Name', 'Freq-GHz', 'Meas Freq-GHz', 'CDMS/JPL Intensity', 'Lovas/AST Intensity',
                    'Linelist')
-        # TODO-Dynamic Frequency Units
-        if chemical_name is not None:
-            lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz,
-                                            chemical_name=chemical_name)[columns]
-        else:
-            lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz,
-                                            line_lists=line_list)[columns]
+
+        try:
+            # TODO-Dynamic Frequency Units
+            if chemical_name is not None:
+                lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz,
+                                                chemical_name=chemical_name)[columns]
+            else:
+                lines = Splatalogue.query_lines(low_freq * u.MHz, high_freq * u.MHz,
+                                                line_lists=line_list)[columns]
+        except TimeoutError:
+            return []
 
         return lines
 

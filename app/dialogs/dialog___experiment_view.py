@@ -75,6 +75,7 @@ class ExperimentView(QMainWindow):
         self.graph_toolbox = None
         self.table_toolbox = None
 
+
         ''' Undo/Redo (Time Machine) '''
         self.time_machine = None
         self.undo_action = None     # action_bar undo button
@@ -148,8 +149,8 @@ class ExperimentView(QMainWindow):
         window.exec_()
 
     def save_analysis(self):
-        self.experiment.save_affirmed_matches()
-        print "[ANALYSIS SAVED]"
+        self.experiment.save_affirmed_matches(True)
+        display_informative_message("Save Complete!")
 
     ###############################################################################
     # Selection Widget Functions
@@ -1052,4 +1053,3 @@ class State:
         self.pending_matches = pending_widget.get_matches()
         self.accepted_matches = accepted_widget.get_matches()
         self.rejected_matches = rejected_widget.get_matches()
-

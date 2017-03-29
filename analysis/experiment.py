@@ -220,19 +220,33 @@ class Experiment:
                 # reset experiment peak to be pending, if previously validated
                 peak.set_status_as_pending()
 
-    def save_affirmed_matches(self):
+    def save_affirmed_matches(self, show_progress_window=False):
         """
         Saves all verified matches (rejected, or accepted)
         :return:
         """
+        if show_progress_window is True:
+            from app.events import LoadingProgressScreen
+            screen = LoadingProgressScreen()
+            screen.start()
+            screen.set_caption('Removing old data...')
 
         # delete all currently associated
         affirmed_assignments.remove_all(conn, self.mid)
         assignments.remove_all(conn, self.mid)
 
+        if show_progress_window is True:
+            screen.next_value(5)
+            screen.set_caption('Saving new data...')
+
+        i = 1
+        n = float(len(self.molecule_matches.keys()))
+
         # add current association
         for key, value in self.molecule_matches.iteritems():
-
+            if show_progress_window is True:
+                screen.next_value(int((i / float(n)) * 100) + 5)
+                i += 1
             if value.is_validated() or value.is_invalidated():
                 for m in value.matches:
                     exp_pid = m.exp_pid
@@ -240,7 +254,8 @@ class Experiment:
                     if not assignments.assignment_exists(conn, exp_pid, assigned_pid):
                         aid = assignments.new_assignment_entry(conn, exp_pid, assigned_pid)
                         affirmed_assignments.new_entry(conn, aid, value.status)
-
+        if show_progress_window is True:
+            screen.end()
     ###############################################################################
     # Getter Functions
     ###############################################################################

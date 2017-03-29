@@ -647,25 +647,24 @@ class ExperimentView(QMainWindow):
         # --- 2nd Tab : Peak List
 
         # Create Tool Box
-        tool_box = QToolBox()
-        #text = QString("Graph Options")
-        text = QString("Experiment Info")
-        #self.table_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
-        #tool_box.addItem(self.info_widget, text)
-
-        #tool_box.addItem(self.graph_options_widget, text)
-        tool_box.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
-        text = QString("Peak List")
-        #tool_box.addItem(self.table_widget, text)
+        # tool_box = QToolBox()
+        # #text = QString("Graph Options")
+        # text = QString("Experiment Info")
+        # #self.table_widget.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        # #tool_box.addItem(self.info_widget, text)
+        #
+        # #tool_box.addItem(self.graph_options_widget, text)
+        # tool_box.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        # text = QString("Peak List")
+        # #tool_box.addItem(self.table_widget, text)
 
         # Dock the tool box
-        dock_tools = QDockWidget(self.window())
-        dock_tools.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
-        dock_tools.setWidget(tool_box)
-        dock_tools.setFeatures(QDockWidget.DockWidgetClosable |
-                               QDockWidget.DockWidgetMovable |
-                               QDockWidget.DockWidgetFloatable |
-                               QDockWidget.DockWidgetVerticalTitleBar)
+        # dock_tools = QDockWidget(self.window())
+        # dock_tools.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        # dock_tools.setFeatures(QDockWidget.DockWidgetClosable |
+        #                        QDockWidget.DockWidgetMovable |
+        #                        QDockWidget.DockWidgetFloatable |
+        #                        QDockWidget.DockWidgetVerticalTitleBar)
 
         # ------------------------------------------------------------------ #
         # Molecule Selection Widgets in Tabs (Pending, Validated, Invalidated)
@@ -710,6 +709,7 @@ class ExperimentView(QMainWindow):
         ''' Dock Widgets '''
         self.table_toolbox = QDockWidget()
         self.table_toolbox.setWidget(self.table_widget)
+        # dock_tools.setWidget(tool_box)
 
         self.info_toolbox = QDockWidget()
         self.info_toolbox.setWidget(self.info_widget)

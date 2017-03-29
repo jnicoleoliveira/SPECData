@@ -363,6 +363,9 @@ class Experiment:
     def get_validated_molecules_count(self):
         return len(self.validated_matches)
 
+    def is_invalidated_molecule(self, mid):
+        return self.molecule_matches[mid].is_invalidated()
+
     def get_invalidated_peaks_count(self):
         """
 
@@ -413,7 +416,7 @@ class Experiment:
     def get_unassigned_peaks(self):
         unassigned = []
         for p in self.experiment_peaks:
-            if p.status == "validated" is False:
+            if p.is_validated() is False and p.is_pending() is False:
                 unassigned.append(p)
         return unassigned
 

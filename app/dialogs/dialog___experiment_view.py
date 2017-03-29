@@ -288,7 +288,7 @@ class ExperimentView(QMainWindow):
         from config import conn
         matches = self.experiment.get_all_matches_list()
         unassigned = self.experiment.get_unassigned_peaks()
-        print len(unassigned)
+        print "len(unassigned) = " + str(len(unassigned))
         row_count = len(matches) + len(unassigned)  # Number of values
         column_count = 5         # Columns
 
@@ -304,12 +304,14 @@ class ExperimentView(QMainWindow):
 
         for i in range(0, row_count):
 
-            if row_count > len(matches):
-                exp_pid = unassigned[row_count - i].pid
-                exp_frequency = unassigned[row_count - i].frequency
-                exp_intensity = unassigned[row_count - i].intensity
+            if i >= len(matches):
+                index = i - len(matches)
+                exp_pid = unassigned[index].pid
+                exp_frequency = unassigned[index].frequency
+                exp_intensity = unassigned[index].intensity
                 name = "-"
                 mid = "-"
+                status = "unassigned"
             else:
                 # Get Row Data
                 exp_pid = matches[i].exp_pid
@@ -318,9 +320,13 @@ class ExperimentView(QMainWindow):
                 mid = matches[i].mid
                 status = "pending"
 
-            # Determine if status is valid
-            if self.experiment.is_validated_molecule(mid):
-                status = "valid"
+                # Determine if status is valid
+                if self.experiment.is_validated_molecule(mid):
+                    status = "valid"
+                elif self.experiment.is_invalidated_molecule(mid):
+                    name = "-"
+                    mid = "-"
+                    status = "unassigned"
 
             # Convert Data to QTableWidgetItem
             exp_pid_item = QTableWidgetItem(str(exp_pid))
@@ -330,14 +336,13 @@ class ExperimentView(QMainWindow):
             status_item = QTableWidgetItem(status)
 
             # Get status color, default pending status is black
-            color = QColor("black")
-            if status is "invalid":
-                color = QColor(self.COLOR_INVALID)
-            elif status is "valid":
-                color = QColor(self.COLOR_VALID)
-
-            name_item.setBackgroundColor(color)
-            status_item.setBackgroundColor(color)
+            if status is not "unassigned":
+                if status is "valid":
+                    color = QColor(self.COLOR_VALID)
+                elif status is "pending":
+                    color = QColor(self.COLOR_PENDING)
+                name_item.setBackgroundColor(color)
+                status_item.setBackgroundColor(color)
 
             # Add Widget Items to Table
             self.table_widget.setItem(i, 0, exp_pid_item)

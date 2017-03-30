@@ -36,6 +36,10 @@ class SplatalogueAssignmentWindow(QDialog):
 
         self.__setup__()
 
+    def validate(self):
+        print "VALIDATE BUTTON CLICKED"
+        self.close()
+
     def __setup__(self):
         self.setStyleSheet(
             "background-color: rgb(48, 48, 48);\ngridline-color: rgb(195, 195, 195);\ncolor: rgb(255, 255, 255);\n")
@@ -59,8 +63,7 @@ class SplatalogueAssignmentWindow(QDialog):
         bottom_frame = QFrame()
         frame_layout = QHBoxLayout()
         # --- Widgets --- #
-        validate_btn = QPushButton(QIcon(images.VALIDATE_ICON), "")
-        invalidate_btn = QPushButton(QIcon(images.INVALIDATE_ICON), "")
+        validate_btn = QPushButton(QIcon(images.VALIDATE_ICON), "Validate")
         cancel_btn = QPushButton("Cancel")
         # -- Settings -- #
         bottom_frame.setFrameShadow(QFrame.Raised)
@@ -68,9 +71,11 @@ class SplatalogueAssignmentWindow(QDialog):
         # -- Add Widgets -- #
         frame_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum))
         frame_layout.addWidget(validate_btn)
-        frame_layout.addWidget(invalidate_btn)
         frame_layout.addWidget(cancel_btn)
         bottom_frame.setLayout(frame_layout)
+        # -- Button Connections -- #
+        validate_btn.clicked.connect(self.validate)
+        cancel_btn.clicked.connect(self.close)
 
         ''' Add '''
         outer_layout.addLayout(layout)
@@ -179,7 +184,6 @@ class SplatalogueAssignmentWindow(QDialog):
 
         # -- Additional Options -- #
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
-
 
 class SplatalogueInfoWidget(QWidget):
     def __init__(self, chemical):

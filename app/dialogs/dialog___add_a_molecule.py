@@ -5,9 +5,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from app.dialogs.frames.experiment_view.frame___add_a_molecule import Ui_Dialog
-
-from tables.molecules_table import get_mids_where_category_in, get_name
 from config import conn
+from tables.molecules_table import get_mids_where_category_in, get_name
 
 
 class AddAMolecule(QDialog):
@@ -32,6 +31,16 @@ class AddAMolecule(QDialog):
     # Setup Functions
     ###############################################################################
     def __setup__(self):
+
+        layout = self.layout()
+        cbox = QComboBox()
+        edit_box = QLineEdit()
+        cbox.setLineEdit(edit_box)
+        layout.addWidget(cbox)
+        cbox.addItem("Apple")
+        cbox.addItem("Bear")
+        cbox.addItem("Carriage")
+
 
         self.ui.scrollArea.setWidgetResizable(True)
         self.ui.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)

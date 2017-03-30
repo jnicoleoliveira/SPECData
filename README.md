@@ -1,5 +1,5 @@
 # SPECdata
-SPECdata, is an open source, interactive tool which is designed to simplify and greatly accelerate spectral analysis and discovery. This software tool combines both automated and manual components that free the user from computation, while giving him/her considerable flexibility to assign, manipulate, interpret and export_cleaned_lines their analysis.
+SPECdata, is an open source, interactive tool which is designed to simplify and greatly accelerate spectral analysis and discovery. This software tool combines both automated and manual components that free the user from computation, while giving him/her considerable flexibility to assign, manipulate, interpret and export their analysis.
 
 ## Requirements
 * Python 2.7

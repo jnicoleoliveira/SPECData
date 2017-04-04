@@ -436,7 +436,8 @@ class AssignmentGraph:
                                                      right=0.97,
                                                      hspace=0.35, )
 
-    def set_options(self, full_spectrum=False, sharey=False, y_to_experiment_intensities=False, color_experiment=False):
+    def set_options(self, full_spectrum=False, sharey=False,
+                    y_to_experiment_intensities=False, color_experiment=False):
         self.full_spectrum = full_spectrum
         self.sharey = sharey
         self.display_exp_assignments = color_experiment

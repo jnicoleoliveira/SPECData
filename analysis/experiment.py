@@ -725,7 +725,16 @@ class Experiment:
 
             return pids
 
+        def get_matches_frequency_intensity_list(self):
+            frequencies = []
+            intensities = []
+            for m in self.matches:
+                pid = m.pid
+                f, i = peaks.get_frequency_intensity(conn, pid)
+                frequencies.append(f)
+                intensities.append(i)
 
+            return frequencies, intensities
 class Match:
 
     def __init__(self, name, mid, pid, p, exp_pid, Rst):

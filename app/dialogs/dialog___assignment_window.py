@@ -5,14 +5,13 @@ import os
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget     # Matplotlib Widget
 
 from app.dialogs.frames.assignment_view.frame___assignment_window import Ui_Dialog              # Dialog Window
 from app.dialogs.widgets.widget___assignment_graph_options import AssignmentGraphOptionsWidget # Graph Options Widget
 from app.dialogs.widgets.widget___assignment_window_info import AssignmentInfoWidget    # Assignment Info Widget
+from app.dialogs.widgets.widget___experiment_graph_widget import ExperimentGraphWidget
 from config import conn
 from config import resources
-from ..experiment_analysis import AssignmentGraph
 
 
 class AssignmentWindow(QDialog):
@@ -26,7 +25,7 @@ class AssignmentWindow(QDialog):
         self.resize(1500, 750)
 
         # Widgets
-        self.matplot_widget = None
+        self.graph_widget = None
         self.info_widget = None
         self.table_widget = None
         self.graph_options_widget = None
@@ -37,7 +36,6 @@ class AssignmentWindow(QDialog):
         self.match = match
         self.color = color
         self.experiment = experiment
-        self.experiment_graph = None
 
         self.startup()
 
@@ -54,26 +52,22 @@ class AssignmentWindow(QDialog):
         self.setLayout(layout)
 
         ''' Widgets '''
-        self.matplot_widget = MatplotlibWidget()
         self.info_widget = AssignmentInfoWidget(self.match)
         self.table_widget = QTableWidget()
         self.graph_options_widget = AssignmentGraphOptionsWidget()
         self.validate_btn = QPushButton()
         self.invalidate_btn = QPushButton()
-        spacer_item = QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.graph_widget = ExperimentGraphWidget(self.experiment)
 
         ''' Add Data '''
         self.populate_table_widget()
-        self.experiment_graph = AssignmentGraph(self.matplot_widget, self.experiment)
 
         ''' Setup Buttons '''
         size = QSize(32, 32)
-        #path = os.path.join(resources, 'validate-128.png')
-        #self.validate_btn.setStyleSheet("QPushButton{ background-image: url(" + path + "); }")
+
         self.validate_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'validate-64x.png'))))
         self.invalidate_btn.setIcon(QIcon(QPixmap(os.path.join(resources, 'invalidate-32.png'))))
-        #self.validate_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        #self.invalidate_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
         self.validate_btn.setIconSize(size)
         self.invalidate_btn.setIconSize(size)
 
@@ -85,25 +79,16 @@ class AssignmentWindow(QDialog):
         button_container.addWidget(self.validate_btn)
         button_container.addWidget(self.invalidate_btn)
 
-        # Right Container
-        right_container = QVBoxLayout()
-        #right_container.addWidget(self.graph_options_widget)
-        #right_container.addLayout(button_container)
-        #right_container.addSpacerItem(spacer_item)
-
         # Left Container
         left_container = QVBoxLayout()
         left_container.addWidget(self.info_widget)
         left_container.addWidget(self.graph_options_widget)
-        #left_container.addLayout(button_container)
         left_container.addWidget(self.table_widget)
-        #left_container.addSpacerItem(spacer_item)
 
         ''' Add Widgets to Layout '''
         layout.addLayout(left_container, 0, 0)
-        layout.addWidget(self.matplot_widget, 0, 1)
-        #layout.addLayout(right_container, 0, 2)
-        #layout.addLayout(right_container, 0, 2)
+        layout.addWidget(self.graph_widget, 0, 2)
+
 
     def populate_table_widget(self):
         """
@@ -188,9 +173,9 @@ class AssignmentWindow(QDialog):
         y_to_experiment_intensities = self.graph_options_widget.y_exp_intensities_chk.isChecked()
 
         # Set Options in __setup_graph #
-        self.experiment_graph.set_options(full_spectrum=full_spectrum, sharey=sharey,
-                                          y_to_experiment_intensities=y_to_experiment_intensities,
-                                          color_experiment=color_experiment)
+        self.graph_widget.set_options(full_spectrum=full_spectrum, sharey=sharey,
+                                      y_to_experiment_intensities=y_to_experiment_intensities,
+                                      color_experiment=color_experiment)
 
     def graph(self):
         """
@@ -200,11 +185,11 @@ class AssignmentWindow(QDialog):
         (3) Full Original Spectrum of this assignment
         :return:
         """
-
-        self.experiment_graph.graph(self.match, self.color)
-        self.experiment_graph.draw()
+        self.graph_widget.graph_assignment_view(self.match, self.color)
+        # self.experiment_graph.graph(self.match, self.color)
+        # self.experiment_graph.draw()
 
     def redisplay_graph(self):
         self.set_graph_options()
-        self.experiment_graph.clear()
+        self.graph_widget.clear()
         self.graph()

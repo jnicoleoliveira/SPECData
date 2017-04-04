@@ -170,6 +170,7 @@ def get_intensity(conn, pid):
     intensity = line[0]
     return intensity
 
+
 def get_mid(conn, pid):
     """
     Returns the intensity of a specified peak
@@ -181,6 +182,7 @@ def get_mid(conn, pid):
     line = cursor.fetchone()
     mid = line[0]
     return mid
+
 
 def get_frequency(conn, pid):
     """
@@ -391,6 +393,47 @@ def pid_exists(conn, pid):
 #       * __checkfile(filepath)
 ###############################################################################
 
+
+def add_peak(conn, mid, frequency, intensity):
+    """
+
+    :param conn:
+    :param mid:
+    :param frequency:
+    :param intensity:
+    :return:
+    """
+    conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',
+                 (mid, frequency, intensity))  # insert into peak table
+
+    conn.commit()
+    # Get the new entry's molecule id (mid)
+    cursor = conn.execute('SELECT max(pid) FROM peaks')
+    pid = cursor.fetchone()[0]
+
+    return pid
+
+
+def add_peaks(conn, mid, frequencies, intensities):
+    """
+
+    :param conn:
+    :param mid:
+    :param frequencies:
+    :param intensities:
+    :return:
+    """
+    if len(frequencies) != len(intensities):
+        return ValueError
+
+    for i in range(0, len(frequencies)):
+        conn.execute('INSERT INTO peaks(mid, frequency, intensity) VALUES (?,?,?)',
+                     (mid, frequencies[i], intensities[i]))  # insert into peak table
+
+        # Commit Changes
+        conn.commit()
+
+
 def import_file(conn, filepath, mid, peaks=False):
     """
     Imports file to peak table in spectrum database to it's associative molecule
@@ -436,6 +479,7 @@ def import_file(conn, filepath, mid, peaks=False):
 
     return True
 
+
 def __import_dptfile(conn, filepath, mid):
     """
     Inheritently Private Function, determines peaks of .sp File and imports to database
@@ -468,6 +512,7 @@ def __import_dptfile(conn, filepath, mid):
     conn.commit()
 
     print "[ Added entry peaks ] "
+
 
 def __import_txtfile(conn, filepath, mid, peaks=False):
     """
@@ -515,6 +560,7 @@ def __import_txtfile(conn, filepath, mid, peaks=False):
 
     print "[ Added entry peaks ] "
 
+
 def __import_catfile(conn, filepath, mid):
     """
     Inheritently Private Function, imports catfile to database
@@ -546,6 +592,7 @@ def __import_catfile(conn, filepath, mid):
     conn.commit()
 
     print "[ Added entry peaks ] "
+
 
 def __import_spfile(conn, filepath, mid):
     """
@@ -585,6 +632,7 @@ def __import_spfile(conn, filepath, mid):
 
     print "[ Added entry peaks ] "
 
+
 def __import_linesfile(conn, filepath, mid):
     """
     Inheritently Private Function, imports .lines file to spectrum database
@@ -605,6 +653,7 @@ def __import_linesfile(conn, filepath, mid):
     conn.commit()
 
     print "[ Added entry peaks ] "
+
 
 def __import_ftbfile(conn, filepath, mid, peaks=False):
     """
@@ -653,6 +702,7 @@ def __import_ftbfile(conn, filepath, mid, peaks=False):
 
     print "[ Added entry peaks ] "
 
+
 def __import_listfile(conn, filepath, mid):
     """
     Inheritently Private Function, imports .list file to spectrum database
@@ -680,6 +730,7 @@ def __import_listfile(conn, filepath, mid):
     conn.commit()
 
     print "[ Added entry peaks ] "
+
 
 def __checkfile(filepath):
     """

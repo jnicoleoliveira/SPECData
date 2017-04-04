@@ -23,7 +23,6 @@ class SplatalogueDockWidget(QDockWidget):
         self.least_likely_list_widget = QListWidget()
 
         self.toolbox = QToolBox()
-
         self.splat_analysis = SplatalogueAnalysis(experiment)
         # self.__setup__()
 
@@ -118,11 +117,14 @@ class SplatalogueDockWidget(QDockWidget):
 
         item = list_widget.selectedItems()[0]
         text = str(item.text()).split()
-
         chemical = self.splat_analysis.chemicals[text[1]]
+        window = SplatalogueAssignmentWindow(self.splat_analysis.experiment, chemical,
+                                             self.parent().validated_selection_widget)
+        result = window.exec_()
 
-        window = SplatalogueAssignmentWindow(self.splat_analysis.experiment, chemical)
-        window.exec_()
+        # If assignment was validated - remove item from the list
+        if result == 1:
+            list_widget.takeItem(list_widget.row(item))
 
     def open_settings(self):
         window = SplatalogueSettingsDialog(0.2)

@@ -14,7 +14,7 @@ class SplatalogueAssignmentWindow(QDialog):
     FACE_COLOR = "#626262"
     EXPERIMENT_EDGE_COLOR = 'black'
 
-    def __init__(self, experiment, chemical):
+    def __init__(self, experiment, chemical, selection_widget):
         super(SplatalogueAssignmentWindow, self).__init__()
 
         self.setAttribute(Qt.WA_DeleteOnClose)
@@ -29,6 +29,7 @@ class SplatalogueAssignmentWindow(QDialog):
         self.info_widget = SplatalogueInfoWidget(chemical)
         self.table_widget = QTableWidget()
         self.matplot_widget = MatplotlibWidget()
+        self.selection_widget = selection_widget
 
         '''Colors'''
         self.color___experiment_edge = SplatalogueAssignmentWindow.EXPERIMENT_EDGE_COLOR
@@ -37,8 +38,14 @@ class SplatalogueAssignmentWindow(QDialog):
         self.__setup__()
 
     def validate(self):
-        print "VALIDATE BUTTON CLICKED"
+        # Validate all lines for now
+        for line in self.chemical.lines:
+            line.validated = True
+        match = self.chemical.validate_chemical(self.experiment)
+        self.selection_widget.add_row(match)
+
         self.close()
+        self.setResult(1)
 
     def __setup__(self):
         self.setStyleSheet(
@@ -184,6 +191,7 @@ class SplatalogueAssignmentWindow(QDialog):
 
         # -- Additional Options -- #
         self.table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
+
 
 class SplatalogueInfoWidget(QWidget):
     def __init__(self, chemical):

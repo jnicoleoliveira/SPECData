@@ -197,6 +197,7 @@ class ExperimentView(QMainWindow):
         return self.selection_widget.get_selections()
 
     def populate_selection_widget(self):
+        print "populating!"
         self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
 
     def organize_matches(self):

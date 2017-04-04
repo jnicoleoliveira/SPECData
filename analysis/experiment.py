@@ -186,6 +186,15 @@ class Experiment:
         self.molecule_matches[mid] = mol
         return mol
 
+    def add_a_molecule_match(self, mid, name, matches, p=None):
+        m = Experiment.MoleculeMatch(name, mid, 100, 0.2)
+        m.set_status_as_validated()
+        self.molecule_matches[mid] = m
+        self.validate_a_match(mid)
+        if p is not None:
+            m.p = p
+        return self.molecule_matches[mid]
+
     ###############################################################################
     # Status Functions
     ###############################################################################

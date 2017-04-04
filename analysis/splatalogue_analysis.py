@@ -8,7 +8,7 @@ from astroquery.exceptions import TimeoutError
 from astroquery.splatalogue import Splatalogue
 
 from config import conn
-from tables import experimentinfo_table
+from tables import experimentinfo_table, molecules_table, peaks_table
 
 
 class LineList:
@@ -225,11 +225,47 @@ class Chemical:
             name, full_name, frequency, intensity, line_list = SplatalogueAnalysis.get_row_data(row)
             if min_freq < frequency < max_freq:
                 line = Line(frequency, line_list, intensity)
-                print frequency
                 lines.append(line)
 
         return lines
 
+    def validate_chemical(self, experiment):
+        """
+
+        :param experiment:
+        :param chemical:
+        :return:
+        """
+        from analysis.experiment import Match
+        # (1) Create molecule (database) representation of Chemical
+        name = self.name
+        category = "splatalogue"
+
+        mid = molecules_table.get_mid(conn, name, category)  # Check if already exists
+        if mid is None:
+            # Otherwise: Create new molecule entry
+            mid = molecules_table.new_molecule_entry(conn, name, category)
+
+        # (2) Add (only assigned) Chemical Peaks to peaks table
+        matches = []
+        for i in range(0, self.N):
+            line = self.lines[i]
+            exp_pid = self.matched_lines[i]
+
+            if line.validated is True:
+                frequency = line.frequency
+                intensity = line.intensity
+
+                # Add assignments to peaks table
+                pid = peaks_table.add_peak(conn, mid, frequency, intensity)
+
+                # Save values to be made into Molecule Match Objects
+                match = Match(name, mid, pid, 100, exp_pid, 1)
+                matches.append(match)
+
+        # (3) Add a Molecule Match Objects
+        match = experiment.add_a_molecule_match(mid, name, matches, 1000)  # p=1000 (for now)
+        return match
 
 class Line:
     """
@@ -241,5 +277,4 @@ class Line:
         self.line_list = line_list
         self.units = units
         self.intensity = intensity
-
-
+        self.validated = False

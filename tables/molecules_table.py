@@ -156,7 +156,7 @@ def get_mids_in_temperature_range(conn, min, max):
         string = ""
 
     query = "SELECT M.mid FROM molecules M JOIN KnownInfo K ON M.mid=K.mid" + string
-    print query
+    # print query
     cursor = conn.execute(query)
     rows = cursor.fetchall()
 
@@ -366,7 +366,6 @@ def update(conn, mid, row, value):
 
 def update_experiment(conn, mid, row, value):
     if row == 'last_updated':
-        print "UPDATING LAST UPDATED!!! -------------------------------"
         from experimentinfo_table import update_last_updated
         update_last_updated(conn, mid)
     else:

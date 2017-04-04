@@ -121,11 +121,10 @@ class SplatalogueDockWidget(QDockWidget):
         window = SplatalogueAssignmentWindow(self.splat_analysis.experiment, chemical,
                                              self.parent().validated_selection_widget)
         result = window.exec_()
-        print "result == " + str(result)
+
+        # If assignment was validated - remove item from the list
         if result == 1:
-            print "removing item!"
             list_widget.takeItem(list_widget.row(item))
-            item = None
 
     def open_settings(self):
         window = SplatalogueSettingsDialog(0.2)

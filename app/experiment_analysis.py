@@ -294,6 +294,7 @@ class MainGraph:
 class AssignmentGraph:
     FACE_COLOR = "#626262"
     EXPERIMENT_EDGE_COLOR = 'black'
+
     def __init__(self, plot_widget, experiment):
         self.plot_widget = plot_widget
         self.experiment = experiment
@@ -440,3 +441,4 @@ class AssignmentGraph:
         self.sharey = sharey
         self.display_exp_assignments = color_experiment
         self.y_to_experiment_intensities = y_to_experiment_intensities
+

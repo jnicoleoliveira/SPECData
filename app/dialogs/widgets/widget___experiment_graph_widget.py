@@ -26,7 +26,7 @@ class ExperimentGraphWidget(MatplotlibWidget):
     ###############################################################################
     # User Functions
     ###############################################################################
-    def graph_assignment_view(self, match, color):
+    def graph_assignment_view(self, match, color, is_splatalogue=False):
 
         #####################################
         # Experiment Subplot (#1)
@@ -63,7 +63,13 @@ class ExperimentGraphWidget(MatplotlibWidget):
         subplot_3 = self.__add_subplot(313, "", "", "",
                                        sharex=subplot_1, sharey=sharey,
                                        min=min_x, max=max_x)
-        x, y = get_peaks.get_frequency_intensity_list(conn, match.mid, max_x, min_x)
+
+        if is_splatalogue is True:
+            from analysis.splatalogue_analysis import Chemical
+            x, y = Chemical.get_full_frequency_intensity_list(match.name, min_x, max_x)
+        else:
+            x, y = get_peaks.get_frequency_intensity_list(conn, match.mid, max_x, min_x)
+
         self.__graph_subplot(subplot_3, x, y, color)
 
         self.draw()

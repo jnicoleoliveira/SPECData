@@ -28,3 +28,6 @@ class AssignmentInfoWidget(QWidget):
         self.ui.presence_val_lbl.setText(str(self.match.p * 100))
         self.ui.info_val_lbl.setText("[stub]")
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+    def set_name(self, text):
+        self.ui.experiment_name_lbl.setText(text)

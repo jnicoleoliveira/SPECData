@@ -12,6 +12,7 @@ from app.dialogs.widgets.widget___assignment_window_info import AssignmentInfoWi
 from app.dialogs.widgets.widget___experiment_graph_widget import ExperimentGraphWidget
 from config import conn
 from config import resources
+from tables.molecules_table import get_category
 
 
 class AssignmentWindow(QDialog):
@@ -36,6 +37,7 @@ class AssignmentWindow(QDialog):
         self.match = match
         self.color = color
         self.experiment = experiment
+        self.category = get_category(conn, self.match.mid)
 
         self.startup()
 
@@ -52,6 +54,8 @@ class AssignmentWindow(QDialog):
         self.setLayout(layout)
 
         ''' Widgets '''
+        # if self.category == 'splatalogue':
+        #     self.info_widget =
         self.info_widget = AssignmentInfoWidget(self.match)
         self.table_widget = QTableWidget()
         self.graph_options_widget = AssignmentGraphOptionsWidget()
@@ -88,7 +92,6 @@ class AssignmentWindow(QDialog):
         ''' Add Widgets to Layout '''
         layout.addLayout(left_container, 0, 0)
         layout.addWidget(self.graph_widget, 0, 2)
-
 
     def populate_table_widget(self):
         """
@@ -185,7 +188,11 @@ class AssignmentWindow(QDialog):
         (3) Full Original Spectrum of this assignment
         :return:
         """
-        self.graph_widget.graph_assignment_view(self.match, self.color)
+
+        if self.category == 'splatalogue':
+            self.graph_widget.graph_assignment_view(self.match, self.color, is_splatalogue=True)
+        else:
+            self.graph_widget.graph_assignment_view(self.match, self.color)
         # self.experiment_graph.graph(self.match, self.color)
         # self.experiment_graph.draw()
 

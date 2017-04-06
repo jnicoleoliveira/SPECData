@@ -10,6 +10,7 @@ class Experiment:
 
     exp_average_intensity = None
     max_frequency = None
+
     def __init__(self, name, mid, match_threshold=0.2):
         """
         Experiment Object, represents an experiment, its peaks, molecule matches and its associated probabilities.
@@ -267,6 +268,17 @@ class Experiment:
                         affirmed_assignments.new_entry(conn, aid, value.status)
         if show_progress_window is True:
             screen.end()
+
+    ###############################################################################
+    # Check Functions
+    ###############################################################################
+    def is_invalidated_molecule(self, mid):
+        return self.molecule_matches[mid].is_invalidated()
+
+    def is_validated_molecule(self, mid):
+        """ Determines if a molecule is validated"""
+        return mid in self.validated_matches
+
     ###############################################################################
     # Getter Functions
     ###############################################################################
@@ -374,9 +386,6 @@ class Experiment:
     def get_validated_molecules_count(self):
         return len(self.validated_matches)
 
-    def is_invalidated_molecule(self, mid):
-        return self.molecule_matches[mid].is_invalidated()
-
     def get_invalidated_peaks_count(self):
         """
 
@@ -404,10 +413,6 @@ class Experiment:
 
         return assigned_mids
 
-    def is_validated_molecule(self, mid):
-        """ Determines if a molecule is validated"""
-        return mid in self.validated_matches
-
     def get_sorted_molecule_matches(self):
         import operator
         # Get Tuples
@@ -431,32 +436,6 @@ class Experiment:
                 unassigned.append(p)
         return unassigned
 
-    def print_matches(self):
-        """
-        Print Molecule Matches of experiment.
-        :return:
-        """
-        buff = 30       # Space Buffer
-        scale = 100     # Scale Factor (p * scale)
-        sorted = []     # Sorted tuple(name,p) list
-
-        print "NAME" + (' '*(buff - 4)) + "[P]    " + "[RATIO]"     # Print Header
-        print '-' * (buff+12)
-
-        # Get Tuples
-        for key, value in self.molecule_matches.iteritems():
-            sorted.append((key, value.p * scale))    # Append name and scaled probability values
-
-        sorted.sort(key=lambda tup: tup[1],reverse=True)    # Sorts tuples in place
-
-        for value in sorted:
-            name = str(self.molecule_matches[value[0]].name)
-            prob = str(round(value[1], 2))
-            ratio = str(round(self.molecule_matches[value[0]].ratio, 2))
-
-            space_length = buff - len(name)                           # Get length of space
-            print name + (' ' * space_length) + prob + "   " + ratio  # Print Line
-
     def get_type(self):
         return info.get_type(conn, self.mid)
 
@@ -468,6 +447,32 @@ class Experiment:
 
     def get_notes(self):
         return info.get_notes(conn, self.mid)
+
+    def print_matches(self):
+        """
+        Print Molecule Matches of experiment.
+        :return:
+        """
+        buff = 30  # Space Buffer
+        scale = 100  # Scale Factor (p * scale)
+        sorted = []  # Sorted tuple(name,p) list
+
+        print "NAME" + (' ' * (buff - 4)) + "[P]    " + "[RATIO]"  # Print Header
+        print '-' * (buff + 12)
+
+        # Get Tuples
+        for key, value in self.molecule_matches.iteritems():
+            sorted.append((key, value.p * scale))  # Append name and scaled probability values
+
+        sorted.sort(key=lambda tup: tup[1], reverse=True)  # Sorts tuples in place
+
+        for value in sorted:
+            name = str(self.molecule_matches[value[0]].name)
+            prob = str(round(value[1], 2))
+            ratio = str(round(self.molecule_matches[value[0]].ratio, 2))
+
+            space_length = buff - len(name)  # Get length of space
+            print name + (' ' * space_length) + prob + "   " + ratio  # Print Line
 
     ###############################################################################
     #
@@ -735,6 +740,8 @@ class Experiment:
                 intensities.append(i)
 
             return frequencies, intensities
+
+
 class Match:
 
     def __init__(self, name, mid, pid, p, exp_pid, Rst):

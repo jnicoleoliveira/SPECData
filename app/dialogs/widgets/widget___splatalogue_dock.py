@@ -125,6 +125,7 @@ class SplatalogueDockWidget(QDockWidget):
         # If assignment was validated - remove item from the list
         if result == 1:
             list_widget.takeItem(list_widget.row(item))
+            self.parent().update_info()
 
     def open_settings(self):
         window = SplatalogueSettingsDialog(0.2)

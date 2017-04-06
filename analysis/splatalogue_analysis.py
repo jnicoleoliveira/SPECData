@@ -218,7 +218,8 @@ class Chemical:
         columns = ('Species', 'Chemical Name', 'Freq-GHz', 'Meas Freq-GHz',
                    'CDMS/JPL Intensity', 'Lovas/AST Intensity', 'Linelist')
 
-        rows = Splatalogue.query_lines(min_freq * u.MHz, max_freq * u.MHz, chemical_name=self.full_name,
+        rows = Splatalogue.query_lines(min_freq * u.MHz, max_freq * u.MHz,
+                                       chemical_name=self.full_name,
                                        line_lists=line_list)[columns]
         lines = []
         for row in rows:
@@ -238,7 +239,7 @@ class Chemical:
         """
         from analysis.experiment import Match
         # (1) Create molecule (database) representation of Chemical
-        name = self.name
+        name = self.full_name
         category = "splatalogue"
 
         mid = molecules_table.get_mid(conn, name, category)  # Check if already exists
@@ -266,6 +267,32 @@ class Chemical:
         # (3) Add a Molecule Match Objects
         match = experiment.add_a_molecule_match(mid, name, matches, 1000)  # p=1000 (for now)
         return match
+
+    @staticmethod
+    def get_full_frequency_intensity_list(full_name, min_freq, max_freq, line_list=[LineList.JPL, LineList.CDMS]):
+        columns = ('Species', 'Chemical Name', 'Freq-GHz', 'Meas Freq-GHz',
+                   'CDMS/JPL Intensity', 'Lovas/AST Intensity', 'Linelist')
+
+        rows = Splatalogue.query_lines(min_freq * u.MHz, max_freq * u.MHz,
+                                       chemical_name=full_name,
+                                       line_lists=line_list)[columns]
+        frequencies = []
+        intensities = []
+        for row in rows:
+            name, full_name, frequency, intensity, line_list = SplatalogueAnalysis.get_row_data(row)
+            if min_freq < frequency < max_freq:
+                frequencies.append(frequency)
+                intensities.append(intensity)
+
+        return frequencies, intensities
+
+    def get_composition(self, full_name):
+        columns = ('Species')
+        rows = Splatalogue.query_lines(chemical_name=full_name)[columns]
+        row = rows[0]
+        name = SplatalogueAnalysis.get_row_data(row)
+
+        return name
 
 class Line:
     """

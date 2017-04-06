@@ -205,7 +205,6 @@ class ExperimentView(QMainWindow):
         return self.selection_widget.get_selections()
 
     def populate_selection_widget(self):
-        print "populating!"
         self.selection_widget.add_all(self.experiment.get_sorted_molecule_matches())
 
     def organize_matches(self):
@@ -305,7 +304,6 @@ class ExperimentView(QMainWindow):
         from config import conn
         matches = self.experiment.get_all_matches_list()
         unassigned = self.experiment.get_unassigned_peaks()
-        print "len(unassigned) = " + str(len(unassigned))
         row_count = len(matches) + len(unassigned)  # Number of values
         column_count = 5         # Columns
 
@@ -474,7 +472,6 @@ class ExperimentView(QMainWindow):
     ###############################################################################
 
     def undo(self):
-        print "UNDOING!"
         state = self.time_machine.undo()
         self.__restore_state(state)
 
@@ -489,7 +486,6 @@ class ExperimentView(QMainWindow):
             self.undo_action.setIcon(QIcon(images.UNDO))
 
     def redo(self):
-        print "REDO!"
         state = self.time_machine.redo()
         self.__restore_state(state)
 

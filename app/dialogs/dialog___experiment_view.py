@@ -193,6 +193,14 @@ class ExperimentView(QMainWindow):
         # Refresh Dependent Widgets
         self.splatalogue_dock_widget.refresh_analysis()
 
+        # Regraph
+        try:
+            self.select_all()
+            self.redisplay_graph()
+            self.deselect_all()
+        except AttributeError:
+            self.deselect_all()
+
     def get_selections(self):
         return self.selection_widget.get_selections()
 
@@ -253,6 +261,14 @@ class ExperimentView(QMainWindow):
 
         # Refresh Dependent Widgets
         self.splatalogue_dock_widget.refresh_analysis()
+
+        # Regraph
+        try:
+            self.select_all()
+            self.redisplay_graph()
+            self.deselect_all()
+        except AttributeError:
+            self.deselect_all()
 
     def current_selection_widget(self):
         return self.selection_tab_widget.currentWidget().widget()
@@ -396,7 +412,7 @@ class ExperimentView(QMainWindow):
         Clears current experiment __setup_graph, and redisplays __setup_graph from checkbox selections.
         """
 
-        xlim, ylim = self.experiment_graph.get_zoom_coordinates()
+        # xlim, ylim = self.experiment_graph.get_zoom_coordinates()
         # print str(xlim) + " " + str(ylim)
 
         # Clear Graph
@@ -581,6 +597,7 @@ class ExperimentView(QMainWindow):
                            self.invalidated_selection_widget)
         self.time_machine = TimeMachine(base_state, 20)
 
+        self.deselect_all()  # deselect all
         # -- Stop Doing Things -- #
 
         '''End Loading Screen'''

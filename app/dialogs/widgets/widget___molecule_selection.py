@@ -42,6 +42,7 @@ class MoleculeSelectionWidget(QWidget):
         :param color : If none, will automatically assign a color.
         :return:
         """
+
         # Create Widgets
         color_lbl = QLabel()
         checkbox = QCheckBox()
@@ -49,25 +50,32 @@ class MoleculeSelectionWidget(QWidget):
         probability_lcd = QLCDNumber()
 
         # Color Label Settings
-
         if color is None:
             color = self.colorWheel.next_color()
 
-        color_lbl.setText('             ')
+        color_lbl.setText((' ') * 15)
         color_lbl.setFrameShape(QFrame.Panel)
         color_lbl.setFrameShadow(QFrame.Raised)
         color_lbl.setStyleSheet("border-color: rgb(255, 255, 255); "
                                 + "background-color: " + color + ";")
+        color_lbl.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         # Check Box Settings
+        if 10 < len(match.name) < 20:
+            size = 18
+        elif len(match.name) > 20:
+            size = 10
+        else:
+            size = 20
+
         font = QFont()
-        font.setPixelSize(20)
+        font.setPixelSize(size)
         checkbox.setFont(font)
         checkbox.setText(match.name)
         checkbox.click()
 
         # Probability LCD Number
-        probability_lcd.setNumDigits(4)
+        probability_lcd.setNumDigits(3)
         probability_lcd.display((match.p * 1000))
         probability_lcd.setSegmentStyle(QLCDNumber.Flat)
         probability_lcd.setFrameShape(QFrame.NoFrame)
@@ -75,12 +83,15 @@ class MoleculeSelectionWidget(QWidget):
         probability_lcd.setStyleSheet("background-color: none; \
                                         border-color: none;\
                                         color: rgb(255, 255, 255);")
+        probability_lcd.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
         # More Button (...) Settings
         more_btn.setText('...')
         more_btn.clicked.connect(lambda: self.more_info(match, color))
 
         # Add Widgets to Layout
         widget = QHBoxLayout()
+        widget.setSpacing(2)
         widget.addWidget(probability_lcd)
         widget.addWidget(color_lbl)
         widget.addWidget(checkbox)

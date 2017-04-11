@@ -20,7 +20,6 @@ def clickable(widget):
     widget.installEventFilter(filter)
     return filter.clicked
 
-
 def select_file(plain_txt_box):
     """
     Displays a 'select file box'.

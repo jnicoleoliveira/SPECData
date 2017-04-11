@@ -2,10 +2,12 @@
 # Date: 02/16/2017
 
 from math import isnan
+from time import sleep
 
 from astropy import units as u
 from astroquery.exceptions import TimeoutError
 from astroquery.splatalogue import Splatalogue
+from requests.exceptions import ConnectionError
 
 from config import conn
 from tables import experimentinfo_table, molecules_table, peaks_table
@@ -40,6 +42,7 @@ class SplatalogueAnalysis:
         self.units = self.__determine_frequency_units()
 
     def find_matches(self, threshold=0.1):
+        print "FINDING MATCHES CALLED"
         mid = self.experiment.mid
         if len(self.chemicals) > 0:
             self.chemicals.clear()
@@ -50,12 +53,20 @@ class SplatalogueAnalysis:
         for i in range(0, len(frequencies)):
 
             ''' Query for Matches '''
-            lines = self.query(frequencies[i] - threshold, frequencies[i] + threshold)
+            try:
+                lines = self.query(frequencies[i] - threshold, frequencies[i] + threshold)
+            except ConnectionError:
+                print "Connection refused by the server. (i=" + str(i) + ") Waiting to request.."
+                sleep(5)
+                i -= 1
+                print "I'm awake! Trying again!"
+                continue
 
             added = []
             for row in lines:
 
                 # Get row data
+
                 name, full_name, freq, intensity, line_list = self.get_row_data(row)
 
                 # If line already matched to chemical, skip
@@ -281,7 +292,7 @@ class Chemical:
         for row in rows:
             name, full_name, frequency, intensity, line_list = SplatalogueAnalysis.get_row_data(row)
             if min_freq < frequency < max_freq:
-                frequencies.append(frequency)
+                frequencies.append(frequency * 1000)  # convert to MHz
                 intensities.append(intensity)
 
         return frequencies, intensities

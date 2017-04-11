@@ -32,7 +32,7 @@ color: rgb(255, 255, 255);
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(43, 43, 43);</string>
+    <string notr="true">background-color: #282828;</string>
    </property>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -41,25 +41,25 @@ color: rgb(255, 255, 255);
     <addaction name="actionFull_Screen"/>
     <addaction name="separator"/>
     <addaction name="actionAnalysis_Bar"/>
-       <addaction name="action_Graph_Settings"/>
-       <addaction name="actionInfo_Bar"/>
-       <addaction name="actionPeaks_Table"/>
+    <addaction name="action_Graph_Settings"/>
+    <addaction name="actionInfo_Bar"/>
+    <addaction name="actionPeaks_Table"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;File</string>
     </property>
-       <widget class="QMenu" name="menuExport">
-           <property name="title">
-               <string>&amp;Export..</string>
-           </property>
-           <addaction name="actionAssignment_Data"/>
-           <addaction name="actionAnalysis_Summary"/>
-           <addaction name="actionCleaned_Lines"/>
-       </widget>
+    <widget class="QMenu" name="menuExport">
+     <property name="title">
+      <string>&amp;Export..</string>
+     </property>
+     <addaction name="actionAssignment_Data"/>
+     <addaction name="actionAnalysis_Summary"/>
+     <addaction name="actionCleaned_Lines"/>
+    </widget>
     <addaction name="actionSave_Analysis"/>
     <addaction name="separator"/>
-       <addaction name="menuExport"/>
+    <addaction name="menuExport"/>
     <addaction name="separator"/>
     <addaction name="actionSettings"/>
     <addaction name="separator"/>
@@ -99,7 +99,7 @@ color: rgb(255, 255, 255);
     <enum>RightToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-       <bool>false</bool>
+    <bool>false</bool>
    </attribute>
   </widget>
   <widget class="QToolBar" name="left_bar">
@@ -110,7 +110,7 @@ color: rgb(255, 255, 255);
     <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-       <bool>false</bool>
+    <bool>false</bool>
    </attribute>
   </widget>
   <action name="action_Graph_Tools">
@@ -148,14 +148,14 @@ color: rgb(255, 255, 255);
     <string>Settings...</string>
    </property>
   </action>
-     <action name="actionExport_analysis_write_up">
+  <action name="actionExport_analysis_write_up">
    <property name="text">
-       <string>&amp;Export analysis summary..</string>
+    <string>&amp;Export analysis summary..</string>
    </property>
   </action>
   <action name="actionSave_analysis_write_up_as">
    <property name="text">
-       <string>Save analysis</string>
+    <string>Save analysis</string>
    </property>
   </action>
   <action name="actionRe_analyze">
@@ -185,17 +185,17 @@ color: rgb(255, 255, 255);
   </action>
   <action name="actionSelect_All_Ctrl_A">
    <property name="text">
-       <string>Select All Ctrl+A</string>
+    <string>Select All Ctrl+A</string>
    </property>
   </action>
   <action name="actionUndo">
    <property name="text">
-       <string>Undo Ctrl+Z</string>
+    <string>Undo Ctrl+Z</string>
    </property>
   </action>
   <action name="actionRedo">
    <property name="text">
-       <string>Redo Ctrl+Y</string>
+    <string>Redo Ctrl+Y</string>
    </property>
   </action>
   <action name="actionExport_cleaned_lines">
@@ -203,36 +203,36 @@ color: rgb(255, 255, 255);
     <string>Export cleaned lines..</string>
    </property>
   </action>
-     <action name="actionAnalysis_Summary">
-         <property name="text">
-             <string>Analysis Summary</string>
-         </property>
-     </action>
-     <action name="actionCleaned_Lines">
-         <property name="text">
-             <string>Cleaned Lines</string>
-         </property>
-     </action>
-     <action name="actionAssignment_Data">
-         <property name="text">
-             <string>Assignment Data</string>
-         </property>
-     </action>
-     <action name="actionDeslect_All_Ctrl_D">
-         <property name="text">
-             <string>Deslect All Ctrl+D</string>
-         </property>
-     </action>
-     <action name="actionInfo_Bar">
-         <property name="text">
-             <string>Info Bar</string>
-         </property>
-     </action>
-     <action name="actionPeaks_Table">
-         <property name="text">
-             <string>Peaks Table</string>
-         </property>
-     </action>
+  <action name="actionAnalysis_Summary">
+   <property name="text">
+    <string>Analysis Summary</string>
+   </property>
+  </action>
+  <action name="actionCleaned_Lines">
+   <property name="text">
+    <string>Cleaned Lines</string>
+   </property>
+  </action>
+  <action name="actionAssignment_Data">
+   <property name="text">
+    <string>Assignment Data</string>
+   </property>
+  </action>
+  <action name="actionDeslect_All_Ctrl_D">
+   <property name="text">
+    <string>Deslect All Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionInfo_Bar">
+   <property name="text">
+    <string>Info Bar</string>
+   </property>
+  </action>
+  <action name="actionPeaks_Table">
+   <property name="text">
+    <string>Peaks Table</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

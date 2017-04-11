@@ -5,7 +5,6 @@
 from math import ceil
 
 import numpy as np
-import peakutils
 from scipy.signal import savgol_filter
 
 
@@ -181,30 +180,30 @@ def _is_valid_panel(a, i, panel):
     return True
 
 
-def peak_finder_peakutils(s_freq_list, s_int_list, threshold=0.1):
-    """
-     Finds Peaks in 2D data
-        (1) Normalizes Intensities
-        (2) PeakUtils Determines Peaks
-    :param s_freq_list: Frequency List (x)
-    :param s_int_list: Intensity List (y)
-    :param threshold:
-    :return: Frequency Peak List, Intensity Peak List
-    """
-
-    avg = sum(s_int_list) / len(s_int_list)
-    s_freq_list, s_int_list = clear_baseline(s_freq_list, s_int_list, avg)
-
-    y = s_int_list
-    y = smooth_savgol(s_int_list)
-    # Peak Finder: Obtain indexes of peaks in intensity list
-    indexes = peakutils.indexes(y, thres=threshold)
-
-    # Obtain indexed subset of frequencies and intensities
-    frequencies = [s_freq_list[i] for i in indexes]
-    intensities = [s_int_list[i] for i in indexes]
-
-    return frequencies, intensities
+# def peak_finder_peakutils(s_freq_list, s_int_list, threshold=0.1):
+#     """
+#      Finds Peaks in 2D data
+#         (1) Normalizes Intensities
+#         (2) PeakUtils Determines Peaks
+#     :param s_freq_list: Frequency List (x)
+#     :param s_int_list: Intensity List (y)
+#     :param threshold:
+#     :return: Frequency Peak List, Intensity Peak List
+#     """
+#
+#     avg = sum(s_int_list) / len(s_int_list)
+#     s_freq_list, s_int_list = clear_baseline(s_freq_list, s_int_list, avg)
+#
+#     y = s_int_list
+#     y = smooth_savgol(s_int_list)
+#     # Peak Finder: Obtain indexes of peaks in intensity list
+#     indexes = peakutils.indexes(y, thres=threshold)
+#
+#     # Obtain indexed subset of frequencies and intensities
+#     frequencies = [s_freq_list[i] for i in indexes]
+#     intensities = [s_int_list[i] for i in indexes]
+#
+#     return frequencies, intensities
 
 
 def clear_baseline(frequencies, intensities, limit):

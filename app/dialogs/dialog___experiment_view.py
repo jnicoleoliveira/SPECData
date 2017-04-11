@@ -723,7 +723,8 @@ class ExperimentView(QMainWindow):
 
         selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.selection_tab_widget = selection_tab_widget
-        self.selection_tab_widget.tabBar().setStyleSheet("background-color:rgb(53, 53, 53);")  # tab color fix
+        self.selection_tab_widget.setAutoFillBackground(True)
+        self.selection_tab_widget.tabBar().setStyleSheet("background-color:#3E3E3E;")  # tab color fix
 
         # Save
         self.pending_scroll_selection_container = pending_scroll_selection_container
@@ -786,6 +787,8 @@ class ExperimentView(QMainWindow):
 
         action_bar = self.ui.action_bar
         action_bar.setMovable(False)
+        action_bar.setAutoFillBackground(True)
+        action_bar.setStyleSheet("background-color: #353535")
 
         ''' Home Button '''
         pix_map = QPixmap(os.path.join(resources, 'home.png'))
@@ -922,9 +925,12 @@ class ExperimentView(QMainWindow):
         """
 
         tool_bar = self.ui.left_bar
+        tool_bar.setAutoFillBackground(True)
+        self.ui.left_bar.setStyleSheet("background-color: #353535")
         tool_bar.setMovable(False)
         ''' Toggle Info Widget '''
         btn = RotatedButton("Info", self, orientation="east")
+        # btn.setStyleSheet("background-color:#282828;")
         btn.setFixedWidth(24)
         btn.setFlat(True)
         btn.setIcon(QIcon(images.INFO_ICON))
@@ -935,6 +941,7 @@ class ExperimentView(QMainWindow):
         btn = RotatedButton("Peaks Table", self, orientation="east")
         btn.setFixedWidth(24)
         btn.setFlat(True)
+        #btn.setStyleSheet("background-color:#282828;")
         btn.setIcon(QIcon(images.TABLE_ICON))
         btn.clicked.connect(self.toggle_table_widget)
         tool_bar.addWidget(btn)
@@ -942,11 +949,14 @@ class ExperimentView(QMainWindow):
         ''' Right Toolbar '''
         tool_bar = self.ui.right_bar
         tool_bar.setMovable(False)
+        tool_bar.setAutoFillBackground(True)
+        tool_bar.setStyleSheet("background-color: #353535")
 
         ''' Toggle Graph Options '''
         btn = RotatedButton("Graph Options", self)
         btn.setFixedWidth(24)
         btn.setFlat(True)
+        btn.setStyleSheet("background-color:#282828;")
         btn.setIcon(QIcon(images.ROUND_GRAPH_ICON_BLUE))
         btn.clicked.connect(self.toggle_graph_options_widget)
         tool_bar.addWidget(btn)
@@ -955,6 +965,7 @@ class ExperimentView(QMainWindow):
         btn = RotatedButton("Splatalogue", self)
         btn.setFixedWidth(24)
         btn.setFlat(True)
+        btn.setStyleSheet("background-color:#282828;")
         btn.setIcon(QIcon(images.DATABASE_ICON_RED))
         btn.clicked.connect(self.toggle_splatalogue_options_widget)
         tool_bar.addWidget(btn)

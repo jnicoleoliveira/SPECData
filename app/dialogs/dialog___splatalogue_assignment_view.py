@@ -194,11 +194,14 @@ class SplatalogueAssignmentWindow(QDialog):
 
 
 class SplatalogueInfoWidget(QWidget):
-    def __init__(self, chemical):
+    def __init__(self, chemical=None):
+        None
         super(SplatalogueInfoWidget, self).__init__()
 
         self.chemical = chemical
-        self.__setup__()
+
+        if self.chemical is not None:
+            self.__setup__()
 
     def __setup__(self):
         layout = QFormLayout()
@@ -211,5 +214,19 @@ class SplatalogueInfoWidget(QWidget):
 
         matches_lbl = QLabel("Matches: ")
         layout.addRow(matches_lbl, QLabel(str(self.chemical.N)))
+
+        self.setLayout(layout)
+
+    def setup(self, name, full_name, n_matches):
+        layout = QFormLayout()
+
+        name_lbl = QLabel("Chemical: ")
+        layout.addRow(name_lbl, QLabel(name))
+
+        fullname_lbl = QLabel("Name: ")
+        layout.addRow(fullname_lbl, QLabel(full_name))
+
+        matches_lbl = QLabel("Matches: ")
+        layout.addRow(matches_lbl, QLabel(n_matches))
 
         self.setLayout(layout)

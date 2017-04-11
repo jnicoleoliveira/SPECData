@@ -43,6 +43,9 @@ class ExperimentView(QMainWindow):
         self.setWindowTitle("Experiment View")
         self.resize(1800, 900)
 
+        ''' Status '''
+        self.setup_done = False
+
         ''' Widgets '''
         # -- Graph  -- #
         self.matplot_widget = None
@@ -190,8 +193,9 @@ class ExperimentView(QMainWindow):
 
         self.update_info()
 
-        # Refresh Dependent Widgets
-        self.splatalogue_dock_widget.refresh_analysis()
+        if self.setup_done is True:
+            # Refresh Dependent Widgets
+            self.splatalogue_dock_widget.refresh_analysis()
 
         # Regraph
         try:
@@ -258,8 +262,9 @@ class ExperimentView(QMainWindow):
             self.__save_state()
         self.update_info()
 
-        # Refresh Dependent Widgets
-        self.splatalogue_dock_widget.refresh_analysis()
+        if self.setup_done is True:
+            # Refresh Dependent Widgets
+            self.splatalogue_dock_widget.refresh_analysis()
 
         # Regraph
         try:

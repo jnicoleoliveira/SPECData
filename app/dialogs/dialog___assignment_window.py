@@ -57,6 +57,7 @@ class AssignmentWindow(QDialog):
         # if self.category == 'splatalogue':
         #     self.info_widget =
         self.info_widget = AssignmentInfoWidget(self.match)
+
         self.table_widget = QTableWidget()
         self.graph_options_widget = AssignmentGraphOptionsWidget()
         self.validate_btn = QPushButton()

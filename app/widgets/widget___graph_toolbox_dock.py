@@ -1,13 +1,11 @@
 # Author: Jasmine Oliveira
 # Date: 01/11/2017
 
-import os
-
-from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 
 from app.dialogs.frames.experiment_view.frame___graph_toolbox_dock_widget import Ui_GraphingOptions
-from config import resources
+
 
 class GraphToolBoxDock(QDockWidget):
 

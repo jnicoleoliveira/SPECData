@@ -7,9 +7,9 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from app.dialogs.frames.assignment_view.frame___assignment_window import Ui_Dialog              # Dialog Window
-from app.dialogs.widgets.widget___assignment_graph_options import AssignmentGraphOptionsWidget # Graph Options Widget
-from app.dialogs.widgets.widget___assignment_window_info import AssignmentInfoWidget    # Assignment Info Widget
-from app.dialogs.widgets.widget___experiment_graph_widget import ExperimentGraphWidget
+from app.widgets.widget___assignment_graph_options import AssignmentGraphOptionsWidget  # Graph Options Widget
+from app.widgets.widget___assignment_window_info import AssignmentInfoWidget  # Assignment Info Widget
+from app.widgets.widget___experiment_graph_widget import ExperimentGraphWidget
 from config import conn
 from config import resources
 from tables.molecules_table import get_category

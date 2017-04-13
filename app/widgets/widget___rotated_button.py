@@ -4,8 +4,10 @@
 # Taken and Edited from StackOverflow code:
 #    http://stackoverflow.com/questions/7339685/how-to-rotate-a-qpushbutton
 #
-from PyQt4 import QtGui, QtCore
 import sys
+
+from PyQt4 import QtGui, QtCore
+
 
 class RotatedButton(QtGui.QPushButton):
     def __init__(self, text, parent, orientation="west"):

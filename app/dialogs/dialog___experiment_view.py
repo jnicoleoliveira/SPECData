@@ -11,15 +11,15 @@ from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 import images
 from analysis import experiment
 from app.dialogs.frames.experiment_view.frame___experiment_view import Ui_MainWindow
-from app.dialogs.widgets.widget___experiment_info import ExperimentInfoWidget
-from app.dialogs.widgets.widget___graph_toolbox_dock import GraphToolBoxDock
-from app.dialogs.widgets.widget___main_graph_options import MainGraphOptionsWidget
-from app.dialogs.widgets.widget___molecule_selection import MoleculeSelectionWidget
-from app.dialogs.widgets.widget___rotated_button import RotatedButton
-from app.dialogs.widgets.widget___splatalogue_dock import SplatalogueDockWidget
 from app.events import LoadingProgressScreen, save_as_file, display_informative_message
 from app.experiment_analysis import MainGraph
 from app.time_machine import TimeMachine
+from app.widgets.widget___experiment_info import ExperimentInfoWidget
+from app.widgets.widget___graph_toolbox_dock import GraphToolBoxDock
+from app.widgets.widget___main_graph_options import MainGraphOptionsWidget
+from app.widgets.widget___molecule_selection import MoleculeSelectionWidget
+from app.widgets.widget___rotated_button import RotatedButton
+from app.widgets.widget___splatalogue_dock import SplatalogueDockWidget
 from config import *
 
 

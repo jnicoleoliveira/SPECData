@@ -6,7 +6,7 @@ from PyQt4.QtGui import *
 from app.dialogs.frames.composition_selector.frame___composition_selector import Ui_Dialog
 from app.dialogs.frames.composition_selector.frame___element_viewbox_widget import Ui_Form as ViewBox_Ui
 from app.dialogs.frames.composition_selector.frame___selected_element_box import Ui_Form as SelectedBox_Ui
-from app.dialogs.widgets.widget___periodic_table_scene import PeriodicTableSceneWidget
+from app.widgets.widget___periodic_table_scene import PeriodicTableSceneWidget
 from ..events import display_error_message
 
 

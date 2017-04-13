@@ -14,6 +14,7 @@ PROGRAM_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
 DATABASE_DIR = dir_path = os.path.dirname(os.path.realpath(__file__))
 # Log Directory
 LOG_DIR = ""
+THEME = "light"  # [light, dark]
 
 # -------------------------------------------------------------- #
 # --------------------- DO NOT EDIT BELOW ---------------------- #
@@ -33,3 +34,6 @@ resources = os.path.join(PROGRAM_DIR, "resources")
 
 if os.path.exists(db_filepath):
     conn = sqlite3.connect(db_filepath)
+
+if THEME == "ligh0":
+    WHITE

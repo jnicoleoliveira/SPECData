@@ -4,8 +4,8 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from app.dialogs.frames.main.frame___main_menu import Ui_mainmenu    # This window
 from app.dialogs.dialog___new_experiment_form import NewExperimentForm    # New Experiment Window
+from app.dialogs.frames.main.frame___main_menu import Ui_mainmenu  # This window
 
 
 class MainMenu(QDialog):
@@ -53,7 +53,7 @@ class MainMenu(QDialog):
         window.exec_()
 
     def load_experiment(self):
-        from dialog___load_experiment import LoadExperiment
+        from app.dialogs.dialog___load_experiment import LoadExperiment
         # Go to next fame
         self.close()
         window = LoadExperiment()

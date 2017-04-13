@@ -785,10 +785,13 @@ class ExperimentView(QMainWindow):
 
     def __setup_toolbar_and_shortcuts(self):
 
+        palette = QPalette()
         action_bar = self.ui.action_bar
         action_bar.setMovable(False)
-        action_bar.setAutoFillBackground(True)
-        action_bar.setStyleSheet("background-color: #353535")
+        # action_bar.setAutoFillBackground(True)
+        palette.setColor(QPalette.Background, Qt.black)
+        # action_bar.setStyleSheet("")
+        # action_bar.setPalette(palette)
 
         ''' Home Button '''
         pix_map = QPixmap(os.path.join(resources, 'home.png'))
@@ -925,8 +928,9 @@ class ExperimentView(QMainWindow):
         """
 
         tool_bar = self.ui.left_bar
-        tool_bar.setAutoFillBackground(True)
-        self.ui.left_bar.setStyleSheet("background-color: #353535")
+        # tool_bar.setAutoFillBackground(True)
+        tool_bar.setPalette(palette)
+        # self.ui.left_bar.setStyleSheet("background-color: #353535")
         tool_bar.setMovable(False)
         ''' Toggle Info Widget '''
         btn = RotatedButton("Info", self, orientation="east")
@@ -949,7 +953,8 @@ class ExperimentView(QMainWindow):
         ''' Right Toolbar '''
         tool_bar = self.ui.right_bar
         tool_bar.setMovable(False)
-        tool_bar.setAutoFillBackground(True)
+        # tool_bar.setAutoFillBackground(True)
+        #tool_bar.setPalette(palette)
         tool_bar.setStyleSheet("background-color: #353535")
 
         ''' Toggle Graph Options '''

@@ -12,6 +12,7 @@ from images import *
 from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
 from ..events import display_question_message
 
+
 class ManageDatabase(QDialog):
 
     ACCENT_COLOR = "#008080"
@@ -64,9 +65,16 @@ class ManageDatabase(QDialog):
                                         "entry will be lost.",
                                         "Delete Entry")
         if action is True:
-            molecules_table.remove_molecule(conn, self.current_mid)
 
-        self.selected_mids.remove(self.current_mid)
+            for item in self.molecules_table_widget.selectedItems():
+                row = item.row()
+                column = item.column()
+                if column != 0:
+                    continue
+                mid = int(item.text())
+                self.selected_mids.remove(mid)
+                molecules_table.remove_molecule(conn, mid)
+
         self.clear_tables()
         self.populate_molecule_table_widget(self.selected_mids)
 
@@ -187,7 +195,7 @@ class ManageDatabase(QDialog):
         # -- Set Additional Options -- #
         table_widget.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
         table_widget.setSelectionBehavior(QAbstractItemView.SelectRows)
-        table_widget.setSelectionMode(QAbstractItemView.SingleSelection)
+        # table_widget.setSelectionMode(QAbstractItemView.SingleSelection)
         table_widget.setShowGrid(False)
         table_widget.verticalHeader().setVisible(False)
 
@@ -369,7 +377,6 @@ class ManageDatabase(QDialog):
         item = self.molecules_table_widget.selectedItems()[0]
         mid = int(item.text())
         self.current_mid = mid
-        print mid
         self.populate_info_table_widget(mid)
         self.populate_peak_table_widget(mid)
 

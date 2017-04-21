@@ -4,11 +4,15 @@
 import sys
 from copy import deepcopy
 
+# PYQT Dependencies
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 
+# Resources
 import images
+from config import *
+
 from analysis import experiment
 from app.dialogs.frames.experiment_view.frame___experiment_view import Ui_MainWindow
 from app.events import LoadingProgressScreen, save_as_file, display_informative_message
@@ -20,7 +24,6 @@ from app.widgets.widget___main_graph_options import MainGraphOptionsWidget
 from app.widgets.widget___molecule_selection import MoleculeSelectionWidget
 from app.widgets.widget___rotated_button import RotatedButton
 from app.widgets.widget___splatalogue_dock import SplatalogueDockWidget
-from config import *
 
 
 class ExperimentView(QMainWindow):
@@ -726,8 +729,11 @@ class ExperimentView(QMainWindow):
         # self.selection_tab_widget.setAutoFillBackground(True)
         # self.selection_tab_widget.setStyleSheet("background-color: #353535")
         self.selection_tab_widget.tabBar().setAutoFillBackground(True)
-        self.selection_tab_widget.tabBar().setStyleSheet("color:#353535;")  # tab color fix (windows)
 
+        #self.selection_tab_widget.tabBar().setStyleSheet("color:white; background")  # tab color fix (windows)
+        self.selection_tab_widget.setStyleSheet('QTabBar::tab {background-color: #333333; font-size: 12px;'
+                                                'border: 2px solid #262626; border-style: outset;} '
+                                                'QTabBar {background-color: #262626;}')
         # Save
         self.pending_scroll_selection_container = pending_scroll_selection_container
         self.validated_scroll_selection_container = validated_scroll_selection_container

@@ -787,10 +787,12 @@ class ExperimentView(QMainWindow):
 
     def __setup_toolbar_and_shortcuts(self):
 
+        self.ui.menu_bar.setStyleSheet("""QMenuBar::item {
+             background-color: #353535;
+        }""")
         action_bar = self.ui.action_bar
         action_bar.setMovable(False)
         #action_bar.setAutoFillBackground(True)
-        action_bar.setStyleSheet("color:black;")
         # self.setStyleSheet("background-color: #353535; color:white;")
 
         #self.ui.action_bar.setStyleSheet("color: gray")

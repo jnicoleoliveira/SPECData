@@ -723,8 +723,10 @@ class ExperimentView(QMainWindow):
 
         selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.selection_tab_widget = selection_tab_widget
-        self.selection_tab_widget.setAutoFillBackground(True)
-        self.selection_tab_widget.tabBar().setStyleSheet("background-color:#3E3E3E;")  # tab color fix
+        # self.selection_tab_widget.setAutoFillBackground(True)
+        # self.selection_tab_widget.setStyleSheet("background-color: #353535")
+        self.selection_tab_widget.tabBar().setAutoFillBackground(True)
+        self.selection_tab_widget.tabBar().setStyleSheet("color:#353535;")  # tab color fix (windows)
 
         # Save
         self.pending_scroll_selection_container = pending_scroll_selection_container
@@ -787,8 +789,11 @@ class ExperimentView(QMainWindow):
 
         action_bar = self.ui.action_bar
         action_bar.setMovable(False)
-        action_bar.setAutoFillBackground(True)
-        action_bar.setStyleSheet("background-color: #353535")
+        #action_bar.setAutoFillBackground(True)
+        action_bar.setStyleSheet("color:black;")
+        # self.setStyleSheet("background-color: #353535; color:white;")
+
+        #self.ui.action_bar.setStyleSheet("color: gray")
 
         ''' Home Button '''
         pix_map = QPixmap(os.path.join(resources, 'home.png'))

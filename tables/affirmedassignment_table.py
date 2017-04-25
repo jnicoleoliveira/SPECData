@@ -82,12 +82,12 @@ def update_status(conn, aid, status):
 def remove_all(conn, mid):
 
     aid_list = get_assignment_aid_list(conn, mid)
-    print "[ REMOVE AID LIST: " + str(aid_list) + " ]"
+    # "[ REMOVE AID LIST: " + str(aid_list) + " ]"
     if aid_list  is None or len(aid_list) is 0:
         return False
 
     string = "DELETE FROM AffirmedAssignments WHERE aid IN" + get_in_string(aid_list)
-    print string
+    # print string
     conn.execute(string)
     conn.commit()
 

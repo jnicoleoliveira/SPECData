@@ -269,7 +269,7 @@ def get_mid_from_frequency(conn, frequency):
 
     cursor = conn.execute("SELECT mid FROM peaks "
                           "WHERE frequency=?", (frequency,))
-    print frequency
+    # print frequency
     row = cursor.fetchone()[0]
 
     return row
@@ -351,7 +351,7 @@ def get_unassigned_pid_list(conn, mid):
 
     # Unassigned peaks (all - assigned)
     unassigned = "SELECT pid FROM " + all + " EXCEPT SELECT pid FROM " + assigned + ";"
-    print unassigned
+    #print unassigned
     cursor = conn.execute(unassigned)
 
     return cursor.fetchall()
@@ -621,7 +621,8 @@ def __import_spfile(conn, filepath, mid):
                 print "ValueError in Line: " + str(line_num)
 
     # Determine Peaks
-    frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
+    frequencies, intensities = peak_finder.k_peak_finder(frequencies,
+                                                         intensities)  #peak_finder.peak_finder(frequencies, intensities, 0.2)
 
     # Store peaks into file
     for i in range(0, len(frequencies)):

@@ -1,5 +1,6 @@
 # Author: Marie-Aline Martin
-# Edited: Jasmine Oliveira
+# Author: Jasmine Oliveira
+#
 # Date: 06/16/16
 
 from math import ceil
@@ -221,6 +222,119 @@ def smooth_savgol(intensities, window=5, polynomial=2):
     x = np.array(intensities)
     y = savgol_filter(x, 5, 2)
     return y
+
+
+def k_peak_finder(xarray, yarray, snr=3, re=False):
+    """
+    Kyle Crabtree peak finding algorithm (BlackChirp)
+    :param xarray:
+    :param yarray:
+    :param snr:
+    :return:
+    """
+
+    # compute smoothed 2nd derivative for strong peaks
+    d2y = savgol_filter(yarray, 11, 6, deriv=2)
+
+    # build noise model
+    chunks = 50
+    chunk_size = len(yarray) // chunks
+    avg = []
+    noise = []
+    dat = []
+    outnoise = np.empty(len(yarray))
+    outbaseline = np.empty(len(yarray))
+    for i in range(chunks):
+        if i + 1 == chunks:
+            dat = yarray[i * chunk_size:]
+        else:
+            dat = yarray[i * chunk_size:(i + 1) * chunk_size]
+
+        # Throw out any points that are 10* the median and recalculate
+        # Do this until no points are removed.
+        done = False
+        while not done:
+            if len(dat) == 0:
+                break
+            med = np.median(dat)
+            fltr = [d for d in dat if d < 10 * med]
+            if len(fltr) == len(dat):
+                done = True
+            dat = fltr
+
+        # now, retain the mean and stdev for later use
+        if len(dat) > 2:
+            avg.append(np.mean(dat))
+            noise.append(np.std(dat))
+        else:
+            # something went wrong with noise detection... ignore section
+            # probably a chunk containing only 0.0
+            avg.append(0.0)
+            noise.append(1.)
+
+        if i + 1 == chunks:
+            outnoise[i * chunk_size:] = noise[i]
+            outbaseline[i * chunk_size:] = avg[i]
+        else:
+            outnoise[i * chunk_size:(i + 1) * chunk_size] = noise[i]
+            outbaseline[i * chunk_size:(i + 1) * chunk_size] = avg[i]
+
+    outx = []
+    outy = []
+    outidx = []
+    outsnr = []
+
+    # if a point has SNR > threshold, look for local min in 2nd deriv.
+    for i in range(2, len(yarray) - 2):
+        try:
+            snr_i = (yarray[i] - avg[i // chunk_size]) / noise[i // chunk_size]
+            if snr_i >= snr:
+                if (d2y[i - 2] > d2y[i - 1] > d2y[i] < d2y[i + 1] or
+                                    d2y[i - 1] > d2y[i] < d2y[i + 1] < d2y[i + 2]):
+                    outx.append(xarray[i])
+                    outy.append(yarray[i])
+                    outidx.append(i)
+                    outsnr.append(snr_i)
+        except IndexError:
+            continue
+
+    # test interval points
+    # interval_points = list(filter((lambda x: 18957 < x < 19018)), yarray)
+    min = 9492  # 18900##
+    max = 9497  # 19100##
+    min_pad = min - 50
+    max_pad = max + 50
+
+    if re is False:
+
+        indexes = []
+        for i in range(0, len(outx)):
+            if min < outx[i] < max:
+                indexes.append(i)
+
+        for index in sorted(indexes, reverse=True):
+            del outx[index]
+            del outy[index]
+
+        interval_x = []
+        interval_y = []
+        for i in range(0, len(xarray)):
+            if min_pad < xarray[i] < max_pad:
+                interval_y.append(yarray[i])
+                interval_x.append(xarray[i])
+
+        threshold = float((max - min)) / len(indexes)
+        print threshold
+        freq, inten = k_peak_finder(interval_x, interval_y, threshold, re=True)
+
+        index = indexes[0]
+        for i in range(0, len(freq)):
+            if min < freq[i] < max:
+                outx.insert(index, freq[i])
+                outy.insert(index, inten[i])
+                index += 1
+
+    return outx, outy  # , outidx, outsnr, outnoise, outbaseline
 
 
 def main():

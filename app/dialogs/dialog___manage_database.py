@@ -213,7 +213,6 @@ class ManageDatabase(QDialog):
         table_widget = self.info_table_widget
 
         category = molecules_table.get_category(conn,mid)
-        print category
         if category == "experiment":
             if experimentinfo_table.info_exists(conn, mid):
                 self.populate_info_table_as_experiment(mid, table_widget)
@@ -312,7 +311,6 @@ class ManageDatabase(QDialog):
     def __filter_action(self):
         """ Gets appropriate mid list to display on the list widget"""
 
-        print "FILTERING! "
         mids = []
 
         ''' Category '''

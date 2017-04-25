@@ -305,13 +305,13 @@ def new_entry(conn, mid, units, temperature, composition, isotope, vibrational, 
         # If entry already exists, return that mid.
         return "[ ERROR: KnownInfo entry associated already exists. Cancelling action. ]"
 
-    print notes
-    print composition
-    print temperature
-    print mid
-    print units
-    print isotope
-    print vibrational
+    # print notes
+    # print composition
+    # print temperature
+    # print mid
+    # print units
+    # print isotope
+    # print vibrational
     # If entry does not exist.
     # Add new entry to table
     conn.execute('INSERT INTO KnownInfo (mid, units, temperature, composition, isotope, vibrational, notes)'

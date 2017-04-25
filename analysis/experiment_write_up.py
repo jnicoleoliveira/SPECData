@@ -98,7 +98,8 @@ def export_assignment_data(experiment, path, delimiter=COMMA, unassigned=False):
     # Get Data
     string = ""
     title = "@SPECdata"
-    experiment_name = experiment.name
+    experiment_name = '"' + str(experiment.name) + '"'  # Cleanse Input
+
     time = __get_datetime_string_format()
     column_headers = ["Exp. Frequency", "Exp. Intensity", "Assignment", "Frequency", "Intensity"]
 
@@ -221,7 +222,7 @@ def __get_full_assignment_string(matches, delimeter=COMMA):
     string = ""
     for match in matches:
         # Get Row Data
-        name = match.name
+        name = '"' + str(match.name) + '"'  # Cleanse Input
         exp_frequency, exp_intensity = get_frequency_intensity(conn, match.exp_pid)
         match_frequency, match_intensity = get_frequency_intensity(conn, match.pid)
 

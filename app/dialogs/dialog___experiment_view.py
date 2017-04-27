@@ -723,9 +723,14 @@ class ExperimentView(QMainWindow):
 
         selection_tab_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.selection_tab_widget = selection_tab_widget
-        self.selection_tab_widget.setAutoFillBackground(True)
-        self.selection_tab_widget.tabBar().setStyleSheet("background-color:#3E3E3E;")  # tab color fix
+        # self.selection_tab_widget.setAutoFillBackground(True)
+        # self.selection_tab_widget.setStyleSheet("background-color: #353535")
+        self.selection_tab_widget.tabBar().setAutoFillBackground(True)
 
+        # self.selection_tab_widget.tabBar().setStyleSheet("color:white; background")  # tab color fix (windows)
+        self.selection_tab_widget.setStyleSheet('QTabBar::tab {background-color: #333333; font-size: 12px;'
+                                                'border: 2px solid #262626; border-style: outset;} '
+                                                'QTabBar {background-color: #262626;}')
         # Save
         self.pending_scroll_selection_container = pending_scroll_selection_container
         self.validated_scroll_selection_container = validated_scroll_selection_container
@@ -785,10 +790,15 @@ class ExperimentView(QMainWindow):
 
     def __setup_toolbar_and_shortcuts(self):
 
+        self.ui.menu_bar.setStyleSheet("""QMenuBar::item {
+             background-color: #353535;
+        }""")
         action_bar = self.ui.action_bar
         action_bar.setMovable(False)
-        action_bar.setAutoFillBackground(True)
-        action_bar.setStyleSheet("background-color: #353535")
+        # action_bar.setAutoFillBackground(True)
+        # self.setStyleSheet("background-color: #353535; color:white;")
+
+        #self.ui.action_bar.setStyleSheet("color: gray")
 
         ''' Home Button '''
         pix_map = QPixmap(os.path.join(resources, 'home.png'))

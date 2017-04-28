@@ -549,7 +549,7 @@ class ExperimentView(QMainWindow):
     ###############################################################################
     def __setup__(self, experiment_name, mid):
         """
-        Start-up script, does the following behind a loading progress screen:
+        Start-up example, does the following behind a loading progress screen:
         (1) Creates experiment from mid and experiment_name
         (2) Does Experiment analysis
         (3) Sets up layout with respective analysis data

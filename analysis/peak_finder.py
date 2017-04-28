@@ -339,7 +339,7 @@ def k_peak_finder(xarray, yarray, snr=3, re=False):
 
 def main():
     import matplotlib.pyplot as plot
-    from tests.peak_finding_tests import read_data
+    from tests.example.peak_finding_tests import read_data
     file_path = "/home/joli/Downloads/Av_CP343-CP348_ft.sp"
 
     frequencies, intensities = read_data(file_path)

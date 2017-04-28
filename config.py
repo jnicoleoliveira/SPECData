@@ -34,6 +34,3 @@ resources = os.path.join(PROGRAM_DIR, "resources")
 
 if os.path.exists(db_filepath):
     conn = sqlite3.connect(db_filepath)
-
-if THEME == "ligh0":
-    WHITE

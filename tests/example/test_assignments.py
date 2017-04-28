@@ -5,7 +5,7 @@
 from temp.remove import remove_assignments
 
 from config import *
-from tests.assign_peaks import *
+from tests.example.assign_peaks import *
 
 #print "Enter pid: "
 #pid = raw_input()

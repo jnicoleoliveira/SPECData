@@ -1,6 +1,6 @@
 import os
 
-init_script = os.path.join('init', 'init.py')
+# init_script = os.path.join('init', 'init.py')
 requirements_txt = os.path.join('init', 'bin', 'requirements.txt')
 
 try:
@@ -15,9 +15,11 @@ with open(requirements_txt) as f:
 setup(name='SPECdata',
       version='1.0',
       description='Spectroscopic analysis tool',
+      packages=["app", "tables", "analysis"],
+      include_package_data=True,
       author='Jasmine Oliveira',
       author_email='jasmine.oliveira@cfa.harvard.edu',
       url='https://github.com/jnicoleoliveira/SPECData',
       install_requires=requirements,
-      scripts=[init_script]
+      #     scripts=[init_script]
       )

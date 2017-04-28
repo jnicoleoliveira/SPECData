@@ -1,0 +1,12 @@
+re
+time
+operator
+datetime
+math
+enum
+numpy
+sqlite3
+astropy
+astroquery
+requests
+pyqtgraph.widgets.MatplotlibWidget

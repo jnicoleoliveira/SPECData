@@ -11,7 +11,7 @@ def recurse(list, i):
 #test = [1, 2, 3, 4, 5, 6]
 #recurse(test, 0)
 
-from tests.time_warping_combination import TimeWarpExperiment
+from tests.example.time_warping_combination import TimeWarpExperiment
 
 timewarp = TimeWarpExperiment(145)
 #timewarp.do_the_time_warp()

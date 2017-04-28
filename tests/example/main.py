@@ -1,10 +1,7 @@
-import sqlite3
-
-from config import *
 from queries import view_query
 from tables.entry import entry_info, entry_molecules, entry_peaks
-from tables.molecules import molecules_entry
-from tables.peaks import peaks_entry
+
+from config import *
 
 init = "python init/init.py"
 

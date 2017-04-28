@@ -1,5 +1,6 @@
-from tables import molecules_table
 from config import conn
+from tables import molecules_table
+
 
 def main():
 

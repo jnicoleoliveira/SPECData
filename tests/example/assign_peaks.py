@@ -9,7 +9,7 @@ def get_candidates(conn, frequency, threshold):
             " WHERE molecules.mid=peaks.mid AND molecules.category='known' AND ABS(peaks.frequency - {freq})<={t}" \
             " ORDER BY ABS(peaks.frequency - {freq} ) ASC" \
             " LIMIT 5;".format(freq = frequency, t=threshold)
-    #print script
+    # print example
 
     try:
         cursor.execute(script)
@@ -29,7 +29,7 @@ def get_initial_candidates(conn, frequency, query_pool, threshold):
             " ORDER BY ABS(peaks.frequency - {freq}) ASC" \
             " LIMIT 5;".format(t=threshold, freq=frequency)
    # print "\n Script: "
-    #print script
+    #print example
     try:
         cursor.execute(script)
     except Exception as e:

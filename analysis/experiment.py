@@ -588,7 +588,7 @@ class Experiment:
             # SQLite Script, that returns name, mid, and pid of matched known molecules in database
             #   that are within the threshold of the specified frequency and are
             #   ordered by the closeness of the frequencies to the specified frequency
-            #script = "SELECT molecules.name, molecules.mid, peaks.pid, ABS(peaks.frequency - {freq})" \
+            # example = "SELECT molecules.name, molecules.mid, peaks.pid, ABS(peaks.frequency - {freq})" \
             #         " FROM peaks JOIN molecules" \
             #         " WHERE molecules.mid=peaks.mid AND molecules.category='known' AND ABS(peaks.frequency - {freq})<={t}" \
             #         " ORDER BY ABS(peaks.frequency - {freq} ) ASC".format(freq=frequency, t=threshold)

@@ -47,3 +47,5 @@ SETTINGS_GEAR_ICON = os.path.join(resources, "settings.png")
 LOADING_APPLE_GIF = os.path.join(resources, "loading_apple.gif")
 
 LOGO_ICON = os.path.join(resources, "logo_icon.png")
+
+SPECDATA_LOGO = os.path.join(resources, 'specdata_logo.png')

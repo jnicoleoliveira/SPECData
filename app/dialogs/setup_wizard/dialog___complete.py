@@ -3,29 +3,25 @@
 
 from PyQt4.QtGui import *
 
-from dialog___check_requirements import CheckRequirements
 from dialog___wizard_window import WizardWindow
 
 
-class WelcomeWindow(WizardWindow):
+class CompletingWindow(WizardWindow):
     def __init__(self):
-        super(WelcomeWindow, self).__init__(False)
+        super(CompletingWindow, self).__init__(False)
 
-        self.header_txt = "Welcome to the SPECdata \nSetup Wizard"
-        self.body_txt = "\n\nThis wizard will guide you through the installation of SPECdata. \n\n" \
-                        "It is recommended that you read the README.txt or instructions listed on the" \
-                        " Github Wiki before starting Setup. The appropriate python enviornment must be setup beforehand." \
-                        "\n\n\n\n\n Click Next to continue, or Cancel to exit Setup."
-
+        self.header_txt = "Completing the SPECdata \nSetup Wizard"
+        self.body_txt = "\n\nSPECdata has been successfully installed on your computer. \n\n" \
+                        "Click Finish to close this wizard.\n\n\n\n\n\n"
+        self.launch_after = QCheckBox("Launch SPECdata")
         self.__setup_center_layout()
         self.__setup_buttons()
         self.show()
 
     def __setup_buttons(self):
-        self.rightbtn.setText("Cancel")
-        self.leftbtn.setText("Next")
+        self.rightbtn.setText("Finish")
+        self.leftbtn.hide()
         self.rightbtn.clicked.connect(self.close)
-        self.leftbtn.clicked.connect(self.right_btn_action)
 
     def __setup_center_layout(self):
         # Setup header
@@ -47,11 +43,6 @@ class WelcomeWindow(WizardWindow):
         ###########################################
         self.center_layout.addWidget(header_lbl, 0, 0)
         self.center_layout.addWidget(body_lbl, 1, 0)
-        self.center_layout.addItem(spacer, 2, 0)
+        self.center_layout.addWidget(self.launch_after, 2, 0)
+        self.center_layout.addItem(spacer, 3, 0)
         self.center_layout.setSpacing(0)
-
-    def right_btn_action(self):
-        self.close()
-        window = CheckRequirements()
-        window.show()
-        window.exec_()

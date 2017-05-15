@@ -49,3 +49,7 @@ LOADING_APPLE_GIF = os.path.join(resources, "loading_apple.gif")
 LOGO_ICON = os.path.join(resources, "logo_icon.png")
 
 SPECDATA_LOGO = os.path.join(resources, 'specdata_logo.png')
+
+DATABASE_PLUS = os.path.join(resources, 'database-plus.png')
+
+DATABASE_DOWN = os.path.join(resources, 'database-down.png')

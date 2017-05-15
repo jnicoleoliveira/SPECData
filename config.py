@@ -31,6 +31,7 @@ db_filepath = os.path.join(db_dir, "spectrum.db")
 experiment_spectrums_path = os.path.join(db_dir, "experiments")
 prog_dir = PROGRAM_DIR
 resources = os.path.join(PROGRAM_DIR, "resources")
+schema = os.path.join(PROGRAM_DIR, "init", "bin", "build_tables")
 
 if os.path.exists(db_filepath):
     conn = sqlite3.connect(db_filepath)

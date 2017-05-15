@@ -13,10 +13,11 @@ class CheckRequirements(WizardWindow):
 
         self.text_browser = QTextBrowser()
 
-        self.title.setText("Create Executable")
+        self.title.setText("Checking Requirements")
         self.__setup_center_layout()
         self.__setup_buttons()
         self.show()
+
         self.check_requirements()
 
     def __setup_buttons(self):
@@ -34,7 +35,7 @@ class CheckRequirements(WizardWindow):
 
         # View
         text_browser = self.text_browser
-        text_browser.setStyleSheet("font:monospace;")
+        text_browser.setStyleSheet("font-family:monospace;")
         text_browser.setWordWrapMode(QTextOption.NoWrap)
         text_browser.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
@@ -45,28 +46,34 @@ class CheckRequirements(WizardWindow):
         self.center_layout.addItem(spacer, 3, 0)
 
     def check_requirements(self):
+        """
+        Tests Importing all required imports in import_list.txt and prints results to text_browser
+        Returns list of strings of missing imports names
+        """
         missing_imports = []
         import os
         import config
         path = os.path.join(config.PROGRAM_DIR, "init", "bin", "import_list.txt")
         imports = open(path).readlines()
         buff = len(max(imports, key=len))
-        print buff
+
+        self.text_browser.append("Checking installed packages: ")
         for name in imports:
             name = name.strip()
             try:
                 exec ("import " + name)
-                line = name + ("." * (buff - len(name))) + " [OK]"
-                print line
+                line = " " + name + (" " * (buff - len(name))) + " [OK]"
             except ImportError:
                 missing_imports.append(name)
-                line = name + "[Failed]"
+                line = " " + name + (" " * (buff - len(name))) + "[Failed]"
 
             self.text_browser.append(line)
 
         success = len(imports) - len(missing_imports)
         failed = len(missing_imports)
-        self.text_browser.append("Passed: " + str(success) + " Failed: " + str(failed))
+        self.text_browser.append("\nPassed: " + str(success) + " Failed: " + str(failed))
+
+        return missing_imports
 
     def right_btn_action(self):
         self.close()

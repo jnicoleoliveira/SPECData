@@ -10,7 +10,8 @@ from app.error import path_exists
 from app.events import save_as_file, display_error_message
 from dialog___complete import CompletingWindow
 from dialog___wizard_window import WizardWindow
-from images import LOGO_ICON
+from images import LOGO_ICON, LOGO_ICON_WIN
+from win32com.client import Dispatch
 
 
 class CreateExecutable(WizardWindow):
@@ -19,7 +20,7 @@ class CreateExecutable(WizardWindow):
         self.select_btn = QToolButton()
         self.file_txt = QLineEdit()
         self.file_path = None
-
+        self.executable_ext = ".lnk" #".desktop"
         self.title.setText("Create Executable")
         self.__setup_center_layout()
         self.__setup_buttons()
@@ -30,7 +31,7 @@ class CreateExecutable(WizardWindow):
         self.leftbtn.setText("Next")
         self.leftbtn.clicked.connect(self.next_btn_clicked)
         self.rightbtn.clicked.connect(self.close)
-        self.select_btn.clicked.connect((lambda x: save_as_file(self.file_txt, "")))
+        self.select_btn.clicked.connect((lambda x: save_as_file(self.file_txt, self.executable_ext)))
 
     def __setup_center_layout(self):
         # Radio Buttons
@@ -67,7 +68,8 @@ class CreateExecutable(WizardWindow):
 
         # if path_exists(self.file_path):
         try:
-            self.create_linux_executable(self.file_path)
+            self.create_windows_executable(self.file_path)
+            #self.create_linux_executable(self.file_path)
             self.open_next_window()
         except IOError:
             display_error_message("Invalid Path!", "The path location you chose is invalid.",
@@ -107,3 +109,21 @@ class CreateExecutable(WizardWindow):
         file.close()
 
         return dest
+
+    def create_windows_executable(self, dest):
+        dest = str(dest)
+        app_path = os.path.join(config.PROGRAM_DIR, "app.py")
+        interpreter_path = str(sys.executable)
+        work_path = config.PROGRAM_DIR
+        target = interpreter_path + " " + app_path
+        icon_path = LOGO_ICON_WIN
+
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(dest)
+        shortcut.TargetPath = interpreter_path
+        shortcut.Arguments = ' ' + app_path
+        shortcut.WorkingDirectory = work_path
+        shortcut.IconLocation = icon_path
+        shortcut.Save()
+
+

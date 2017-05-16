@@ -47,9 +47,12 @@ SETTINGS_GEAR_ICON = os.path.join(resources, "settings.png")
 LOADING_APPLE_GIF = os.path.join(resources, "loading_apple.gif")
 
 LOGO_ICON = os.path.join(resources, "logo_icon.png")
+LOGO_ICON_WIN = os.path.join(resources, "logo-icon-windows.ico")
 
 SPECDATA_LOGO = os.path.join(resources, 'specdata_logo.png')
 
 DATABASE_PLUS = os.path.join(resources, 'database-plus.png')
 
 DATABASE_DOWN = os.path.join(resources, 'database-down.png')
+
+WELCOME_RECT = os.path.join(resources, 'welcome-rect.png')

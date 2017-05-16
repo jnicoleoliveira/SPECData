@@ -4,7 +4,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from images import LOGO_ICON
+from images import LOGO_ICON, WELCOME_RECT
 
 
 class WizardWindow(QDialog):
@@ -43,7 +43,7 @@ class WizardWindow(QDialog):
             flayout = QHBoxLayout()
             self.title.setStyleSheet(self.header_font)
             icon = QLabel()
-            icon.setPixmap(QPixmap(LOGO_ICON).scaledToWidth(25))
+            icon.setPixmap(QPixmap(LOGO_ICON).scaledToWidth(50))
 
             # Setup layout
             flayout.addWidget(self.title)
@@ -58,8 +58,11 @@ class WizardWindow(QDialog):
         else:
 
             side_photo = QLabel()
+            side_photo.setPixmap(QPixmap(WELCOME_RECT).scaled(250,500))
             side_photo.setStyleSheet("background:#008080")
             side_photo.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+            side_photo.setFrameStyle(QFrame.StyledPanel)
+
             side_photo.setFixedWidth(200)
             side_photo.setMaximumSize(250, 500)
 

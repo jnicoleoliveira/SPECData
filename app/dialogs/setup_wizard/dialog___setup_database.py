@@ -151,8 +151,9 @@ class SetupDatabase(WizardWindow):
 
         # Copy File to Location ("Import")
         from shutil import copyfile
-        experiment_file_path = os.path.join(db_dir + "spectrum.db")
+        experiment_file_path = os.path.join(db_dir , "spectrum.db")
         copyfile(str(self.file_path), experiment_file_path)
+
         return None, None
 
     def create_new_database(self):

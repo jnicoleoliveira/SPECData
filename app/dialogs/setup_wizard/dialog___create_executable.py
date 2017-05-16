@@ -30,7 +30,7 @@ class CreateExecutable(WizardWindow):
         self.leftbtn.setText("Next")
         self.leftbtn.clicked.connect(self.next_btn_clicked)
         self.rightbtn.clicked.connect(self.close)
-        self.select_btn.clicked.connect((lambda x: save_as_file(self.file_txt, ".txt")))
+        self.select_btn.clicked.connect((lambda x: save_as_file(self.file_txt, "")))
 
     def __setup_center_layout(self):
         # Radio Buttons
@@ -42,9 +42,8 @@ class CreateExecutable(WizardWindow):
 
         # File Selection
         file_layout = QHBoxLayout()
-        file_txt = QLineEdit()
         self.select_btn.setText("...")
-        file_layout.addWidget(file_txt)
+        file_layout.addWidget(self.file_txt)
         file_layout.addWidget(self.select_btn)
 
         # Import Layout
@@ -66,10 +65,11 @@ class CreateExecutable(WizardWindow):
     def next_btn_clicked(self):
         self.file_path = self.file_txt.text()
 
-        if path_exists(self.file_path):
-            self.create_linux_executable()
+        # if path_exists(self.file_path):
+        try:
+            self.create_linux_executable(self.file_path)
             self.open_next_window()
-        else:
+        except IOError:
             display_error_message("Invalid Path!", "The path location you chose is invalid.",
                                   "Please choose an existing path")
 
@@ -89,14 +89,14 @@ class CreateExecutable(WizardWindow):
         startupnotify = "true"
         version = "1.0"
 
-        string += "[Desktop Entry]" \
-                  "Version={version}" \
-                  "Name=SPECdata" \
-                  "Exec={interpreter_path} {app_path}" \
-                  "Type=Application" \
-                  "Path={work_path}" \
-                  "Icon={icon_path}" \
-                  "Categories=Utility;Application;" \
+        string += "[Desktop Entry]\n" \
+                  "Version={version}\n" \
+                  "Name=SPECdata\n" \
+                  "Exec={interpreter_path} {app_path}\n" \
+                  "Type=Application\n" \
+                  "Path={work_path}\n" \
+                  "Icon={icon_path}\n" \
+                  "Categories=Utility;Application;\n" \
                   "StartupNotify=true" \
             .format(version=version, interpreter_path=interpreter_path,
                     app_path=app_path, icon_path=icon_path,

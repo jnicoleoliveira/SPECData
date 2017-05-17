@@ -62,15 +62,8 @@ class MainMenu(QDialog):
         window.exec_()
 
     def manage_database(self):
-
-        # temp testing
-        from app.dialogs.setup_wizard.dialog___welcome import WelcomeWindow
+        from dialog___manage_database import ManageDatabase
+        window = ManageDatabase()
         self.close()
-        window = WelcomeWindow()
         window.show()
         window.exec_()
-        # from dialog___manage_database import ManageDatabase
-        # window = ManageDatabase()
-        # self.close()
-        # window.show()
-        # window.exec_()

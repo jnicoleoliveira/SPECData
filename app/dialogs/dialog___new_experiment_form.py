@@ -12,6 +12,7 @@ from app.dialogs.dialog___composition_selector import CompositionSelector
 from app.dialogs.frames.new_experiment.frame___new_experiment_form import Ui_Dialog  # Import frame
 from app.events import LoadingProgressScreen
 from app.events import display_error_message
+from images import LOGO_ICON
 
 class NewExperimentForm(QDialog):
 
@@ -23,6 +24,8 @@ class NewExperimentForm(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
+
         self.setWindowTitle("New Experiment Form")
         self.resize(1025, 750)
 

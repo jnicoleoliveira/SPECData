@@ -7,7 +7,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from app.dialogs.frames.manage_database.frame___import_files import Ui_Dialog
-
+from images import LOGO_ICON
 
 class ImportFiles(QDialog):
     """
@@ -25,6 +25,7 @@ class ImportFiles(QDialog):
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Import Files")
         self.resize(1025, 750)
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
 
         self.file_paths = None
 

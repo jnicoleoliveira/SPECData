@@ -16,7 +16,7 @@ class SplatalogueAssignmentWindow(QDialog):
 
     def __init__(self, experiment, chemical, selection_widget):
         super(SplatalogueAssignmentWindow, self).__init__()
-
+        self.setWindowIcon(QIcon(QPixmap(images.LOGO_ICON)))
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Splatalogue Assignment Window")
         self.resize(1500, 750)

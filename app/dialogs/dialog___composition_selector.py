@@ -7,8 +7,8 @@ from app.dialogs.frames.composition_selector.frame___composition_selector import
 from app.dialogs.frames.composition_selector.frame___element_viewbox_widget import Ui_Form as ViewBox_Ui
 from app.dialogs.frames.composition_selector.frame___selected_element_box import Ui_Form as SelectedBox_Ui
 from app.widgets.widget___periodic_table_scene import PeriodicTableSceneWidget
+from images import LOGO_ICON
 from ..events import display_error_message
-
 
 class CompositionSelector(QDialog):
 
@@ -18,6 +18,8 @@ class CompositionSelector(QDialog):
         self.ui.setupUi(self)
         self.setLayout(self.ui.gridLayout)
         self.setWindowTitle('Composition Selector')
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
+
         self.setMouseTracking(True)
         self.composition_lbl = composition_lbl
 

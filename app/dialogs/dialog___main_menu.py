@@ -6,6 +6,7 @@ from PyQt4.QtGui import *
 
 from app.dialogs.dialog___new_experiment_form import NewExperimentForm    # New Experiment Window
 from app.dialogs.frames.main.frame___main_menu import Ui_mainmenu  # This window
+from images import LOGO_ICON
 
 
 class MainMenu(QDialog):
@@ -17,7 +18,7 @@ class MainMenu(QDialog):
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Main Menu")
         self.resize(1025, 750)
-
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
         self.connect_buttons()
         self.load_logo()
 

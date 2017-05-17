@@ -24,6 +24,8 @@ class ManageDatabase(QDialog):
 
         ''' UI Options'''
         self.setWindowTitle("Manage Database")
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
+
         self.resize(1200, 750)
         self.show()
 

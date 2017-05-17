@@ -8,9 +8,9 @@ from PyQt4.QtGui import *
 from app.dialogs.frames.manage_database.frame___edit_entry import Ui_Dialog   # import frame
 from config import conn, resources
 from dialog___composition_selector import CompositionSelector
+from images import LOGO_ICON
 from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
 from ..events import display_question_message, select_file
-
 
 class EditEntry(QDialog):
 
@@ -23,6 +23,8 @@ class EditEntry(QDialog):
 
         ''' UI Options'''
         self.setWindowTitle("Edit Entry")
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
+
         self.resize(500, 750)
         self.show()
 

@@ -7,6 +7,7 @@ from PyQt4.QtGui import *
 import tables.molecules_table as molecules_table
 from app.dialogs.frames.load_experiment.frame___load_experiment import Ui_Dialog              # Dialog Window
 from config import conn
+from images import LOGO_ICON
 from ..events import display_error_message
 
 
@@ -18,6 +19,8 @@ class LoadExperiment(QDialog):
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("Load Experiment")
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
+
         self.resize(1025, 750)
 
         self.list_widget = self.ui.listWidget

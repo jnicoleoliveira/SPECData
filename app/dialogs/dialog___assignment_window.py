@@ -12,8 +12,8 @@ from app.widgets.widget___assignment_window_info import AssignmentInfoWidget  # 
 from app.widgets.widget___experiment_graph_widget import ExperimentGraphWidget
 from config import conn
 from config import resources
+from images import LOGO_ICON
 from tables.molecules_table import get_category
-
 
 class AssignmentWindow(QDialog):
 
@@ -22,6 +22,8 @@ class AssignmentWindow(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
+
         self.setWindowTitle("Assignment View")
         self.resize(1500, 750)
 

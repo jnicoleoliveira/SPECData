@@ -40,6 +40,8 @@ class ExperimentView(QMainWindow):
 
         ''' Window Settings '''
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowIcon(QIcon(QPixmap(images.LOGO_ICON)))
+
         self.setWindowTitle("Experiment View")
         self.resize(1800, 900)
 

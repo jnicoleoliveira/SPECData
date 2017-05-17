@@ -7,6 +7,7 @@ from PyQt4.QtGui import *
 from analysis.filetypes import *
 from app.dialogs.frames.experiment_view.frame___export_cleaned_lines_file_type import Ui_Dialog
 from app.events import display_error_message
+from images import LOGO_ICON
 
 
 class ChooseExportFileType(QDialog):
@@ -15,6 +16,8 @@ class ChooseExportFileType(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
+
         self.setWindowTitle("Choose Export Type")
         self.resize(250, 250)
 

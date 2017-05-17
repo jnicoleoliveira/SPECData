@@ -1,17 +1,16 @@
 # Author: Jasmine Oliveira
 # Date: 5/12/2017
 
+import os
+import sys
 from PyQt4.QtGui import *
 
 import config
-import os
-import sys
 from app.error import path_exists
-from app.events import save_as_file, display_error_message
+from app.events import save_as_file, display_error_message, display_informative_message
 from dialog___complete import CompletingWindow
 from dialog___wizard_window import WizardWindow
 from images import LOGO_ICON, LOGO_ICON_WIN
-from win32com.client import Dispatch
 
 
 class CreateExecutable(WizardWindow):
@@ -20,11 +19,27 @@ class CreateExecutable(WizardWindow):
         self.select_btn = QToolButton()
         self.file_txt = QLineEdit()
         self.file_path = None
-        self.executable_ext = ".lnk" #".desktop"
+        self.executable_ext = None  # ".lnk" #".desktop"
+        self.system = None
+
         self.title.setText("Create Executable")
         self.__setup_center_layout()
+        self.__setup_os()
         self.__setup_buttons()
         self.show()
+
+    def __setup_os(self):
+        import platform
+        self.system = platform.system()
+        import os
+
+        if self.system == "Windows":
+            self.executable_ext = ".lnk"
+        elif self.system == "Linux":
+            self.executable_ext = ".desktop"
+            home = os.path.expanduser("~")
+            print home
+            self.file_txt.setText(home + "/.local/share/applications/SPECdata.desktop")
 
     def __setup_buttons(self):
         self.rightbtn.setText("Cancel")
@@ -67,11 +82,27 @@ class CreateExecutable(WizardWindow):
         self.file_path = self.file_txt.text()
 
         # if path_exists(self.file_path):
+
+        # display_error_message("Invalid Path!", "The path location you chose is invalid.",
+        #                       "Please choose an existing path")
+
+
         try:
-            self.create_windows_executable(self.file_path)
-            #self.create_linux_executable(self.file_path)
+            if self.system == "Windows":
+                self.create_windows_executable(self.file_path)
+            elif self.system == "Linux":
+                self.create_linux_executable(self.file_path)
+            else:
+                display_informative_message("The OS you are using: \n     "
+                                            + str(system) + "  " + str(platform.release()) +
+                                            "\n is not currently supported for this feature. \n\n "
+                                            "For questions, or to request to add this feature, "
+                                            "please report this in the Issues Page on Github: \n"
+                                            "\t https://github.com/jnicoleoliveira/SPECData/issues")
+
             self.open_next_window()
         except IOError:
+            print "IO ERROR"
             display_error_message("Invalid Path!", "The path location you chose is invalid.",
                                   "Please choose an existing path")
 
@@ -108,9 +139,16 @@ class CreateExecutable(WizardWindow):
         file.write(string)
         file.close()
 
+        ### Add Executable permissions
+        import stat
+        st = os.stat(dest)
+        os.chmod(dest, st.st_mode | stat.S_IEXEC)
+
         return dest
 
     def create_windows_executable(self, dest):
+        from win32com.client import Dispatch
+
         dest = str(dest)
         app_path = os.path.join(config.PROGRAM_DIR, "app.py")
         interpreter_path = str(sys.executable)

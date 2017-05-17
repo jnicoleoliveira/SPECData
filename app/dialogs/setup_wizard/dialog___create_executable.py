@@ -39,7 +39,7 @@ class CreateExecutable(WizardWindow):
             self.executable_ext = ".desktop"
             home = os.path.expanduser("~")
             print home
-            self.file_txt.setText(home + "/.local/share/applications/SPECdata.desktop")
+            self.file_txt.setText(home + "/.local/share/applications/specdata.desktop")
 
     def __setup_buttons(self):
         self.rightbtn.setText("Cancel")

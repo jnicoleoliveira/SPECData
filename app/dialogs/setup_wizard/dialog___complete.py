@@ -21,7 +21,21 @@ class CompletingWindow(WizardWindow):
     def __setup_buttons(self):
         self.rightbtn.setText("Finish")
         self.leftbtn.hide()
-        self.rightbtn.clicked.connect(self.close)
+        self.rightbtn.clicked.connect(self.finish_btn_action)
+
+    def finish_btn_action(self):
+        if self.launch_after.isChecked():
+            self.open_next_window()
+        else:
+            self.close()
+
+    def open_next_window(self):
+        from app.dialogs.dialog___main_menu import MainMenu
+        self.close()
+        window = MainMenu()
+        window.show()
+        window.exec_()
+
 
     def __setup_center_layout(self):
         # Setup header

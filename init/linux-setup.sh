@@ -7,5 +7,5 @@ echo "Open Environment.."
 source activate specdata-env
 
 cd ..
-python init/run_wizard.py
+python run_wizard.py
 

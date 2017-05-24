@@ -3,10 +3,10 @@
 
 import os
 import sys
+
 from PyQt4.QtGui import *
 
 import config
-from app.error import path_exists
 from app.events import save_as_file, display_error_message, display_informative_message
 from dialog___complete import CompletingWindow
 from dialog___wizard_window import WizardWindow
@@ -38,8 +38,11 @@ class CreateExecutable(WizardWindow):
         elif self.system == "Linux":
             self.executable_ext = ".desktop"
             home = os.path.expanduser("~")
-            print home
+            # print home
             self.file_txt.setText(home + "/.local/share/applications/specdata.desktop")
+        elif self.system == "Mac OS X":
+            self.executable_ext = ".command"
+
 
     def __setup_buttons(self):
         self.rightbtn.setText("Cancel")
@@ -86,15 +89,17 @@ class CreateExecutable(WizardWindow):
         # display_error_message("Invalid Path!", "The path location you chose is invalid.",
         #                       "Please choose an existing path")
 
-
+        print "OS=" + str(self.system)
         try:
             if self.system == "Windows":
                 self.create_windows_executable(self.file_path)
             elif self.system == "Linux":
                 self.create_linux_executable(self.file_path)
+            elif self.system == "Mac OS X":
+                self.create_osx_executable(self.file_path)
             else:
                 display_informative_message("The OS you are using: \n     "
-                                            + str(system) + "  " + str(platform.release()) +
+                                            + str(self.system) + "  " + str(self.system.platform.release()) +
                                             "\n is not currently supported for this feature. \n\n "
                                             "For questions, or to request to add this feature, "
                                             "please report this in the Issues Page on Github: \n"
@@ -164,4 +169,21 @@ class CreateExecutable(WizardWindow):
         shortcut.IconLocation = icon_path
         shortcut.Save()
 
+        return dest
 
+    def create_osx_executable(self, dest):
+
+        # Create File
+        os.system("touch " + dest)
+        os.system("chmod +x " + dest)
+
+        # Get Paths
+        app_path = os.path.join(config.PROGRAM_DIR, "app.py")
+        interpreter_path = str(sys.executable)
+
+        # Write text of executable
+        string = interpreter_path + " " + app_path
+        file = open(dest, 'w')
+        file.write(string)
+
+        return dest

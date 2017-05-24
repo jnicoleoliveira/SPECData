@@ -1,8 +1,8 @@
 # SPECdata
 SPECdata, is an open source, interactive tool which is designed to simplify and greatly accelerate spectral analysis and discovery. This software tool combines both automated and manual components that free the user from computation, while giving him/her considerable flexibility to assign, manipulate, interpret and export their analysis.
 
-# Installation Instructions
-You will need Anaconda to install SPECdata.
+## Installation Instructions
+You will need Anaconda to install SPECdata.<br>
 Installation instructions can be found on the wiki [here](https://github.com/jnicoleoliveira/SPECData/wiki/Install-SPECdata)
 
 ## Demo
@@ -12,4 +12,4 @@ alt="1/11/17 Demo" width="240" height="180" border="10" /></a>
 
 ![alt text](https://zenodo.org/badge/62144661.svg " DOI ")
 
-``  
+`

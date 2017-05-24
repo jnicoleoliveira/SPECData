@@ -182,7 +182,7 @@ class CreateExecutable(WizardWindow):
         interpreter_path = str(sys.executable)
 
         # Write text of executable
-        string = "#!/bin/bash \n #SPECdata Launch" + \
+        string = "#!/bin/bash \n #SPECdata Launch\n" + \
                  interpreter_path + " " + app_path
         file = open(dest, 'w')
         file.write(string)

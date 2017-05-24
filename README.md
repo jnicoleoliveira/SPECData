@@ -1,20 +1,9 @@
 # SPECdata
 SPECdata, is an open source, interactive tool which is designed to simplify and greatly accelerate spectral analysis and discovery. This software tool combines both automated and manual components that free the user from computation, while giving him/her considerable flexibility to assign, manipulate, interpret and export their analysis.
 
-## Requirements
-* Python 2.7
-* PyQT4
-* sqlite3
-
-## Installation
-    >> export PYTHONPATH=$PYTHONPATH:`pwd`
-    >> cd init
-    >> python setup.py build
-    >> python setup.py install
-    >> python init.py
-    
-## Running SPECData Application
-    >> python app.py
+# Installation Instructions
+You will need Anaconda to install SPECdata.
+Installation instructions can be found on the wiki [here](https://github.com/jnicoleoliveira/SPECData/wiki/Install-SPECdata)
 
 ## Demo
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=klsqk3C9xXQ

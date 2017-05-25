@@ -90,6 +90,10 @@ class CreateExecutable(WizardWindow):
         window.exec_()
 
     def next_btn_clicked(self):
+        """
+
+        :return:
+        """
         self.file_path = self.file_txt.text()
 
         if self.file_path == None or self.file_path == "":
@@ -98,13 +102,27 @@ class CreateExecutable(WizardWindow):
             return
 
         print "OS=" + str(self.system)
+
+        try:
+            self.create_executable()
+        except IOError:
+            # Test for spaces...
+            self.file_path = self.file_path.replace(" ", "\\ ")
+
+            try:
+                self.create_executable()
+            except IOError:
+                display_error_message("Invalid Path!", "The path location you chose is invalid.",
+                                      "Please choose an existing path")
+
+    def create_executable(self):
         try:
             if self.system == "Windows":
-                self.create_windows_executable(self.file_path)
+                self.create_windows_executable(str(self.file_path))
             elif self.system == "Linux":
-                self.create_linux_executable(self.file_path)
+                self.create_linux_executable(str(self.file_path))
             elif self.system == "Mac OS X" or self.system == "Darwin":
-                self.create_osx_executable(self.file_path)
+                self.create_osx_executable(str(self.file_path))
             else:
                 display_informative_message("The OS you are using: \n     "
                                             + str(self.system) + "  " + str(self.system.platform.release()) +
@@ -130,6 +148,11 @@ class CreateExecutable(WizardWindow):
 
         app_path = os.path.join(config.PROGRAM_DIR, "app.py")
         interpreter_path = str(sys.executable)
+
+        # Replace spaces
+        app_path = app_path.replace(" ", "\\ ")
+        interpreter_path = interpreter_path.replace(" ", "\\ ")
+
         work_path = config.PROGRAM_DIR
         icon_path = LOGO_ICON
         startupnotify = "true"
@@ -188,6 +211,10 @@ class CreateExecutable(WizardWindow):
         # Get Paths
         app_path = os.path.join(config.PROGRAM_DIR, "app.py")
         interpreter_path = str(sys.executable)
+
+        # Replace spaces
+        app_path = app_path.replace(" ", "\\ ")
+        interpreter_path = interpreter_path.replace(" ", "\\ ")
 
         # Write text of executable
         string = "#!/bin/bash \n#SPECdata Launch\n" + \

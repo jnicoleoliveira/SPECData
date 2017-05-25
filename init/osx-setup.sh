@@ -6,7 +6,7 @@
 # and opens the setup Wizard for configuration
 
 echo "Installing Conda Environment..."
-conda create -n specdata-env -f bin/conda_environment_osx.yml
+conda env create -n specdata-env -f bin/conda_environment_osx.yml
 
 echo " "
 echo "Open Environment.."

@@ -40,9 +40,17 @@ class CreateExecutable(WizardWindow):
             home = os.path.expanduser("~")
             # print home
             self.file_txt.setText(home + "/.local/share/applications/specdata.desktop")
-        elif self.system == "Mac OS X":
+        elif self.system == "Mac OS X" or self.system == "Darwin":
             self.executable_ext = ".command"
-
+            self.file_txt.setText("/Applications/specdata.command")
+        else:
+            display_informative_message("The OS you are using: \n  "
+                                        + str(self.system) +
+                                        "\nis not currently supported for this feature. \n\n"
+                                        "For questions, or to request to add this feature, "
+                                        "please report this in the Issues Page on Github: \n"
+                                        "  https://github.com/jnicoleoliveira/SPECData/issues")
+            self.open_next_window()
 
     def __setup_buttons(self):
         self.rightbtn.setText("Cancel")
@@ -84,10 +92,10 @@ class CreateExecutable(WizardWindow):
     def next_btn_clicked(self):
         self.file_path = self.file_txt.text()
 
-        # if path_exists(self.file_path):
-
-        # display_error_message("Invalid Path!", "The path location you chose is invalid.",
-        #                       "Please choose an existing path")
+        if self.file_path == None or self.file_path == "":
+            display_error_message("No path was chosen!", "No file path was chosen.",
+                                  "Please choose an existing path!")
+            return
 
         print "OS=" + str(self.system)
         try:
@@ -95,7 +103,7 @@ class CreateExecutable(WizardWindow):
                 self.create_windows_executable(self.file_path)
             elif self.system == "Linux":
                 self.create_linux_executable(self.file_path)
-            elif self.system == "Mac OS X":
+            elif self.system == "Mac OS X" or self.system == "Darwin":
                 self.create_osx_executable(self.file_path)
             else:
                 display_informative_message("The OS you are using: \n     "
@@ -182,7 +190,7 @@ class CreateExecutable(WizardWindow):
         interpreter_path = str(sys.executable)
 
         # Write text of executable
-        string = "#!/bin/bash \n #SPECdata Launch\n" + \
+        string = "#!/bin/bash \n#SPECdata Launch\n" + \
                  interpreter_path + " " + app_path
         file = open(dest, 'w')
         file.write(string)

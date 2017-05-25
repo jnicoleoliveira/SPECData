@@ -1,4 +1,5 @@
-# SPECdata
+<img src ="https://github.com/jnicoleoliveira/SPECData/blob/master/resources/specdata_logo_dark.png" width="500">
+<br>
 SPECdata, is an open source, interactive tool which is designed to simplify and greatly accelerate spectral analysis and discovery. This software tool combines both automated and manual components that free the user from computation, while giving him/her considerable flexibility to assign, manipulate, interpret and export their analysis.
 
 ## Installation Instructions
@@ -12,4 +13,5 @@ alt="1/11/17 Demo" width="240" height="180" border="10" /></a>
 
 ![alt text](https://zenodo.org/badge/62144661.svg " DOI ")
 
-`
+## Contact
+joliveira@cfa.harvard.edu

@@ -103,7 +103,7 @@ class MainGraph:
                 intensities.append(get_peaks.get_intensity(conn, match.pid))
 
             subplot.bar(frequencies, intensities, width=0.02, edgecolor=colors[color_index])
-            print value.name + "\t" + colors[color_index]  # Print KEY
+            # print value.name + "\t" + colors[color_index]  # Print KEY
             color_index += 1
 
     def add_subplot_selected_assignments(self, pos, matches, colors):
@@ -144,7 +144,7 @@ class MainGraph:
                     intensities.append(get_peaks.get_intensity(conn, p.pid))
 
                 subplot_2.bar(frequencies, intensities, width=0.02, edgecolor=colors[color_index])
-                print match.name + "\t" + colors[color_index]  # Print KEY
+                #print match.name + "\t" + colors[color_index]  # Print KEY
                 color_index += 1
         else:
             for match in matches:
@@ -155,7 +155,7 @@ class MainGraph:
                     intensities.append(get_peaks.get_intensity(conn, p.exp_pid))
 
                 subplot_2.bar(frequencies, intensities, width=0.02, edgecolor=colors[color_index])
-                print match.name + "\t" + colors[color_index]  # Print KEY
+                #print match.name + "\t" + colors[color_index]  # Print KEY
                 color_index += 1
 
     def add_full_experiment_spectrum(self, pos, color):
@@ -378,7 +378,7 @@ class AssignmentGraph:
 
     def add_subplot_full_spectrum(self, pos, mid, color, sharey=None):
         frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, mid, self.max_freq, self.min_freq)
-        print max(frequencies)
+        #print max(frequencies)
         figure = self.plot_widget.getFigure()
         figure.set_facecolor("#626262")
 

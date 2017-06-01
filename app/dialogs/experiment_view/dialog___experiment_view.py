@@ -1079,7 +1079,6 @@ class ExperimentView(QMainWindow):
         self.experiment.get_assigned_molecules()
         self.organize_matches()
         # self.info_widget.update()
-        print "RE-ANALYZE"
 
     def remove_from_analysis(self):
         print "Clicked 'remove button'"

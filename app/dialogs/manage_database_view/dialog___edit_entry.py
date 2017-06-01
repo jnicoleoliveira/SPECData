@@ -71,7 +71,7 @@ class EditEntry(QDialog):
         # if action is True:
         for i in range(0, len(values)):
             if self.original_data[i] != values[i]:
-                print self.labels[i]
+                # print self.labels[i]
                 molecules_table.update(conn, self.mid, self.labels[i].lower(), values[i])
 
         if self.ui.composition_txt.isEnabled():
@@ -125,7 +125,7 @@ class EditEntry(QDialog):
             labels = ['Name', 'Units', 'Type', 'Notes']
 
         else:
-            print category + " but here"
+            #print category + " but here"
             notes = knowninfo_table.get_notes(conn, mid)
             items.append(QTableWidgetItem(notes))
             labels = ['Name', 'Notes']

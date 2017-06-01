@@ -31,7 +31,7 @@ class TimeMachine:
 
         del self.redo_stack
         self.redo_stack = []
-        print str(self.size)
+        # print str(self.size)
 
     def undo(self):
         if self.has_undone is False:
@@ -47,7 +47,7 @@ class TimeMachine:
         self.size -= 1
 
         self.redo_stack.append(last_state)
-        print str(self.size)
+        #print str(self.size)
 
         return last_state
 
@@ -58,10 +58,10 @@ class TimeMachine:
             return None
 
     def can_undo(self):
-        print "UNDO?" + str(self.size)
+        #print "UNDO?" + str(self.size)
         return self.size > 1
 
     def can_redo(self):
-        print len(self.redo_stack)
+        #print len(self.redo_stack)
         return self.redo_stack is not None and len(self.redo_stack) != 0
 

@@ -103,7 +103,7 @@ class Experiment:
             self.validated_matches[mid].add_match(match)
 
     def __load_saved_data(self):
-        print "[LOADED SAVED DATA]"
+        # print "[LOADED SAVED DATA]"
         self.experiment_peaks.extend(self.validated_peaks)
         self.molecule_matches.update(self.validated_matches)
 
@@ -143,14 +143,14 @@ class Experiment:
             value.M = len(molecule_matches)
             value.get_probability()
             # print value.name + "(" + str(value.m) + ")"
-        print "\tCandidate Matches: " + str(len(molecule_matches))
+        #print "\tCandidate Matches: " + str(len(molecule_matches))
 
         mm = molecule_matches.copy()
         # Remove all false matches
         for key, value in mm.iteritems():
             if value.p is 0:
                 del molecule_matches[key]
-        print "\tLikely Matches: " + str(len(molecule_matches))
+        #print "\tLikely Matches: " + str(len(molecule_matches))
 
         # Reavaluate probabilities
         for key, value in molecule_matches.iteritems():
@@ -183,8 +183,6 @@ class Experiment:
                     raise
                 rows = cursor.fetchone()
                 if rows is not None and rows[0] is not None:
-                    print "found match!"
-                    print rows
                     row = rows[0]
                     name = row[0]
                     mid = row[1]

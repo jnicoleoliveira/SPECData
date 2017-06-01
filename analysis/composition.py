@@ -22,7 +22,7 @@ class Composition:
             array = self.string.split()
         except TypeError:
             array = [self.string]
-        print array
+        # print array
         for a in array:
             try:
                 new_element = Element.string_to_element(a)
@@ -86,7 +86,7 @@ class CompositionQuery:
         script = "SELECT mid, composition FROM " \
                  "(SELECT mid, composition FROM KnownInfo UNION SELECT mid, composition FROM ExperimentInfo) " \
                  "WHERE " + string
-        print script
+        #print script
         cursor = conn.execute(script)
         rows = cursor.fetchall()
 
@@ -99,6 +99,7 @@ class CompositionQuery:
 
         return mids
 
+
     @staticmethod
     def not_have(conn, composition):
         symbols = []
@@ -109,7 +110,7 @@ class CompositionQuery:
         script = "SELECT mid, composition FROM " \
                  "(SELECT mid, composition FROM KnownInfo UNION SELECT mid, composition FROM ExperimentInfo) " \
                  "WHERE " + string
-        print script
+        #print script
         cursor = conn.execute(script)
         rows = cursor.fetchall()
 
@@ -163,8 +164,8 @@ class CompositionQuery:
 
 def main():
     c = Composition("Ha(2) O(2)")
-    print c.elements[0]
-    print c.elements[1]
+    # print c.elements[0]
+    #print c.elements[1]
 
 if __name__ == '__main__':
     main()

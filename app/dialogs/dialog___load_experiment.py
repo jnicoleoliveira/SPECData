@@ -51,7 +51,7 @@ class LoadExperiment(QDialog):
 
         # try:
         text = str((selected_items[0].text())).split()
-        print text
+        # print text
         self.load_experiment(text[1], text[2])
         # except ValueError:
         #     display_error_message("SELECTION ERROR", "You must select one item to load.",\

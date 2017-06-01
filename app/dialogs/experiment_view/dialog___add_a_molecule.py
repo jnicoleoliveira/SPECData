@@ -80,7 +80,7 @@ class AddAMolecule(QDialog):
 
         for m in selected_mids:
             match = self.experiment.add_a_molecule(m)
-            print "added " + str(m)
+            # print "added " + str(m)
 
             self.selection_widget.add_row(match)
 

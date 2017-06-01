@@ -124,7 +124,6 @@ def get_noise_list(frequencies, intensities, n_split=10, autoclean=False):
     part_len = len(frequencies) // n_split
     noise_list = []
     avg_intensity = sum(intensities) / len(intensities)
-    print part_len
 
     # Append the noise list for each portion
     for i in range(n_split):
@@ -324,7 +323,7 @@ def k_peak_finder(xarray, yarray, snr=3, re=False):
                 interval_x.append(xarray[i])
 
         threshold = float((max - min)) / len(indexes)
-        print threshold
+
         freq, inten = k_peak_finder(interval_x, interval_y, threshold, re=True)
 
         index = indexes[0]

@@ -101,7 +101,7 @@ class CreateExecutable(WizardWindow):
                                   "Please choose an existing path!")
             return
 
-        print "OS=" + str(self.system)
+        # print "OS=" + str(self.system)
 
         try:
             self.create_executable()

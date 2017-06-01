@@ -42,7 +42,7 @@ class SplatalogueAnalysis:
         self.units = self.__determine_frequency_units()
 
     def find_matches(self, threshold=0.1):
-        print "FINDING MATCHES CALLED"
+        # print "FINDING MATCHES CALLED"
         mid = self.experiment.mid
         if len(self.chemicals) > 0:
             self.chemicals.clear()

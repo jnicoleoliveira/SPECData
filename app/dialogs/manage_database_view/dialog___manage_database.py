@@ -129,7 +129,7 @@ class ManageDatabase(QDialog):
         return selected
 
     def go_back_to_main_menu(self):
-        from dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)
+        from app.dialogs.dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)
         self.close()
         window = MainMenu()
         window.exec_()

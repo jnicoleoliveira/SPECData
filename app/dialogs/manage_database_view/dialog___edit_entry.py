@@ -67,7 +67,7 @@ class EditEntry(QDialog):
         values = self.get_table_data()
         # action = display_question_message("Are you want to accept these changes?",
         #                                   "Save changes")
-        from ..error import is_valid_file
+        from app.error import is_valid_file
         # if action is True:
         for i in range(0, len(values)):
             if self.original_data[i] != values[i]:

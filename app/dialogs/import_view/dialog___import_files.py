@@ -46,7 +46,7 @@ class ImportFiles(QDialog):
         Close current window, and return to main menu
         """
         self.close()
-        from dialog___main_menu import MainMenu
+        from app.dialogs.dialog___main_menu import MainMenu
         window = MainMenu()
         window.exec_()
 

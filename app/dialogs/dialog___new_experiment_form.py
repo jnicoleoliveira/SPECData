@@ -14,6 +14,12 @@ from app.events import LoadingProgressScreen
 from app.events import display_error_message
 from images import LOGO_ICON
 
+import tables.molecules_table as molecules_table
+import tables.peaks_table as peaks_table
+import tables.experimentinfo_table as info_table
+from config import conn, db_dir
+
+
 class NewExperimentForm(QDialog):
 
     def __init__(self):
@@ -163,6 +169,14 @@ class NewExperimentForm(QDialog):
         # If error exists, display error message window
         if has_error is True:
             display_error_message("Invalid input.", "Be sure to check that all fields are complete.", error_msg)
+        else:
+            if molecules_table.name_exists(conn, str(self.experiment_name)):
+                has_error = True
+                display_error_message("Invalid Experiment Name",
+                                      "Be sure to create a unique experiment name, or delete the existing entry.",
+                                      "\n ERROR: Molecule Name already exists.")
+
+
 
         return has_error
 
@@ -170,10 +184,6 @@ class NewExperimentForm(QDialog):
         """
         Import experiment entry
         """
-        import tables.molecules_table as molecules_table
-        import tables.peaks_table as peaks_table
-        import tables.experimentinfo_table as info_table
-        from config import conn, db_dir
 
         ''' Start Loading Screen '''
         loading_screen = LoadingProgressScreen()

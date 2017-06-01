@@ -1,7 +1,7 @@
 # Author: Jasmine Oliveira
 # Date 08/30/2016
 
-import os
+import os, operator
 
 from PyQt4.QtGui import *
 
@@ -214,12 +214,17 @@ class MoleculeSelectionWidget(QWidget):
             self.add_row(matches[i], colors[i])
 
     def get_matches(self):
+        """
+        Return matches (sorted by match.p)
+        """
         matches = []
         colors = []
-        for key, value in self.elements.iteritems():
+
+        sorted = self.elements.values()
+        sorted.sort(key=operator.attrgetter('match.p'), reverse=True)
+        for value in sorted:
             matches.append(value.match)
             colors.append(value.color)
-
         return [matches, colors]
 
     def set_matches(self, matches, colors):

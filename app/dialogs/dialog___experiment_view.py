@@ -525,6 +525,7 @@ class ExperimentView(QMainWindow):
         self.experiment.molecule_matches = deepcopy(experiment.molecule_matches)
         self.experiment.experiment_peaks = deepcopy(experiment.experiment_peaks)
         self.populate_table_widget()
+
         # print "*****************"
         # print self.experiment.validated_matches
         # for m in self.experiment.get_sorted_molecule_matches():

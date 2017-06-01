@@ -82,7 +82,6 @@ def get_all_mid_list(conn):
 
     return mids
 
-
 def get_mid_list(conn):
     """
     Gets list of all mids in the specified database

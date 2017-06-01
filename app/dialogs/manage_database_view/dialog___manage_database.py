@@ -16,6 +16,7 @@ from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks
 class ManageDatabase(QDialog):
 
     ACCENT_COLOR = "#008080"
+    CATEGORIES = ["experiment", "known", "artifact"]
 
     def __init__(self, parent=None):
         super(ManageDatabase, self).__init__()
@@ -320,7 +321,8 @@ class ManageDatabase(QDialog):
         if len(categories) is not 0:
             mids = molecules_table.get_mids_where_category_in(conn, categories)
         else:
-            mids = molecules_table.get_all_mid_list(conn)
+            mids = molecules_table.get_mids_where_category_in(conn, ManageDatabase.CATEGORIES)
+            # mids = molecules_table.get_all_mid_list(conn)
 
         ''' Frequency Units '''
         frequency_units = self.get_selected_frequency_units()
@@ -386,7 +388,9 @@ class ManageDatabase(QDialog):
         """
 
         ''' Load data to Lists/Frames '''
-        mids = molecules_table.get_all_mid_list(conn)
+
+        # mids = molecules_table.get_all_mid_list(conn)
+        mids = molecules_table.get_mids_where_category_in(conn, ManageDatabase.CATEGORIES)
         self.selected_mids = mids
         self.populate_molecule_table_widget(mids)
 

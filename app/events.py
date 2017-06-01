@@ -77,6 +77,7 @@ def display_error_message(text, informative_text,  detailed_text):
 def display_informative_message(text):
     """
     Displays a Message Box, for an informative message.
+    :rtype: object
     :param text: (String) General Info Statement
     :return:
     """

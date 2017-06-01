@@ -112,30 +112,31 @@ class CreateExecutable(WizardWindow):
             try:
                 self.create_executable()
             except IOError:
-                display_error_message("Invalid Path!", "The path location you chose is invalid.",
-                                      "Please choose an existing path")
+                try:
+                    self.create_executable()
+                except IOError:
+                    self.file_path = self.file_path.replace()
+                    display_error_message("Invalid Path!", "The path location you chose is invalid.",
+                                          "Please choose an existing path")
+
+        self.open_next_window()
 
     def create_executable(self):
-        try:
-            if self.system == "Windows":
-                self.create_windows_executable(str(self.file_path))
-            elif self.system == "Linux":
-                self.create_linux_executable(str(self.file_path))
-            elif self.system == "Mac OS X" or self.system == "Darwin":
-                self.create_osx_executable(str(self.file_path))
-            else:
-                display_informative_message("The OS you are using: \n     "
-                                            + str(self.system) + "  " + str(self.system.platform.release()) +
-                                            "\n is not currently supported for this feature. \n\n "
-                                            "For questions, or to request to add this feature, "
-                                            "please report this in the Issues Page on Github: \n"
-                                            "\t https://github.com/jnicoleoliveira/SPECData/issues")
+        if self.system == "Windows":
+            self.create_windows_executable(str(self.file_path))
+        elif self.system == "Linux":
+            self.create_linux_executable(str(self.file_path))
+        elif self.system == "Mac OS X" or self.system == "Darwin":
+            self.create_osx_executable(str(self.file_path))
+        else:
+            display_informative_message("The OS you are using: \n     "
+                                        + str(self.system) + "  " + str(self.system.platform.release()) +
+                                        "\n is not currently supported for this feature. \n\n "
+                                        "For questions, or to request to add this feature, "
+                                        "please report this in the Issues Page on Github: \n"
+                                        "\t https://github.com/jnicoleoliveira/SPECData/issues")
 
-            self.open_next_window()
-        except IOError:
-            print "IO ERROR"
-            display_error_message("Invalid Path!", "The path location you chose is invalid.",
-                                  "Please choose an existing path")
+
 
     def create_linux_executable(self, dest):
         """
@@ -183,7 +184,10 @@ class CreateExecutable(WizardWindow):
         return dest
 
     def create_windows_executable(self, dest):
-        from win32com.client import Dispatch
+        try:
+            from win32com.client import Dispatch
+        except:
+            return
 
         dest = str(dest)
         app_path = os.path.join(config.PROGRAM_DIR, "app.py")

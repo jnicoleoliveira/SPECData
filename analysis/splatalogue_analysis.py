@@ -277,6 +277,8 @@ class Chemical:
 
         # (3) Add a Molecule Match Objects
         match = experiment.add_a_molecule_match(mid, name, matches, 1000)  # p=1000 (for now)
+        match.chemical_name = self.name
+
         return match
 
     @staticmethod
@@ -297,11 +299,25 @@ class Chemical:
 
         return frequencies, intensities
 
+    @staticmethod
+    def get_chemical_name(full_name, frequency):
+        # columns = ('Species', 'Chemical Name', 'Freq-GHz', 'Meas Freq-GHz',
+        #            'CDMS/JPL Intensity', 'Lovas/AST Intensity', 'Linelist')
+        # print full_name
+        # rows = Splatalogue.query_lines((frequency-0.1)*u.MHz, (frequency+0.1) *u.MHz,
+        #                                line_lists=[LineList.JPL, LineList.CDMS], chemical_name=full_name)[columns]
+        # print rows
+        # for row in rows:
+        #     name, full_name, frequency, intensity, line_list = SplatalogueAnalysis.get_row_data(row)
+        #     return name
+
+        return full_name
+
     def get_composition(self, full_name):
         columns = ('Species')
-        rows = Splatalogue.query_lines(chemical_name=full_name)[columns]
+        rows = Splatalogue.query_lines_async(chemical_name=full_name)[columns]
         row = rows[0]
-        name = SplatalogueAnalysis.get_row_data(row)
+        name = row[0]
 
         return name
 

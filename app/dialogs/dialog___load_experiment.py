@@ -8,7 +8,6 @@ import tables.molecules_table as molecules_table
 from app.dialogs.frames.load_experiment.frame___load_experiment import Ui_Dialog              # Dialog Window
 from config import conn
 from images import LOGO_ICON
-from ..events import display_error_message
 
 
 class LoadExperiment(QDialog):
@@ -50,16 +49,16 @@ class LoadExperiment(QDialog):
     def load(self):
         selected_items = self.list_widget.selectedItems()
 
-        try:
-            text = str((selected_items[0].text())).split()
-            print text
-            self.load_experiment(text[1], text[2])
-        except ValueError:
-            display_error_message("SELECTION ERROR", "You must select one item to load.",\
-                                  "You have not selected one item, please select one item.")
-        except IndexError:
-            display_error_message("SELECTION ERROR", "You must select one item to load.", \
-                                  "You have not selected one item, please select one item.")
+        # try:
+        text = str((selected_items[0].text())).split()
+        print text
+        self.load_experiment(text[1], text[2])
+        # except ValueError:
+        #     display_error_message("SELECTION ERROR", "You must select one item to load.",\
+        #                           "You have not selected one item, please select one item.")
+        # except IndexError:
+        #     display_error_message("SELECTION ERROR", "You must select one item to load.", \
+        #                           "You have not selected one item, please select one item.")
 
     def back(self):
         from dialog___main_menu import MainMenu  # Import Main Menu as (back_frame)

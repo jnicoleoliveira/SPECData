@@ -61,10 +61,11 @@ class MoleculeSelectionWidget(QWidget):
                                 + "background-color: " + color + ";")
         color_lbl.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
+        name = match.get_display_name()
         # Check Box Settings
-        if 10 < len(match.name) < 20:
+        if 10 < len(name) < 20:
             size = 18
-        elif len(match.name) > 20:
+        elif len(name) > 20:
             size = 10
         else:
             size = 20
@@ -72,7 +73,7 @@ class MoleculeSelectionWidget(QWidget):
         font = QFont()
         font.setPixelSize(size)
         checkbox.setFont(font)
-        checkbox.setText(match.name)
+        checkbox.setText(name)
         checkbox.click()
 
         # Probability LCD Number

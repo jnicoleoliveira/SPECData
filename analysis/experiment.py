@@ -3,6 +3,8 @@ import tables.assignments_table as assignments
 import tables.experimentinfo_table as info
 import tables.molecules_table as molecules
 import tables.peaks_table as peaks
+
+from analysis.splatalogue_analysis import Chemical
 from config import conn
 
 
@@ -78,6 +80,7 @@ class Experiment:
         assigned_pid = assignments.get_assigned_pid(conn, aid)
         mid = peaks.get_mid(conn, assigned_pid)
         name = molecules.get_name(conn, mid)
+        category = molecules.get_category(conn, mid)
 
         # Create a Match Object
         match = Match(name, mid, assigned_pid, 1, pid, 1)
@@ -87,7 +90,13 @@ class Experiment:
             self.validated_peaks.append(peak)
 
             if self.validated_matches.has_key(mid) is False:
-                self.validated_matches[mid] = self.MoleculeMatch(name, mid, self.N, self.ratio_threshold)
+                molecule_match = self.MoleculeMatch(name, mid, self.N, self.ratio_threshold)
+
+                if category == "splatalogue":
+                    frequency = peaks.get_frequency(conn, pid) / 1000
+                    molecule_match.chemical_name = Chemical.get_chemical_name(name, frequency)
+
+                self.validated_matches[mid] = molecule_match
                 self.validated_matches[mid].set_status_as_validated()
                 self.validated_matches[mid].p = 1
 
@@ -626,7 +635,7 @@ class Experiment:
             self.m = 0          # Total number of matches
             self.matches = []   # List of Match matches
             self.p = 0          # Total Probability of the molecule
-
+            self.chemical_name = None  # Added for splatalogue molecule matches..
             self.status = "pending"
 
         ###############################################################################
@@ -680,6 +689,11 @@ class Experiment:
                 self.__determine_probability()  # Determine probability
 
             return self.p
+
+        def get_display_name(self):
+            if self.chemical_name is None:
+                return self.name
+            return self.chemical_name
 
         def determine_valid_ratio(self):
             # Determine matches to all peaks ratio

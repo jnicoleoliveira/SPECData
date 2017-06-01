@@ -140,7 +140,7 @@ class ExperimentView(QMainWindow):
             display_informative_message("Export Complete!")
 
     def go_to_main_menu(self):
-        from dialog___main_menu import MainMenu
+        from app.dialogs.dialog___main_menu import MainMenu
         window = MainMenu()
         # self.close()
         self.hide()

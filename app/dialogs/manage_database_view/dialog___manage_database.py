@@ -4,13 +4,13 @@
 from PyQt4.QtGui import *
 
 from analysis.composition import Composition, CompositionQuery
+from app.dialogs.dialog___composition_selector import CompositionSelector
 from app.dialogs.frames.manage_database.frame___manage_database import Ui_Dialog   # import frame
+from app.dialogs.manage_database_view.dialog___edit_entry import EditEntry
+from app.events import display_question_message
 from config import conn
-from dialog___composition_selector import CompositionSelector
-from dialog___edit_entry import EditEntry
 from images import *
 from tables import molecules_table, experimentinfo_table, knowninfo_table, peaks_table
-from ..events import display_question_message
 
 
 class ManageDatabase(QDialog):

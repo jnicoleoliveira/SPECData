@@ -43,7 +43,7 @@ class MainMenu(QDialog):
 
     def import_files(self):
         self.close()
-        from dialog___import_files import ImportFiles
+        from app.dialogs.import_view.dialog___import_files import ImportFiles
         window = ImportFiles()
         window.exec_()
 
@@ -62,7 +62,7 @@ class MainMenu(QDialog):
         window.exec_()
 
     def manage_database(self):
-        from dialog___manage_database import ManageDatabase
+        from app.dialogs.manage_database_view.dialog___manage_database import ManageDatabase
         window = ManageDatabase()
         self.close()
         window.show()

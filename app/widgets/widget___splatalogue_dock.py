@@ -6,7 +6,7 @@ from PyQt4.QtGui import *
 
 import images
 from  analysis.splatalogue_analysis import SplatalogueAnalysis
-from app.dialogs.dialog___splatalogue_assignment_view import SplatalogueAssignmentWindow
+from app.dialogs.experiment_view.dialog___splatalogue_assignment_view import SplatalogueAssignmentWindow
 from app.dialogs.frames.experiment_view.frame___splatalogue_dock import Ui_DockWidget
 from app.dialogs.frames.experiment_view.frame___splatalogue_options import Ui_Dialog as SettingsDialog
 

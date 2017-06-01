@@ -7,8 +7,8 @@ from PyQt4.QtGui import *
 from analysis.experiment_write_up import *
 from analysis.filetypes import *
 from app.dialogs.frames.experiment_view.frame___export_cleaned_lines import Ui_Dialog
+from app.events import display_error_message, save_as_file, display_informative_message
 from images import LOGO_ICON
-from ..events import display_error_message, save_as_file, display_informative_message
 
 
 class ExportCleanedLines(QDialog):
@@ -177,7 +177,7 @@ class ExportCleanedLines(QDialog):
         self.close()
 
     def open_choose_export_file_type_window(self):
-        from dialog___choose_export_cleaned_lines_file_type import ChooseExportFileType
+        from app.dialogs.experiment_view.dialog___choose_export_cleaned_lines_file_type import ChooseExportFileType
         window = ChooseExportFileType()
         if window.exec_():
             self.type, self.format, self.delimiter, self.shots = window.get_values()

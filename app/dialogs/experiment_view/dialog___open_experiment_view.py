@@ -1,6 +1,6 @@
 from PyQt4.QtGui import *
 
-from dialog___experiment_view import ExperimentView
+from app.dialogs.experiment_view.dialog___experiment_view import ExperimentView
 
 
 class OpenExperimentView(QDialog):

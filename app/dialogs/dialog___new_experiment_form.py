@@ -7,17 +7,16 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 import const
+import tables.experimentinfo_table as info_table
+import tables.molecules_table as molecules_table
+import tables.peaks_table as peaks_table
 from app import error as error
 from app.dialogs.dialog___composition_selector import CompositionSelector
 from app.dialogs.frames.new_experiment.frame___new_experiment_form import Ui_Dialog  # Import frame
 from app.events import LoadingProgressScreen
 from app.events import display_error_message
-from images import LOGO_ICON
-
-import tables.molecules_table as molecules_table
-import tables.peaks_table as peaks_table
-import tables.experimentinfo_table as info_table
 from config import conn, db_dir
+from images import LOGO_ICON
 
 
 class NewExperimentForm(QDialog):
@@ -226,7 +225,7 @@ class NewExperimentForm(QDialog):
         return mid
 
     def next_frame(self, mid):
-        from dialog___open_experiment_view import OpenExperimentView
+        from app.dialogs.experiment_view.dialog___open_experiment_view import OpenExperimentView
         # Go to next fame
         self.close()
         window = OpenExperimentView(str(self.experiment_name), mid)

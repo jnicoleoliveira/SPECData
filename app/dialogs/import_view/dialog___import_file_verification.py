@@ -6,12 +6,12 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+from app.dialogs.dialog___composition_selector import CompositionSelector
 from app.dialogs.frames.manage_database.frame___import_file_verification import Ui_Dialog
+from app.error import is_valid_file, get_file_error_message, molecule_entry_exists
 from app.events import display_error_message
 from config import conn
-from dialog___composition_selector import CompositionSelector
 from images import LOGO_ICON
-from ..error import is_valid_file, get_file_error_message, molecule_entry_exists
 
 class ImportFileVerification(QDialog):
     """

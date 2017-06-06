@@ -5,7 +5,7 @@ from PyQt4.QtGui import *
 
 from dialog___setup_database import SetupDatabase
 from dialog___wizard_window import WizardWindow
-
+from app.events import display_question_message
 
 class CheckRequirements(WizardWindow):
     def __init__(self):
@@ -18,12 +18,25 @@ class CheckRequirements(WizardWindow):
         self.__setup_buttons()
         self.show()
 
-        self.check_requirements()
+        self.missing = self.check_requirements()
+
+    def run(self):
+
+        missing = self.check_requirements()
+
+        if len(missing) == 0:
+            return  # All Requirments met
+
+        # Otherwise... throw warning.
+        display_question_message("Your environment does not satisfy the necessary"
+                                 " requirements. It is recrommended that these requirementss are"
+                                 " resolved before continuing. Are you sure you want to continue?",
+                                 "Requirements Unfulfilled")
 
     def __setup_buttons(self):
         self.rightbtn.setText("Cancel")
         self.leftbtn.setText("Next")
-        self.leftbtn.clicked.connect(self.right_btn_action)
+        self.leftbtn.clicked.connect(self.left_btn_action)
         self.rightbtn.clicked.connect(self.close)
 
     def __setup_center_layout(self):
@@ -76,6 +89,27 @@ class CheckRequirements(WizardWindow):
         return missing_imports
 
     def right_btn_action(self):
+        self.close()
+        window = SetupDatabase()
+        window.show()
+        window.exec_()
+
+    def left_btn_action(self):
+        if len(self.missing) == 0:
+            self.open_next()
+
+        # Otherwise... throw warning.
+        answer = display_question_message("Your environment does not satisfy the necessary"
+                                 " requirements! It is recrommended that these requirements are"
+                                 " resolved before continuing.\nAre you sure you want to continue?",
+                                 "Requirements Unfulfilled")
+
+        if answer is True:
+            self.open_next()
+        else:
+            self.close()
+
+    def open_next(self):
         self.close()
         window = SetupDatabase()
         window.show()

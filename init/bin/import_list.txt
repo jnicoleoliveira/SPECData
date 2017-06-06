@@ -5,6 +5,7 @@ datetime
 math
 enum
 numpy
+scipy
 sqlite3
 astropy
 astroquery

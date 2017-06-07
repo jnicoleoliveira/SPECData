@@ -33,8 +33,21 @@ class AssignmentWindow(QDialog):
         self.show()
 
     def __setup__(self):
+        # Create Layouts
         layout = QHBoxLayout()
-        layout.addWidget(self.info_table_widget)
+        left_layout = QVBoxLayout()
+
+        # ------------ Create Components -------------- #
+        # Name Label
+        name_lbl = QLabel(self.match.name)
+        name_lbl.setStyleSheet("font: 15px;")
+        name_lbl.pa
+        # -----------Add Widgets to Layout ------------ #
+        # Left layout
+        left_layout.addWidget(name_lbl)
+        left_layout.addWidget(self.info_table_widget)
+        # Central Layout
+        layout.addLayout(left_layout)
         layout.addWidget(self.fgraph_widget)
 
         self.setLayout(layout)

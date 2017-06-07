@@ -304,34 +304,34 @@ def k_peak_finder(xarray, yarray, snr=3, re=False):
     min_pad = min - 50
     max_pad = max + 50
 
-    if re is False:
-
-        indexes = []
-        for i in range(0, len(outx)):
-            if min < outx[i] < max:
-                indexes.append(i)
-
-        for index in sorted(indexes, reverse=True):
-            del outx[index]
-            del outy[index]
-
-        interval_x = []
-        interval_y = []
-        for i in range(0, len(xarray)):
-            if min_pad < xarray[i] < max_pad:
-                interval_y.append(yarray[i])
-                interval_x.append(xarray[i])
-
-        threshold = float((max - min)) / len(indexes)
-
-        freq, inten = k_peak_finder(interval_x, interval_y, threshold, re=True)
-
-        index = indexes[0]
-        for i in range(0, len(freq)):
-            if min < freq[i] < max:
-                outx.insert(index, freq[i])
-                outy.insert(index, inten[i])
-                index += 1
+    # if re is False:
+    #
+    #     indexes = []
+    #     for i in range(0, len(outx)):
+    #         if min < outx[i] < max:
+    #             indexes.append(i)
+    #
+    #     for index in sorted(indexes, reverse=True):
+    #         del outx[index]
+    #         del outy[index]
+    #
+    #     interval_x = []
+    #     interval_y = []
+    #     for i in range(0, len(xarray)):
+    #         if min_pad < xarray[i] < max_pad:
+    #             interval_y.append(yarray[i])
+    #             interval_x.append(xarray[i])
+    #
+    #     threshold = float((max - min)) / len(indexes)
+    #
+    #     freq, inten = k_peak_finder(interval_x, interval_y, threshold, re=True)
+    #
+    #     index = indexes[0]
+    #     for i in range(0, len(freq)):
+    #         if min < freq[i] < max:
+    #             outx.insert(index, freq[i])
+    #             outy.insert(index, inten[i])
+    #             index += 1
 
     return outx, outy  # , outidx, outsnr, outnoise, outbaseline
 

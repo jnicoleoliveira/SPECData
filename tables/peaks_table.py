@@ -548,7 +548,7 @@ def __import_txtfile(conn, filepath, mid, peaks=False):
 
         if peaks is False:
             # Determine Peaks
-            frequencies, intensities = peak_finder.peak_finder(frequencies, intensities, 0.2)
+            frequencies, intensities = peak_finder.k_peak_finder(frequencies, intensities)
 
     # Store peaks into file
     for i in range(0, len(frequencies)):

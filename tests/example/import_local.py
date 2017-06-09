@@ -2,12 +2,12 @@
 # Date: 07/05/2016
 # Imports all local files to database
 
-import tables.entry.entry_molecules as mol_entry
-import tables.entry.entry_peaks as p_entry
-import temp.get.get_molecules as mol_get
-import temp.remove.remove_molecules as mol_rem
-import temp.remove.remove_peaks as p_rem
-from queries import view_query
+import tables.molecules_table as mol_entry
+import tables.peaks_table as p_entry
+# import tables.molecules_tabl as mol_get
+# import temp.remove.remove_molecules as mol_rem
+# import temp.remove.remove_peaks as p_rem
+# from queries import view_query
 
 from config import *
 
@@ -60,23 +60,26 @@ while True:
         except ImportError:
             print "Error importing: " + name
     elif input == "c":
-        print "Enter mid: "
-        mid = input()
-        name = mol_get.getName(conn, mid)
-        mol_rem.remove_molecule(conn,mid)
+        print "Sorry - This feature is deprecated"
+        # print "Enter mid: "
+        # mid = input()
+        # name = mol_get.getName(conn, mid)
+        # mol_rem.remove_molecule(conn,mid)
         print "[ Removed molecule: " + name + " ]"
 
     elif input == "d":
-        print "Enter mid: "
-        name = mol_get.getName(conn, mid)
-        p_rem.remove_all(conn, mid)
-        print "[ Removed all peaks for: " + name + " ]"
+        print "Sorry - This feature is deprecated"
+        # print "Enter mid: "
+        # name = mol_get.getName(conn, mid)
+        # p_rem.remove_all(conn, mid)
+        # print "[ Removed all peaks for: " + name + " ]"
 
     elif input == "e":
-        print "Enter tablename: "
-        table = input()
-        print "Enter appropriate id: "
-        id = input()
-        print view_query.row_view(table,id)
+        print "Sorry - This feature is deprecated"
+        # print "Enter tablename: "
+        # table = input()
+        # print "Enter appropriate id: "
+        # id = input()
+        # print view_query.row_view(table,id)
     else:
         print "Error. Incorrect input."

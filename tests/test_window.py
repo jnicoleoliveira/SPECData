@@ -23,6 +23,6 @@ class MainWindow(QMainWindow):
 
         self.close()
 
-        status = AssignmentWindow(experiment.molecule_matches.values()[1], "blue", experiment).exec_()
+        status = AssignmentWindow(experiment.molecule_matches[86], "blue", experiment).exec_()
 
         sys.exit(status)

@@ -3,31 +3,51 @@
 # Updated version of AssignmentGraph..
 
 from PyQt4.QtGui import *
-
 from pyqtgraph.widgets.MatplotlibWidget import MatplotlibWidget
 
+from colors import *
+from config import conn
+from tables.peaks_table import *
 
 class FilterGraphWidget(QWidget):
-    def __init__(self):
+    def __init__(self, experiment_mid, match):
         super(FilterGraphWidget, self).__init__()
+        self.molecule_match = match
+        self.experiment_mid = experiment_mid
+
         self.full_spectrum = False
+        self.experiment = False
         self.matches = False
-        self.catalogue = False
+        self.catalog = False
         self.expected = False
 
-        # Widgets
-        self.graph_widget = MatplotlibWidget()
-        self.filter_widget = FilterWidget()
+        self.catalog_peaks = None
+        self.experiment_peaks = None
+        self.match_peaks = None
+        self.expected_peaks = None
 
+        self.xmax = None
+        self.xmin = None
+        self.ymax = None
+
+        # Widgets
+        self.graph_widget = AssignmentGraphWidget()
+        self.filter_widget = FilterWidget()
         # Set Up UI
         self.__setup__()
 
     def __setup__(self):
+        self.__setup_ui__()
+        self.xmax = get_max_frequency(conn, self.experiment_mid)
+        self.xmin = get_min_frequency(conn, self.experiment_mid)
+        self.ymax = get_max_intensity(conn, self.experiment_mid)
+
+    def __setup_ui__(self):
         # Create Layout
         widget_layout = QHBoxLayout()
         filter_layout = QVBoxLayout()
 
-        # Edit Components
+        # -------- Edit Components -------------- #
         self.graph_widget.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
 
         # Setup Filter layout
@@ -47,22 +67,160 @@ class FilterGraphWidget(QWidget):
     def __event__filter_changed(self):
         full_spectrum = self.filter_widget.full_spectrum.isChecked()
         matches = self.filter_widget.matches.isChecked()
-        catalogue = self.filter_widget.catalogue.isChecked()
-        expected = self.filter_widget.catalogue.isChecked()
+        catalog = self.filter_widget.catalogue.isChecked()
+        expected = self.filter_widget.expected.isChecked()
+        experiment = self.filter_widget.experiment_peaks.isChecked()
 
-        self.redisplay(full_spectrum, matches, catalogue, expected)
+        self.reset_graph()
+
+        if full_spectrum is True:
+            print "should graph"
+
+        if catalog is True:
+            self.graph_catalog()
+
+        if experiment is True:
+            self.graph_experiment()
+
+        if expected is True:
+            self.graph_expected()
+
+        if matches is True:
+            self.graph_matches()
+
+            # if matches != self.matches:
+            #     if matches == True:
+            #         self.reset_graph()
+            #         self.graph_matches()
+            #     else:
+            #         self.matches = False
+            #
+            # if catalog != self.catalog:
+            #     if catalog == True:
+            #         self.graph_catalog()
+            #     else:
+            #         self.catalog = False
+            #         self.reset_graph()
+            #
+            # if expected != self.expected:
+            #     if expected == True:
+            #         self.graph_expected()
+            #     else:
+            #         self.expected = False
+            #         self.reset_graph()
+            #
+            # if experiment != self.experiment:
+            #     if experiment == True:
+            #         self.graph_experiment()
+            #     else:
+            #         self.experiment = False
+            #         self.reset_graph()
+
+
+
+            # self.redisplay(full_spectrum, matches, catalogue, expected)
 
     def redisplay(self, full_spectrum, matches, catalogue, expected):
         print "redisplay"
 
+    # ------------------------
+    # Graphing
+    # ------------------------
+    def graph_matches(self):
+        self.matches = True
+        if self.match_peaks is None:
+            self._get_matches_peaks()
 
-class FilterWidget(QDockWidget):
+        self.graph_widget.plot_peaks(self.match_peaks[0], self.match_peaks[1], BLUE,
+                                     xmin=self.xmin, xmax=self.xmax)
+
+    def graph_catalog(self):
+        self.catalog = True
+
+        if self.catalog_peaks is None:
+            self._get_catalog_peaks()
+
+        self.graph_widget.plot_peaks(self.catalog_peaks[0], self.catalog_peaks[1], GREEN, mirror=True,
+                                     xmax=self.xmax, xmin=self.xmin)
+
+    def graph_experiment(self):
+        self.experiment = True
+        if self.experiment_peaks is None:
+            self._get_experiment_peaks()
+
+        self.graph_widget.plot_peaks(self.experiment_peaks[0], self.experiment_peaks[1], LIGHT_ORANGE,
+                                     xmax=self.xmax, xmin=self.xmin)
+
+    def graph_expected(self):
+        self.expected = True
+        if self.expected_peaks is None:
+            self._get_expected_peaks()
+
+        self.graph_widget.plot_peaks(self.expected_peaks[0], self.expected_peaks[1], YELLOW, xmax=self.xmax,
+                                     xmin=self.xmin)
+
+    # ------------------------
+    # Get Data
+    # ------------------------
+    def _get_matches_peaks(self):
+        import tables.peaks_table as get_peaks
+        # Get Data
+        frequencies = []
+        intensities = []
+        for p in self.molecule_match.matches:
+            frequencies.append(get_peaks.get_frequency(conn, p.exp_pid))
+            intensities.append(get_peaks.get_intensity(conn, p.exp_pid))
+        self.match_peaks = [frequencies, intensities]
+
+    def _get_experiment_peaks(self):
+        # Get Data
+        frequencies, intensities = get_frequency_intensity_list(conn, self.experiment_mid)
+        self.experiment_peaks = [frequencies, intensities]
+
+    def _get_catalog_peaks(self):
+        import tables.peaks_table as get_peaks
+        # Get Data
+        frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, self.molecule_match.mid)
+        self.catalog_peaks = [frequencies, intensities]
+
+    def _get_expected_peaks(self):
+
+        import tables.peaks_table as get_peaks
+
+        if self.catalog_peaks is None:
+            self._get_catalog_peaks()
+
+        mfrequencies = []
+        for p in self.molecule_match.matches:
+            mfrequencies.append(get_peaks.get_frequency(conn, p.pid))
+
+        frequencies = []
+        intensities = []
+        for i in range(0, len(self.catalog_peaks[0])):
+            frequency = self.catalog_peaks[0][i]
+
+            if frequency not in mfrequencies:
+                intensity = self.catalog_peaks[1][i]
+                frequencies.append(frequency)
+                intensities.append(intensity)
+
+        self.expected_peaks = [frequencies, intensities]
+
+    def reset_graph(self):
+        self.graph_widget.reset()
+
+
+class FilterWidget(QGroupBox):
     def __init__(self):
         super(FilterWidget, self).__init__()
-        self.setMaximumWidth(200)
+        self.setMaximumWidth(150)
+
+        # Settings
+        self.setTitle("Filter")
         # Create Filter Components
-        self.full_spectrum = QCheckBox("Full Experiment Spectrum")
-        self.matches = QCheckBox("Matched Lines")
+        self.full_spectrum = QCheckBox("Full Spectrum")
+        self.experiment_peaks = QCheckBox("Experiment Peaks")
+        self.matches = QCheckBox("Matched Peaks")
         self.catalogue = QCheckBox("Catalogue")
         self.expected = QCheckBox("Expected")
 
@@ -79,6 +237,7 @@ class FilterWidget(QDockWidget):
 
         # Add Components to layout
         frame_layout.addWidget(self.full_spectrum)
+        frame_layout.addWidget(self.experiment_peaks)
         frame_layout.addWidget(self.matches)
         frame_layout.addWidget(self.catalogue)
         frame_layout.addWidget(self.expected)
@@ -89,8 +248,8 @@ class FilterWidget(QDockWidget):
         frame_layout.setSpacing(2)
 
         # Set Widget Layout
-        self.setWidget(frame)
-
+        # self.setWidget(frame)
+        self.setLayout(frame_layout)
         # ADDITIONAL SETTINGS #
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 
@@ -104,3 +263,59 @@ class FilterWidget(QDockWidget):
         self.matches.stateChanged.connect(function)
         self.catalogue.stateChanged.connect(function)
         self.expected.stateChanged.connect(function)
+        self.experiment_peaks.stateChanged.connect(function)
+
+
+class AssignmentGraphWidget(MatplotlibWidget):
+    def __init__(self):
+        super(AssignmentGraphWidget, self).__init__()
+        self.ax = None
+        self.__setup__()
+
+    def __setup__(self):
+
+        figure = self.getFigure()
+
+        # --- Color Scheme -- #
+        figure.set_facecolor(BACKGROUND)  # Background
+        self.setStyleSheet("QWidget { background-color: " + BACKGROUND + "}")
+
+        # Test Plot #
+        ax = figure.add_subplot(111, axisbg=BACKGROUND)
+        ax.spines['bottom'].set_color('#F5F5F5')
+        ax.spines['top'].set_color('#F5F5F5')
+        ax.spines['right'].set_color('#F5F5F5')
+        ax.spines['left'].set_color('#F5F5F5')
+        ax.tick_params(axis='x', colors='#F5F5F5')
+        ax.tick_params(axis='y', colors='#F5F5F5')
+        ax.title.set_color('#F5F5F5')
+        self.ax = ax
+
+        # --- Spacing and Borders -- #
+        figure.subplots_adjust(left=0.1, right=0.97)
+        # -- Sample plotting -- #
+        # ax.plot([1,2,3,4,5], [1,2,3,4,5], color=YELLOW)
+        # ax.bar([1,2,3,4,5], [1,2,3,4,5], width=0.02, color=BLUE)
+        # ax.bar([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], width=0.02, color=GREEN, bottom=-5)
+
+    def plot_peaks(self, frequencies, intensities, color, mirror=False, xmax=None, xmin=None):
+
+        if mirror is False:
+            for i in range(0, len(frequencies)):
+                if frequencies[i] < xmin or frequencies[i] > xmax:
+                    continue
+                else:
+                    self.ax.bar(frequencies[i], intensities[i], width=0.02, edgecolor=color, color=color)
+        else:
+            for i in range(0, len(frequencies)):
+                if frequencies[i] < xmin or frequencies[i] > xmax:
+                    continue
+                else:
+                    self.ax.bar(frequencies[i], -intensities[i], width=0.02, bottom=0, edgecolor=color,
+                                color=color)
+
+        self.draw()
+
+    def reset(self):
+        self.getFigure().clear()
+        self.__setup__()

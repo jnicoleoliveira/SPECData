@@ -7,6 +7,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from app.widgets.widget___filter_graph import FilterGraphWidget
+from colors import *
 from config import conn
 from images import LOGO_ICON
 
@@ -19,38 +20,62 @@ class AssignmentWindow(QDialog):
         self.setWindowIcon(QIcon(QPixmap(LOGO_ICON)))
         self.setWindowTitle("Assignment View")
         self.resize(1500, 750)
-
+        self.setStyleSheet("background-color:" + BACKGROUND)
         # Data
         self.match = match
         self.color = color
         self.experiment = experiment
 
         # Widgets
-        self.fgraph_widget = FilterGraphWidget()
-        self.info_table_widget = InfoTableWidget(match.mid)
+        self.fgraph_widget = None
+        self.info_table_widget = None
+        self.assignment_table_widget = None
 
         self.__setup__()
         self.show()
 
     def __setup__(self):
+        self.__setup_ui__()
+        self.__setup_graph__()
+
+    def __setup_ui__(self):
         # Create Layouts
         layout = QHBoxLayout()
         left_layout = QVBoxLayout()
-
+        right_layout = QVBoxLayout()
         # ------------ Create Components -------------- #
         # Name Label
         name_lbl = QLabel(self.match.name)
         name_lbl.setStyleSheet("font: 15px;")
-        name_lbl.pa
+        name_lbl.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        # Graphing Widget
+        self.fgraph_widget = FilterGraphWidget(self.experiment.mid, self.match)
+        # Info Table Widget
+        self.info_table_widget = InfoTableWidget(self.match.mid)
+        self.info_table_widget.setMinimumHeight((self.info_table_widget.rowCount()
+                                                 * self.info_table_widget.rowHeight(0)) + 5)
+        # Assignment Table Widget
+        # self.assignment_table_widget = QTableWidget()
+
         # -----------Add Widgets to Layout ------------ #
         # Left layout
         left_layout.addWidget(name_lbl)
         left_layout.addWidget(self.info_table_widget)
+        left_layout.addSpacerItem(QSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)))
+        # Right Layout
+        right_layout.addWidget(self.fgraph_widget)
+        right_layout.addWidget(self.assignment_table_widget)
         # Central Layout
         layout.addLayout(left_layout)
-        layout.addWidget(self.fgraph_widget)
+        layout.addLayout(right_layout)
 
         self.setLayout(layout)
+
+    def __setup_graph__(self):
+        self.fgraph_widget.filter_widget.matches.click()
+        # self.fgraph_widget.filter_widget.catalogue.click()
+        # self.fgraph_widget.graph_matches()
+        # self.fgraph_widget.graph_catalog()
 
 
 class InfoTableWidget(QTableWidget):
@@ -68,12 +93,15 @@ class InfoTableWidget(QTableWidget):
         self.change_settings()
 
     def change_settings(self):
+        # -- Remove -- #
+        self.removeRow(0)  # Remove the row: kid
         # --- Set Size Policy --- #
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 
         # -- Set Additional Options -- #
         self.setEditTriggers(QTableWidget.NoEditTriggers)  # disallow in-table editing
-        self.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.setSelectionMode(QAbstractItemView.NoSelection)
+        #self.setSelectionBehavior()
         self.setShowGrid(False)
         self.horizontalHeader().setVisible(False)
         self.setSortingEnabled(False)

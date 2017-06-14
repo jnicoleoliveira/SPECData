@@ -9,6 +9,7 @@ from colors import *
 from config import conn
 from tables.peaks_table import *
 
+
 class FilterGraphWidget(QWidget):
     def __init__(self, experiment_mid, match):
         super(FilterGraphWidget, self).__init__()
@@ -26,9 +27,17 @@ class FilterGraphWidget(QWidget):
         self.match_peaks = None
         self.expected_peaks = None
 
+        self.displayed = 0
+
         self.xmax = None
         self.xmin = None
         self.ymax = None
+
+        # Colors
+        self.catalog_color = GREEN
+        self.experiment_color = PASTEL_PURPLE
+        self.expected_color = BLUE
+        self.matches_color = PASTEL_RED
 
         # Widgets
         self.graph_widget = AssignmentGraphWidget()
@@ -51,17 +60,17 @@ class FilterGraphWidget(QWidget):
         self.graph_widget.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
 
         # Setup Filter layout
-        filter_layout.addSpacerItem(QSpacerItem(QSpacerItem(30, 30, QSizePolicy.Minimum, QSizePolicy.Minimum)))
+        filter_layout.addSpacerItem(QSpacerItem(QSpacerItem(30, 69, QSizePolicy.Minimum, QSizePolicy.Minimum)))
         filter_layout.addWidget(self.filter_widget)
         filter_layout.addSpacerItem(QSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)))
 
         # Add Components
         widget_layout.addWidget(self.graph_widget)
         widget_layout.addLayout(filter_layout)
+        widget_layout.setSpacing(-15)
 
         # Connect Checkboxes
         self.filter_widget.set_filter_connection(self.__event__filter_changed)
-
         self.setLayout(widget_layout)
 
     def __event__filter_changed(self):
@@ -72,7 +81,7 @@ class FilterGraphWidget(QWidget):
         experiment = self.filter_widget.experiment_peaks.isChecked()
 
         self.reset_graph()
-
+        self.displayed = 0
         if full_spectrum is True:
             print "should graph"
 
@@ -131,33 +140,42 @@ class FilterGraphWidget(QWidget):
         if self.match_peaks is None:
             self._get_matches_peaks()
 
-        self.graph_widget.plot_peaks(self.match_peaks[0], self.match_peaks[1], BLUE,
-                                     xmin=self.xmin, xmax=self.xmax)
+        self.displayed += 1
+        self.graph_widget.plot_peaks(self.match_peaks[0], self.match_peaks[1], self.matches_color,
+                                     xmin=self.xmin, xmax=self.xmax, displayed=self.displayed,
+                                     label="Match")
+        self.graph_widget.plot_scatter(self.match_peaks[0], self.match_peaks[1], self.matches_color)
 
     def graph_catalog(self):
         self.catalog = True
-
         if self.catalog_peaks is None:
             self._get_catalog_peaks()
 
-        self.graph_widget.plot_peaks(self.catalog_peaks[0], self.catalog_peaks[1], GREEN, mirror=True,
-                                     xmax=self.xmax, xmin=self.xmin)
+        self.displayed += 1
+        self.graph_widget.plot_peaks(self.catalog_peaks[0], self.catalog_peaks[1], self.catalog_color, mirror=True,
+                                     xmax=self.xmax, xmin=self.xmin, displayed=self.displayed,
+                                     label="Catalog")
 
     def graph_experiment(self):
         self.experiment = True
         if self.experiment_peaks is None:
             self._get_experiment_peaks()
 
-        self.graph_widget.plot_peaks(self.experiment_peaks[0], self.experiment_peaks[1], LIGHT_ORANGE,
-                                     xmax=self.xmax, xmin=self.xmin)
+        self.displayed += 1
+        self.graph_widget.plot_peaks(self.experiment_peaks[0], self.experiment_peaks[1], self.experiment_color,
+                                     xmax=self.xmax, xmin=self.xmin, displayed=self.displayed,
+                                     label="Experiment")
 
     def graph_expected(self):
         self.expected = True
         if self.expected_peaks is None:
             self._get_expected_peaks()
 
-        self.graph_widget.plot_peaks(self.expected_peaks[0], self.expected_peaks[1], YELLOW, xmax=self.xmax,
-                                     xmin=self.xmin)
+        self.displayed += 1
+        self.graph_widget.plot_peaks(self.expected_peaks[0], self.expected_peaks[1], self.expected_color,
+                                     xmax=self.xmax,
+                                     xmin=self.xmin, displayed=self.displayed,
+                                     label="Expected")
 
     # ------------------------
     # Get Data
@@ -221,8 +239,8 @@ class FilterWidget(QGroupBox):
         self.full_spectrum = QCheckBox("Full Spectrum")
         self.experiment_peaks = QCheckBox("Experiment Peaks")
         self.matches = QCheckBox("Matched Peaks")
-        self.catalogue = QCheckBox("Catalogue")
-        self.expected = QCheckBox("Expected")
+        self.catalogue = QCheckBox("Catalog Peaks")
+        self.expected = QCheckBox("Expected Peaks")
 
         self.__setup__()
 
@@ -243,6 +261,7 @@ class FilterWidget(QGroupBox):
         frame_layout.addWidget(self.expected)
         frame_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
                                    )
+
         # Set frame Layout
         frame.setLayout(frame_layout)
         frame_layout.setSpacing(2)
@@ -252,6 +271,13 @@ class FilterWidget(QGroupBox):
         self.setLayout(frame_layout)
         # ADDITIONAL SETTINGS #
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        self.setStyleSheet("background-color:white; " +
+                           "color:" + BACKGROUND + ";")
+        self.full_spectrum.setWhatsThis("Full Spectrum of the experiment")
+        self.experiment_peaks.setWhatsThis("Peaks of the experiment spectrum.")
+        self.matches.setWhatsThis("Peaks of the experiment that are considered matched to the catalog.")
+        self.catalogue.setWhatsThis("Peaks of the associated Catalog file.")
+        self.expected.setWhatsThis("Catalog lines that are not considered matches.")
 
     def set_filter_connection(self, function):
         """
@@ -292,13 +318,23 @@ class AssignmentGraphWidget(MatplotlibWidget):
         self.ax = ax
 
         # --- Spacing and Borders -- #
-        figure.subplots_adjust(left=0.1, right=0.97)
+        figure.subplots_adjust(left=0.1, right=0.97, top=0.98, bottom=0.03)
+
+        # # --- Legend Settings --- #
+        # self.ax.legend(loc=0)
+        # legend = ax.legend()
+        # legend.set_title('Legend', prop={'size':14})
+        #     ax.legend(loc=0, ncol=1, bbox_to_anchor=(0, 0, 1, 1),
+        #                     prop=font, fancybox=True, shadow=True, title='LEGEND')
+        # f
+        # ax.setp(legend.get_title(), fontsize='xx-small')
         # -- Sample plotting -- #
         # ax.plot([1,2,3,4,5], [1,2,3,4,5], color=YELLOW)
         # ax.bar([1,2,3,4,5], [1,2,3,4,5], width=0.02, color=BLUE)
         # ax.bar([1, 2, 3, 4, 5], [1, 2, 3, 4, 5], width=0.02, color=GREEN, bottom=-5)
 
-    def plot_peaks(self, frequencies, intensities, color, mirror=False, xmax=None, xmin=None):
+    def plot_peaks(self, frequencies, intensities, color, mirror=False, xmax=None, xmin=None, displayed="",
+                   label=""):
 
         if mirror is False:
             for i in range(0, len(frequencies)):
@@ -314,7 +350,18 @@ class AssignmentGraphWidget(MatplotlibWidget):
                     self.ax.bar(frequencies[i], -intensities[i], width=0.02, bottom=0, edgecolor=color,
                                 color=color)
 
+        # Add Legend
+        self.ax.bar((xmin + xmax) / 2, 0, label=label, color=color)  # invisible bar
+        from matplotlib.font_manager import FontProperties
+        font = FontProperties()
+        font.set_size('small')
+        legend = self.ax.legend(loc=0, shadow=True, fancybox=True, title="Legend", prop=font)
+        #legend.set_title('Legend',prop={'size':10})
+
         self.draw()
+
+    def plot_scatter(self, frequencies, intensities, color):
+        self.ax.scatter(frequencies, intensities, c=color)
 
     def reset(self):
         self.getFigure().clear()

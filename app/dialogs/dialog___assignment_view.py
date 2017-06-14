@@ -6,6 +6,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+from app.widgets.widget___donut_chart import DonutChartWidget
 from app.widgets.widget___filter_graph import FilterGraphWidget
 from colors import *
 from config import conn
@@ -54,6 +55,9 @@ class AssignmentWindow(QDialog):
         self.info_table_widget = InfoTableWidget(self.match.mid)
         self.info_table_widget.setMinimumHeight((self.info_table_widget.rowCount()
                                                  * self.info_table_widget.rowHeight(0)) + 5)
+        # Donut Widget
+        self.donut = DonutChartWidget()
+        self.donut.setMaximumSize(100, 100)
         # Assignment Table Widget
         # self.assignment_table_widget = QTableWidget()
 
@@ -62,6 +66,7 @@ class AssignmentWindow(QDialog):
         left_layout.addWidget(name_lbl)
         left_layout.addWidget(self.info_table_widget)
         left_layout.addSpacerItem(QSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)))
+        left_layout.addWidget(self.donut)
         # Right Layout
         right_layout.addWidget(self.fgraph_widget)
         right_layout.addWidget(self.assignment_table_widget)

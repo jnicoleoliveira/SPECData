@@ -80,12 +80,6 @@ class MoleculeSelectionWidget(QWidget):
         probability_lcd = QLabel()
         probability_lcd.setText(" " + str(match.p * 1000)[:4] + "  ")  # substring (of length 4)
         probability_lcd.setFont(QFont("monospace"))
-        # probability_lcd.setDecMode()
-        # probability_lcd.setDigitCount(4)
-        # probability_lcd.display((match.p * 1000))
-        # probability_lcd.setSegmentStyle(QLCDNumber.Flat)
-        # probability_lcd.setFrameShape(QFrame.NoFrame)
-        # #probability_lcd.setFrameShadow(QFrame.Raised)
         probability_lcd.setStyleSheet("background-color: none; \
                                         border-color: none;\
                                         color: rgb(255, 255, 255);")

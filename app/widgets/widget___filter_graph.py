@@ -42,6 +42,7 @@ class FilterGraphWidget(QWidget):
         # Widgets
         self.graph_widget = AssignmentGraphWidget()
         self.filter_widget = FilterWidget()
+
         # Set Up UI
         self.__setup__()
 
@@ -55,19 +56,24 @@ class FilterGraphWidget(QWidget):
         # Create Layout
         widget_layout = QHBoxLayout()
         filter_layout = QVBoxLayout()
+        filter_dock = QDockWidget()
 
         # -------- Edit Components -------------- #
         self.graph_widget.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
 
         # Setup Filter layout
-        filter_layout.addSpacerItem(QSpacerItem(QSpacerItem(30, 69, QSizePolicy.Minimum, QSizePolicy.Minimum)))
-        filter_layout.addWidget(self.filter_widget)
-        filter_layout.addSpacerItem(QSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)))
+        # filter_layout.addSpacerItem(QSpacerItem(QSpacerItem(30, 69, QSizePolicy.Minimum, QSizePolicy.Minimum)))
+        # filter_layout.addWidget(self.filter_widget)
+        # filter_layout.addSpacerItem(QSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)))
+
+        # Setup Dock
+        filter_dock.setWidget(self.filter_widget)
 
         # Add Components
         widget_layout.addWidget(self.graph_widget)
-        widget_layout.addLayout(filter_layout)
-        widget_layout.setSpacing(-15)
+        widget_layout.addWidget(filter_dock)
+        # widget_layout.addLayout(filter_layout)
+        widget_layout.setSpacing(0)
 
         # Connect Checkboxes
         self.filter_widget.set_filter_connection(self.__event__filter_changed)
@@ -199,6 +205,8 @@ class FilterGraphWidget(QWidget):
         import tables.peaks_table as get_peaks
         # Get Data
         frequencies, intensities = get_peaks.get_frequency_intensity_list(conn, self.molecule_match.mid)
+        normalize = get_peaks.get_max_intensity(conn, self.experiment_mid)
+        for i in intensities: i = i / normalize /2
         self.catalog_peaks = [frequencies, intensities]
 
     def _get_expected_peaks(self):
@@ -253,14 +261,21 @@ class FilterWidget(QGroupBox):
         frame.setFrameShadow(QFrame.Raised)
         frame.setFrameShape(QFrame.StyledPanel)
 
+        # Create Componenets
+        header_1 = QLabel("Data")
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        # line.setFrameShadow(QFrame.Sunken)
+        line.setStyleSheet("color:white")
         # Add Components to layout
+        frame_layout.addWidget(header_1)
+        frame_layout.addWidget(line)
         frame_layout.addWidget(self.full_spectrum)
         frame_layout.addWidget(self.experiment_peaks)
         frame_layout.addWidget(self.matches)
         frame_layout.addWidget(self.catalogue)
         frame_layout.addWidget(self.expected)
-        frame_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-                                   )
+        frame_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
         # Set frame Layout
         frame.setLayout(frame_layout)
@@ -271,8 +286,8 @@ class FilterWidget(QGroupBox):
         self.setLayout(frame_layout)
         # ADDITIONAL SETTINGS #
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
-        self.setStyleSheet("background-color:white; " +
-                           "color:" + BACKGROUND + ";")
+        self.setStyleSheet("background-color:" + BACKGROUND_DARK + "; " +
+                           "color:" + "WHITE" + ";")
         self.full_spectrum.setWhatsThis("Full Spectrum of the experiment")
         self.experiment_peaks.setWhatsThis("Peaks of the experiment spectrum.")
         self.matches.setWhatsThis("Peaks of the experiment that are considered matched to the catalog.")
@@ -307,7 +322,7 @@ class AssignmentGraphWidget(MatplotlibWidget):
         self.setStyleSheet("QWidget { background-color: " + BACKGROUND + "}")
 
         # Test Plot #
-        ax = figure.add_subplot(111, axisbg=BACKGROUND)
+        ax = figure.add_subplot(111, axisbg=BACKGROUND_DARK)
         ax.spines['bottom'].set_color('#F5F5F5')
         ax.spines['top'].set_color('#F5F5F5')
         ax.spines['right'].set_color('#F5F5F5')
@@ -318,8 +333,10 @@ class AssignmentGraphWidget(MatplotlibWidget):
         self.ax = ax
 
         # --- Spacing and Borders -- #
-        figure.subplots_adjust(left=0.1, right=0.97, top=0.98, bottom=0.03)
+        self.fig.tight_layout()
 
+        # figure.subplots_adjust(left=0.1, right=0.97, top=0.98, bottom=0.03)
+        #figure.set_tight_layout(figure.get_tight_layout())
         # # --- Legend Settings --- #
         # self.ax.legend(loc=0)
         # legend = ax.legend()
@@ -357,11 +374,12 @@ class AssignmentGraphWidget(MatplotlibWidget):
         font.set_size('small')
         legend = self.ax.legend(loc=0, shadow=True, fancybox=True, title="Legend", prop=font)
         #legend.set_title('Legend',prop={'size':10})
-
+        self.fig.tight_layout()
         self.draw()
 
     def plot_scatter(self, frequencies, intensities, color):
         self.ax.scatter(frequencies, intensities, c=color)
+        self.fig.tight_layout()
 
     def reset(self):
         self.getFigure().clear()

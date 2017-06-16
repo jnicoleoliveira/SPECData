@@ -6,7 +6,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from app.widgets.widget___donut_chart import DonutChartWidget
+from app.widgets.widget___assignments_table import AssignmentTableWidget
 from app.widgets.widget___filter_graph import FilterGraphWidget
 from colors import *
 from config import conn
@@ -22,6 +22,7 @@ class AssignmentWindow(QDialog):
         self.setWindowTitle("Assignment View")
         self.resize(1500, 750)
         self.setStyleSheet("background-color:" + BACKGROUND)
+
         # Data
         self.match = match
         self.color = color
@@ -55,9 +56,13 @@ class AssignmentWindow(QDialog):
         self.info_table_widget = InfoTableWidget(self.match.mid)
         self.info_table_widget.setMinimumHeight((self.info_table_widget.rowCount()
                                                  * self.info_table_widget.rowHeight(0)) + 5)
+        self.info_table_widget.setMaximumWidth(404)
+        # Table Widget
+        self.assignment_table_widget = AssignmentTableWidget(self.experiment.mid, self.match)
+        self.assignment_table_widget.setMaximumWidth(404)
         # Donut Widget
-        self.donut = DonutChartWidget()
-        self.donut.setMaximumSize(100, 100)
+        # self.donut = DonutChartWidget()
+        # self.donut.setMaximumSize(100, 100)
         # Assignment Table Widget
         # self.assignment_table_widget = QTableWidget()
 
@@ -65,15 +70,22 @@ class AssignmentWindow(QDialog):
         # Left layout
         left_layout.addWidget(name_lbl)
         left_layout.addWidget(self.info_table_widget)
-        left_layout.addSpacerItem(QSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)))
-        left_layout.addWidget(self.donut)
+        left_layout.addWidget(self.assignment_table_widget)
+        left_layout.setMargin(0)
+        left_layout.setSpacing(5)
+
+        # left_layout.addSpacerItem(QSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)))
+        # left_layout.addWidget(self.donut)
         # Right Layout
         right_layout.addWidget(self.fgraph_widget)
-        right_layout.addWidget(self.assignment_table_widget)
+
+        #right_layout.addWidget(self.assignment_table_widget)
+
         # Central Layout
         layout.addLayout(left_layout)
         layout.addLayout(right_layout)
-
+        layout.setMargin(0)
+        layout.setSpacing(0)
         self.setLayout(layout)
 
     def __setup_graph__(self):
@@ -89,6 +101,7 @@ class InfoTableWidget(QTableWidget):
         from app.dialogs.manage_database_view.dialog___manage_database import ManageDatabase
         from tables.molecules_table import get_category
         category = get_category(conn, mid)
+        self.setMaximumWidth(900)
 
         if category == "artifact":
             ManageDatabase.populate_info_table_as_artifact(mid, self)
@@ -111,7 +124,6 @@ class InfoTableWidget(QTableWidget):
         self.horizontalHeader().setVisible(False)
         self.setSortingEnabled(False)
         self.horizontalHeader().setStretchLastSection(False)
-
         # -- Set Colors -- #
         stylesheet = "QHeaderView::section{Background-color:" + "#008080" + \
                      ";border - radius:14px;}"

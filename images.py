@@ -32,6 +32,10 @@ TRASH_ICON = os.path.join(resources, "delete.png")
 
 ADD_ICON = os.path.join(resources, "add.png")
 
+SUBTRACT_ICON = os.path.join(resources, "subtract.png")
+
+EXPORT_ICON = os.path.join(resources, "export.png")
+
 SPLATALOGUE_LOGO_ICON = os.path.join(resources, "splatalogue-logo.png")
 
 DATABASE_ICON_RED = os.path.join(resources, "database-red.png")

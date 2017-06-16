@@ -1,6 +1,6 @@
 # Author: Marie-Aline Martin
-# Author: Jasmine Oliveira
 # Author: Kyle Crabtree
+# Author: Jasmine Oliveira
 # Date: 06/16/16
 
 from math import ceil

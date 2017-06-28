@@ -60,3 +60,8 @@ DATABASE_PLUS = os.path.join(resources, 'database-plus.png')
 DATABASE_DOWN = os.path.join(resources, 'database-down.png')
 
 WELCOME_RECT = os.path.join(resources, 'welcome-rect.png')
+
+MOLECULE_ICON = os.path.join(resources, 'molecule.png')
+
+THUMPS_UP_ICON = os.path.join(resources, 'thumbs-up.png')
+THUMPS_DOWN_ICON = os.path.join(resources, 'thumbs-down.png')

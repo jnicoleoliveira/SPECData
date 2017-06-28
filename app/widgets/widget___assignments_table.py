@@ -37,6 +37,7 @@ class AssignmentTableWidget(QWidget):
         newlayout.setMargin(0)
         newlayout.addWidget(frame)
 
+        self.setStyleSheet("background:" + FOREGROUND)
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.setLayout(newlayout)
 
@@ -89,10 +90,12 @@ class TableWidget(QTableWidget):
             match_frequency_item = QTableWidgetItem(str(match_frequency))
             match_intensity_item = QTableWidgetItem(str(match_intensity))
 
-            color = QColor(BACKGROUND_DARK)
+            color = QColor(FOREGROUND)
             match_frequency_item.setBackgroundColor(color)
             match_intensity_item.setBackgroundColor(color)
-
+            color = QColor(BACKGROUND_LIGHT)
+            exp_frequency_item.setBackground(color)
+            exp_intensity_item.setBackground(color)
             # Add Widget Items to Table
             self.setItem(i, 0, exp_frequency_item)
             self.setItem(i, 1, exp_intensity_item)
@@ -114,8 +117,8 @@ class ToolbarWidget(QWidget):
     def __init__(self):
         super(ToolbarWidget, self).__init__()
         self.add_btn = QPushButton()
-        self.remove_btn = QToolButton()
-        self.export_btn = QToolButton()
+        self.remove_btn = QPushButton()
+        self.export_btn = QPushButton()
 
         self.__setup__()
         self.show()
@@ -158,7 +161,7 @@ class ToolbarWidget(QWidget):
         self.setLayout(l)
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         self.setMaximumHeight(40)
-        self.setStyleSheet("background-color:" + BACKGROUND_DARK + ";" +
+        self.setStyleSheet("background-color:" + FOREGROUND + ";" +
                            "margin:1px; border:1px solid" + "WHITE" + "; ")
 
     def add_assignment(self):

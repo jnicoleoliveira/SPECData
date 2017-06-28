@@ -28,7 +28,9 @@ class FilterGraphWidget(QWidget):
         self.expected_peaks = None
 
         self.displayed = 0
+        self.has_full_spectrum = False
 
+        # Graphing Limits (from experiment max/min)
         self.xmax = None
         self.xmin = None
         self.ymax = None
@@ -56,7 +58,7 @@ class FilterGraphWidget(QWidget):
         # Create Layout
         widget_layout = QHBoxLayout()
         filter_layout = QVBoxLayout()
-        filter_dock = QDockWidget()
+        group_box = QGroupBox()
 
         # -------- Edit Components -------------- #
         self.graph_widget.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
@@ -67,18 +69,31 @@ class FilterGraphWidget(QWidget):
         # filter_layout.addSpacerItem(QSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)))
 
         # Setup Dock
-        filter_dock.setWidget(self.filter_widget)
+        l = QVBoxLayout()
+        l.addWidget(self.filter_widget)
+        l.setMargin(0)
+        group_box.setLayout(l)
+        # group_box.setStyleSheet("QGroupBox { border:0.5px solid white;}")
+        # filter_dock.setWidget(self.filter_widget)
 
         # Add Components
         widget_layout.addWidget(self.graph_widget)
-        widget_layout.addWidget(filter_dock)
+        widget_layout.addWidget(group_box)
         # widget_layout.addLayout(filter_layout)
         widget_layout.setSpacing(0)
+        widget_layout.setMargin(0)
 
         # Connect Checkboxes
         self.filter_widget.set_filter_connection(self.__event__filter_changed)
         self.setLayout(widget_layout)
 
+        # Determine if
+        self.filter_widget.full_spectrum.setDisabled(True)
+        self.filter_widget.full_spectrum.setStyleSheet("color:gray")
+        self.filter_widget.full_spectrum.setWhatsThis("Full Spectrum is not available.")
+
+        # Additional Settings
+        self.setStyleSheet("background:" + FOREGROUND)
     def __event__filter_changed(self):
         full_spectrum = self.filter_widget.full_spectrum.isChecked()
         matches = self.filter_widget.matches.isChecked()
@@ -134,6 +149,8 @@ class FilterGraphWidget(QWidget):
 
 
             # self.redisplay(full_spectrum, matches, catalogue, expected)
+
+        self.graph_widget.getFigure().tight_layout(pad=0, w_pad=0.5, h_pad=1.0)
 
     def redisplay(self, full_spectrum, matches, catalogue, expected):
         print "redisplay"
@@ -263,13 +280,15 @@ class FilterWidget(QGroupBox):
 
         # Create Componenets
         header_1 = QLabel("Data")
+        header_1.setMargin(2)
+        header_1.setStyleSheet("background :" + ACCENT_LIGHT)
         line = QFrame()
         line.setFrameShape(QFrame.HLine)
         # line.setFrameShadow(QFrame.Sunken)
         line.setStyleSheet("color:white")
         # Add Components to layout
         frame_layout.addWidget(header_1)
-        frame_layout.addWidget(line)
+        #frame_layout.addWidget(line)
         frame_layout.addWidget(self.full_spectrum)
         frame_layout.addWidget(self.experiment_peaks)
         frame_layout.addWidget(self.matches)
@@ -286,7 +305,7 @@ class FilterWidget(QGroupBox):
         self.setLayout(frame_layout)
         # ADDITIONAL SETTINGS #
         self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
-        self.setStyleSheet("background-color:" + BACKGROUND_DARK + "; " +
+        self.setStyleSheet("background-color:" + FOREGROUND + "; " +
                            "color:" + "WHITE" + ";")
         self.full_spectrum.setWhatsThis("Full Spectrum of the experiment")
         self.experiment_peaks.setWhatsThis("Peaks of the experiment spectrum.")
@@ -311,6 +330,9 @@ class AssignmentGraphWidget(MatplotlibWidget):
     def __init__(self):
         super(AssignmentGraphWidget, self).__init__()
         self.ax = None
+
+        self.y_axis_on = False
+
         self.__setup__()
 
     def __setup__(self):
@@ -318,20 +340,32 @@ class AssignmentGraphWidget(MatplotlibWidget):
         figure = self.getFigure()
 
         # --- Color Scheme -- #
-        figure.set_facecolor(BACKGROUND)  # Background
-        self.setStyleSheet("QWidget { background-color: " + BACKGROUND + "}")
-
-        # Test Plot #
-        ax = figure.add_subplot(111, axisbg=BACKGROUND_DARK)
+        figure.set_facecolor(FOREGROUND)  # Background
+        self.setStyleSheet("QWidget { background-color: " + FOREGROUND + "}")
+        # --- Axis Color Scheme --- #
+        ax = figure.add_subplot(111, axisbg=FOREGROUND)
+        ax.spines['top'].set_color(FOREGROUND)
+        ax.spines['right'].set_color(FOREGROUND)
         ax.spines['bottom'].set_color('#F5F5F5')
-        ax.spines['top'].set_color('#F5F5F5')
-        ax.spines['right'].set_color('#F5F5F5')
-        ax.spines['left'].set_color('#F5F5F5')
+        # ax.spines['top'].set_color('#F5F5F5')
+        # ax.spines['right'].set_color('#F5F5F5')
+        #ax.spines['left'].set_color('#F5F5F5')
         ax.tick_params(axis='x', colors='#F5F5F5')
-        ax.tick_params(axis='y', colors='#F5F5F5')
         ax.title.set_color('#F5F5F5')
-        self.ax = ax
 
+        # -- Labels Font and Color Scheme -- #
+        font = {'style': 'italic', 'size': 10, 'color': '#F5F5F5'}
+        ax.set_xlabel('frequency', font)
+
+        if self.y_axis_on is True:
+            ax.set_ylabel('intensity', font)
+            ax.spines['left'].set_color('#F5F5F5')
+            ax.tick_params(axis='y', colors='#F5F5F5')
+        else:
+            ax.spines['left'].set_color(FOREGROUND)
+            ax.tick_params(axis='y', colors=FOREGROUND)
+
+        self.ax = ax
         # --- Spacing and Borders -- #
         self.fig.tight_layout()
 
@@ -374,8 +408,8 @@ class AssignmentGraphWidget(MatplotlibWidget):
         font.set_size('small')
         legend = self.ax.legend(loc=0, shadow=True, fancybox=True, title="Legend", prop=font)
         #legend.set_title('Legend',prop={'size':10})
-        self.fig.tight_layout()
         self.draw()
+        self.fig.tight_layout()
 
     def plot_scatter(self, frequencies, intensities, color):
         self.ax.scatter(frequencies, intensities, c=color)

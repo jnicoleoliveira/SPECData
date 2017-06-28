@@ -90,14 +90,17 @@ class AssignmentWindow(QDialog):
         validate_btn.setIcon(QIcon(THUMPS_UP_ICON))
         validate_btn.setIconSize(QSize(16, 16))
         validate_btn.setStyleSheet("font: 15px; background-color: " + GREEN_2)
+        validate_btn.setFixedSize(90, 30)
 
         reject_btn = QPushButton("Reject")
         reject_btn.setIcon(QIcon(THUMPS_DOWN_ICON))
         reject_btn.setIconSize(QSize(16, 16))
         reject_btn.setStyleSheet("font: 15px; background-color: " + MAROON)
+        reject_btn.setFixedSize(90, 30)
 
         cancel_btn = QPushButton("Cancel")
         cancel_btn.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        cancel_btn.setFixedSize(90, 30)
 
         # -----------Add Widgets to Layout ------------ #
         # Title Layout

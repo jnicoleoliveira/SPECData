@@ -4,7 +4,11 @@
 #  and opens the Setup Wizard for configuration
 
 echo "Installing Conda Environment..."
-conda env create -n specdata-env -f bin/conda_environment_windows.yml
+Try {
+    conda env create -n specdata-env -f bin/conda_environment_windows.yml
+} Catch {
+    echo "Environment already exists.. would you like to reinstall?"
+}
 
 echo "Open Environment.."
 activate specdata-env
